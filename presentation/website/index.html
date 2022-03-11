@@ -19,7 +19,7 @@ body, html {
 .bgimg-1 {
   background-position: center;
   background-size: cover;
-  background-image: url("/w3images/mac.jpg");
+  background-image: url("./img/soccer.jpg");
   min-height: 100%;
 }
 
@@ -38,9 +38,9 @@ body, html {
     <div class="w3-right w3-hide-small">
       <a href="#about" class="w3-bar-item w3-button">ABOUT</a>
       <a href="#team" class="w3-bar-item w3-button"><i class="fa fa-user"></i> TEAM</a>
-      <a href="#work" class="w3-bar-item w3-button"><i class="fa fa-th"></i> WORK</a>
+      <!-- <a href="#work" class="w3-bar-item w3-button"><i class="fa fa-th"></i> WORK</a>
       <a href="#pricing" class="w3-bar-item w3-button"><i class="fa fa-usd"></i> PRICING</a>
-      <a href="#contact" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i> CONTACT</a>
+      <a href="#contact" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i> CONTACT</a> -->
     </div>
     <!-- Hide right-floated links on small screens and replace them with a menu icon -->
 
@@ -55,34 +55,44 @@ body, html {
   <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close ×</a>
   <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button">ABOUT</a>
   <a href="#team" onclick="w3_close()" class="w3-bar-item w3-button">TEAM</a>
-  <a href="#work" onclick="w3_close()" class="w3-bar-item w3-button">WORK</a>
+  <!-- <a href="#work" onclick="w3_close()" class="w3-bar-item w3-button">WORK</a>
   <a href="#pricing" onclick="w3_close()" class="w3-bar-item w3-button">PRICING</a>
-  <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button">CONTACT</a>
+  <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button">CONTACT</a> -->
 </nav>
 
 <!-- Header with full-height image -->
 <header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
   <div class="w3-display-left w3-text-white" style="padding:48px">
-    <span class="w3-jumbo w3-hide-small">Start something that matters</span><br>
-    <span class="w3-xxlarge w3-hide-large w3-hide-medium">Start something that matters</span><br>
-    <span class="w3-large">Stop wasting valuable time with projects that just isn't you.</span>
-    <p><a href="#about" class="w3-button w3-white w3-padding-large w3-large w3-margin-top w3-opacity w3-hover-opacity-off">Learn more and start today</a></p>
+    <span class="w3-jumbo w3-hide-small">Soccer Commentator</span><br>
+    <!-- <span class="w3-xxlarge w3-hide-large w3-hide-medium">Start something that matters</span><br>
+    <span class="w3-large">Stop wasting valuable time with projects that just isn't you.</span> -->
+    <!-- <p><a href="#about" class="w3-button w3-white w3-padding-large w3-large w3-margin-top w3-opacity w3-hover-opacity-off">Learn more and start today</a></p> -->
   </div> 
-  <div class="w3-display-bottomleft w3-text-grey w3-large" style="padding:24px 48px">
+  <!-- <div class="w3-display-bottomleft w3-text-grey w3-large" style="padding:24px 48px">
     <i class="fa fa-facebook-official w3-hover-opacity"></i>
     <i class="fa fa-instagram w3-hover-opacity"></i>
     <i class="fa fa-snapchat w3-hover-opacity"></i>
     <i class="fa fa-pinterest-p w3-hover-opacity"></i>
     <i class="fa fa-twitter w3-hover-opacity"></i>
     <i class="fa fa-linkedin w3-hover-opacity"></i>
-  </div>
+  </div> -->
 </header>
 
 <!-- About Section -->
 <div class="w3-container" style="padding:128px 16px" id="about">
-  <h3 class="w3-center">ABOUT THE COMPANY</h3>
-  <p class="w3-center w3-large">Key features of our company</p>
-  <div class="w3-row-padding w3-center" style="margin-top:64px">
+  <h3 class="w3-center">ABOUT THE PROJECT</h3>
+  <p class="w3-center w3-large">O objetivo deste projeto é o desenvolvimento de um sistema automático de comentário em linguagem natural 
+    para jogos de futebol robótico (ou humano). Usando a informação de baixo nível (posições dos jogadores e 
+    bola) que está disponível na Liga de Simulação e que pode ser recolhida usando vídeos da Liga de Robôs Médios 
+    ou em vídeos de futebol humano, o sistema deve gerar informação de mais alto nível, reconhecendo passes, 
+    remates, cruzamentos, oportunidades, contra-ataques e outros eventos futebolísticos, e também fazer análise 
+    mais geral do estado do jogo, estimando posses de bola, formações usadas pelas equipas, zonas preferenciais de 
+    ataque/defesa, percentagens de sucesso, domínio territorial, etc.. Esta informação deve depois ser usada para 
+    gerar um comentário interessante e apelativo, em tempo real, usando linguagem natural. O comentário a ser 
+    gerado poderá eventualmente ser parametrizável, por exemplo, em termos de emotividade ou de parcialidade 
+    do comentado.</p>
+
+  <!-- <div class="w3-row-padding w3-center" style="margin-top:64px">
     <div class="w3-quarter">
       <i class="fa fa-desktop w3-margin-bottom w3-jumbo w3-center"></i>
       <p class="w3-large">Responsive</p>
@@ -103,11 +113,11 @@ body, html {
       <p class="w3-large">Support</p>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
     </div>
-  </div>
+  </div> -->
 </div>
 
 <!-- Promo Section - "We know design" -->
-<div class="w3-container w3-light-grey" style="padding:128px 16px">
+<!-- <div class="w3-container w3-light-grey" style="padding:128px 16px">
   <div class="w3-row-padding">
     <div class="w3-col m6">
       <h3>We know design.</h3>
@@ -118,7 +128,7 @@ body, html {
       <img class="w3-image w3-round-large" src="/w3images/phone_buildings.jpg" alt="Buildings" width="700" height="394">
     </div>
   </div>
-</div>
+</div> -->
 
 <!-- Team Section -->
 <div class="w3-container" style="padding:128px 16px" id="team">
@@ -130,9 +140,10 @@ body, html {
         <img src="./img/team/afonso.jpg" alt="John" style="width:100%">
         <div class="w3-container">
           <h3>Afonso Campos</h3>
-          <p class="w3-opacity">CEO & Founder</p>
-          <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.</p>
-          <p><button class="w3-button w3-light-grey w3-block"><i class="fa fa-envelope"></i> Contact</button></p>
+          <p class="w3-opacity">Team Member</p>
+          <p>Email: afonso.campos@ua.pt</p>
+          <p>GitHub: AfonsoCampos971</p>
+          <!-- <p><button class="w3-button w3-light-grey w3-block"><i class="fa fa-envelope"></i> Contact</button></p> -->
         </div>
       </div>
     </div>
@@ -140,10 +151,11 @@ body, html {
       <div class="w3-card">
         <img src="./img/team/dinis.jpg" alt="Jane" style="width:100%">
         <div class="w3-container">
-          <h3>Anja Doe</h3>
-          <p class="w3-opacity">Art Director</p>
-          <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.</p>
-          <p><button class="w3-button w3-light-grey w3-block"><i class="fa fa-envelope"></i> Contact</button></p>
+          <h3>Dinis Lei</h3>
+          <p class="w3-opacity">DevOps</p>
+          <p>Email: dinislei@ua.pt</p>
+          <p>GitHub: dinis-lei</p>
+          <!-- <p><button class="w3-button w3-light-grey w3-block"><i class="fa fa-envelope"></i> Contact</button></p> -->
         </div>
       </div>
     </div>
@@ -151,10 +163,11 @@ body, html {
       <div class="w3-card">
         <img src="./img/team/isabel.jpg" alt="Mike" style="width:100%">
         <div class="w3-container">
-          <h3>Mike Ross</h3>
-          <p class="w3-opacity">Web Designer</p>
-          <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.</p>
-          <p><button class="w3-button w3-light-grey w3-block"><i class="fa fa-envelope"></i> Contact</button></p>
+          <h3>Isabel Rosário</h3>
+          <p class="w3-opacity">Team Leader</p>
+          <p>Email: isabel.rosario@ua.pt</p>
+          <p>GitHub: rospuye</p>
+          <!-- <p><button class="w3-button w3-light-grey w3-block"><i class="fa fa-envelope"></i> Contact</button></p> -->
         </div>
       </div>
     </div>
@@ -162,10 +175,11 @@ body, html {
       <div class="w3-card">
         <img src="./img/team/lucius.jpeg" alt="Dan" style="width:100%">
         <div class="w3-container">
-          <h3>Dan Star</h3>
-          <p class="w3-opacity">Designer</p>
-          <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.</p>
-          <p><button class="w3-button w3-light-grey w3-block"><i class="fa fa-envelope"></i> Contact</button></p>
+          <h3>Lucius Vinicius</h3>
+          <p class="w3-opacity">Team Member</p>
+          <p>Email: luciusviniciusf@ua.pt</p>
+          <p>GitHub: luciusvinicius</p>
+          <!-- <p><button class="w3-button w3-light-grey w3-block"><i class="fa fa-envelope"></i> Contact</button></p> -->
         </div>
       </div>
     </div>
@@ -173,10 +187,11 @@ body, html {
         <div class="w3-card">
           <img src="./img/team/miguel.jpg" alt="Dan" style="width:100%">
           <div class="w3-container">
-            <h3>Dan Star</h3>
-            <p class="w3-opacity">Designer</p>
-            <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.</p>
-            <p><button class="w3-button w3-light-grey w3-block"><i class="fa fa-envelope"></i> Contact</button></p>
+            <h3>Miguel Ferreira</h3>
+            <p class="w3-opacity">Team Member</p>
+            <p>Email: miguel.r.ferreira@ua.pt</p>
+            <p>GitHub: MiguelF07</p>
+            <!-- <p><button class="w3-button w3-light-grey w3-block"><i class="fa fa-envelope"></i> Contact</button></p> -->
           </div>
         </div>
       </div>
@@ -184,7 +199,7 @@ body, html {
 </div>
 
 <!-- Promo Section "Statistics" -->
-<div class="w3-container w3-row w3-center w3-dark-grey w3-padding-64">
+<!-- <div class="w3-container w3-row w3-center w3-dark-grey w3-padding-64">
   <div class="w3-quarter">
     <span class="w3-xxlarge">14+</span>
     <br>Partners
@@ -201,10 +216,10 @@ body, html {
     <span class="w3-xxlarge">150+</span>
     <br>Meetings
   </div>
-</div>
+</div> -->
 
 <!-- Work Section -->
-<div class="w3-container" style="padding:128px 16px" id="work">
+<!-- <div class="w3-container" style="padding:128px 16px" id="work">
   <h3 class="w3-center">OUR WORK</h3>
   <p class="w3-center w3-large">What we've done for people</p>
 
@@ -237,19 +252,19 @@ body, html {
       <img src="/w3images/tech_tableturner.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="A tableturner">
     </div>
   </div>
-</div>
+</div> -->
 
 <!-- Modal for full size images on click-->
-<div id="modal01" class="w3-modal w3-black" onclick="this.style.display='none'">
+<!-- <div id="modal01" class="w3-modal w3-black" onclick="this.style.display='none'">
   <span class="w3-button w3-xxlarge w3-black w3-padding-large w3-display-topright" title="Close Modal Image">×</span>
   <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
     <img id="img01" class="w3-image">
     <p id="caption" class="w3-opacity w3-large"></p>
   </div>
-</div>
+</div> -->
 
 <!-- Skills Section -->
-<div class="w3-container w3-light-grey w3-padding-64">
+<!-- <div class="w3-container w3-light-grey w3-padding-64">
   <div class="w3-row-padding">
     <div class="w3-col m6">
       <h3>Our Skills.</h3>
@@ -273,10 +288,10 @@ body, html {
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <!-- Pricing Section -->
-<div class="w3-container w3-center w3-dark-grey" style="padding:128px 16px" id="pricing">
+<!-- <div class="w3-container w3-center w3-dark-grey" style="padding:128px 16px" id="pricing">
   <h3>PRICING</h3>
   <p class="w3-large">Choose a pricing plan that fits your needs.</p>
   <div class="w3-row-padding" style="margin-top:64px">
@@ -329,10 +344,10 @@ body, html {
       </ul>
     </div>
   </div>
-</div>
+</div> -->
 
 <!-- Contact Section -->
-<div class="w3-container w3-light-grey" style="padding:128px 16px" id="contact">
+<!-- <div class="w3-container w3-light-grey" style="padding:128px 16px" id="contact">
   <h3 class="w3-center">CONTACT</h3>
   <p class="w3-center w3-large">Lets get in touch. Send us a message:</p>
   <div style="margin-top:48px">
@@ -351,8 +366,8 @@ body, html {
         </button>
       </p>
     </form>
-    <!-- Image of location/map -->
-    <img src="/w3images/map.jpg" class="w3-image w3-greyscale" style="width:100%;margin-top:48px">
+    
+    <!-- <img src="/w3images/map.jpg" class="w3-image w3-greyscale" style="width:100%;margin-top:48px"> -->
   </div>
 </div>
 
