@@ -3,11 +3,13 @@ import re
 
 def process(log):
 
-    path = "logs/"
+    path = "logs/input/"
+    out = "logs/output/" + log.rstrip(".log") + ".txt"
     count = 0
     inpt = open(path + log, "r")
-    output = open(path + "log.txt", "w")
+    output = open(out, "w")
     flg = False
+    
     for line in inpt:
         #print(line)
         timestamp = re.findall("time \d+[.]?\d*", line)[0]
@@ -21,25 +23,28 @@ def process(log):
                 output.write(f"{timestamp}:ball:{tmp2}\n")
             #flg = True
         if re.search("naobody\d{1}.obj", line):
-            robotIds = [re.sub("\D", "", x) for x in re.findall("naobody\d{1}.obj", line)]
-            print(robotIds)
+
             count += 1
-            tmp = [x.strip() for x in re.split("\(nd TRF", line) if re.search("naobody", x)]
-            #print(tmp)
-            i = 0 
-            for t in tmp:
-                tmp2 = re.findall("\(SLT .*?\)",t)
-                #print(tmp2)
-                for t2 in tmp2:
-                    output.write(f"{timestamp}:naobody{robotIds[i]}:{t2}\n")
-                i += 1
+            tmp = re.split("\(nd TRF", line)
+            pattern = "\(resetMaterials .*?\)"
+            tmp2 = [(tmp[i-1], re.findall(pattern, tmp[i])[0])  for i in range(len(tmp)) if re.search("naobody", tmp[i])]
+            
+            #print(tmp2)
+            
+            for t, n in tmp2:
+                l = n.split(" ")
+                robotID = l[1] + l[2]
+                output.write(f"{timestamp}:naobody{robotID}:{t}\n")
+                
+            #flg = True
+                
             
 
         if flg:
             break
 
         
-    print(count)
+    #print(count)
 
 if __name__ == "__main__":
     log = sys.argv[1]
