@@ -1,6 +1,6 @@
 # PI 2021/2022: **Comentador Automático de Jogos de Futebol**
 
-## Participantes:
+## Participants:
 | Nome  | NMec  |
 |---|---|
 | Afonso Campos | 100055 |
@@ -11,7 +11,7 @@
 
 ---
 
-### **Recursos**
+### **Resources**
 
 Rocco (RoboCup Commentador): https://www.dfki.de/imedia/robocup/
 
