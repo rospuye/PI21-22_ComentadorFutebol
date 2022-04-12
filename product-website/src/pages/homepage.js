@@ -1,6 +1,6 @@
 // React
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // Components
 import Title from '../components/Title';
@@ -48,7 +48,9 @@ class Homepage extends Component {
           </Col>
           <Col>
             <div style={{ width: '100%', paddingLeft: '25%', paddingTop: '20%' }}>
-                <Button variant="success" size="lg">Start<FontAwesomeIcon icon={faPlay} /></Button>
+              <Link to="/another_page">
+                <Button variant="success" size="lg">Start <FontAwesomeIcon icon={faPlay} /></Button>
+              </Link>
             </div>
           </Col>
         </Row>

@@ -1,5 +1,7 @@
 npm install web-vitals
 
+npm install react-scripts --save
+
 npm install react-bootstrap bootstrap
 
 npm i --save @fortawesome/fontawesome-svg-core

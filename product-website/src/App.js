@@ -1,6 +1,6 @@
 // React
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // CSS
 import './App.css';
@@ -10,11 +10,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Pages
 import Homepage from './pages/homepage';
+import Anotherpage from './pages/anotherpage';
 
-class App extends Component {
-  render() {
-    return <Homepage></Homepage>
-  }
+export default function App() {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Homepage />}></Route>
+          <Route path="/another_page" element={<Anotherpage />} />
+        </Routes>
+      </BrowserRouter>
+    );
 }
 
-export default App;
+// export default App;
