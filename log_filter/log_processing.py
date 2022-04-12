@@ -2,6 +2,7 @@ import sys
 import re
 import json
 
+
 class Entity():
     def __init__(self, id, position, index, offset):
         self.id = id
@@ -11,6 +12,17 @@ class Entity():
 
     def to_json(self):
         return {"id": self.id, "position": self.position}
+
+def position_to_array(position):
+    #print(position)
+    tmp = position.split(" ")
+    pos = []
+    for i in range(2, len(tmp)):
+        pos.append(float(tmp[i].rstrip(")")))
+    if len(pos) != 16:
+        pos = [float(tmp[1])] + pos
+    assert len(pos) == 16
+    return pos
 
 
 def process(log):
@@ -31,19 +43,20 @@ def process(log):
             timestamp = re.findall("time \d+[.]?\d*", line)[0].split(" ")[1]
             count += 1
             tmp = re.split("\(nd", line)
-
+            #print(tmp[:10])
             tmp2 = [(tmp[i-1].strip(),i) for i in range(len(tmp)) if re.search("soccerball.obj", tmp[i])]
-            for t,i in tmp2:
-                ball = Entity("ball",t,i, 1)
+            for pos,i in tmp2:
+                
+                ball = Entity("ball",position_to_array(pos),i, 1)
                 entities.append(ball)
 
             pattern = "\(resetMaterials .*?\)"
-            tmp4 = [(tmp[i-2], re.findall(pattern, tmp[i])[0], i)  for i in range(len(tmp)) if re.search("naobody", tmp[i])]
+            tmp4 = [(tmp[i-2].strip(), re.findall(pattern, tmp[i])[0], i)  for i in range(len(tmp)) if re.search("naobody", tmp[i])]
 
-            for t, n, i in tmp4:
+            for pos, n, i in tmp4:
                 l = n.split(" ")
                 robotID = l[1] + l[2]
-                robot = Entity(robotID, t, i, 2)
+                robot = Entity(robotID, position_to_array(pos), i, 2)
                 entities.append(robot)
                                                       
             output.write(f'"{timestamp}":')
@@ -55,22 +68,31 @@ def process(log):
         
         if new_timestamp != timestamp:
             break
-        
+    
+    old_timestamp = timestamp
     for line in inpt:
         
-        if re.search("soccerball.obj|models/naobody", line):
-            tmp = re.split("\(nd", line)
-            timestamp = re.findall("time \d+[.]?\d*", line)[0].split(" ")[1]
-            for entity in entities:
-                i = entity.index
-                o = entity.offset
-                if re.search("soccerball.obj|models/naobody", tmp[i]):
-                    entity.position = tmp[i-o]
-            output.write(f',\n"{timestamp}":')
-            json.dump([entity.to_json() for entity in entities], output)
-            
-        if flg:
+        #if re.search("soccerball.obj|models/naobody", line):
+        timestamp = re.findall("time \d+[.]?\d*", line)[0].split(" ")[1]
+        if old_timestamp == timestamp:
             break
+        old_timestamp = timestamp
+        tmp = re.split("\(nd", line)
+        
+        for entity in entities:
+            i = entity.index
+            o = entity.offset
+            if tmp[i-o]:
+                entity.position = position_to_array(tmp[i-o].strip())
+            #print(tmp[:10])
+            #print(tmp[i])
+            #print(tmp[i-o])
+            #break
+        output.write(f',\n"{timestamp}":')
+        json.dump([entity.to_json() for entity in entities], output)
+        #break
+            
+        
     output.write("}")
     output.close()
     #print(count)
