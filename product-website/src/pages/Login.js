@@ -7,6 +7,8 @@ import Button from 'react-bootstrap/Button'
 import Title from '../components/Title'
 import SmallerTitle from '../components/SmallerTitle'
 
+import '../components/components_css/Form.css';
+
 function Login() {
   return (
     <Container>
@@ -33,6 +35,7 @@ function Login() {
                     </div>
                 </Form>
             </Col>
+            <div class="vl"></div>
             <Col style={{padding:"50px"}}>
                 <SmallerTitle title="Register"/>
                 <Form>
@@ -54,7 +57,7 @@ function Login() {
                         <Form.Control type="password" placeholder="Password" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                        <Form.Check type="checkbox" label="Check me out" />
+                        <Form.Check type="checkbox" label="Remember me" />
                     </Form.Group>
                     <div style={{textAlign:"center"}}>
                         <Button variant="primary" type="submit">
