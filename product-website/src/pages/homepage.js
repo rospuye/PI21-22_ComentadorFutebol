@@ -33,7 +33,7 @@ class Homepage extends Component {
         </Row>
       </Container>
 
-      <Title subtitle={intro}></Title>
+      <Title title="Commentator" subtitle={intro}></Title>
 
       <Container>
         <Row>

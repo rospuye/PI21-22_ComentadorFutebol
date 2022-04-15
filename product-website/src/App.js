@@ -9,8 +9,9 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Pages
-import Homepage from './pages/homepage';
-import Anotherpage from './pages/anotherpage';
+import Homepage from './pages/Homepage';
+import Anotherpage from './pages/Anotherpage';
+import ConnectToSimulatorPage from './pages/ConnectToSimulatorPage';
 
 export default function App() {
     return (
@@ -18,6 +19,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Homepage />}></Route>
           <Route path="/another_page" element={<Anotherpage />} />
+          <Route path="/simulator" element={<ConnectToSimulatorPage />} />
         </Routes>
       </BrowserRouter>
     );
