@@ -1,4 +1,4 @@
-"use strict";
+
 
 // To store the scene graph, and elements usefull to rendering the scene
 const sceneElements = {
