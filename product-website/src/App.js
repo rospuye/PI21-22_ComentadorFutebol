@@ -12,6 +12,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Homepage from './pages/Homepage';
 import Anotherpage from './pages/Anotherpage';
 import ConnectToSimulatorPage from './pages/ConnectToSimulatorPage';
+import Login from './pages/Login';
 
 export default function App() {
     return (
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="/" element={<Homepage />}></Route>
           <Route path="/another_page" element={<Anotherpage />} />
           <Route path="/simulator" element={<ConnectToSimulatorPage />} />
+          <Route path="/login" element={<Login/>}/>
         </Routes>
       </BrowserRouter>
     );
