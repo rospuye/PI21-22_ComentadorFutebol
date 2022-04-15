@@ -25,10 +25,10 @@ def position_to_array(position):
     return pos
 
 
-def process(log):
+def process(log, skip=1, skip_flg=False):
 
     path = "logs/input/"
-    out = "logs/output/" + log.rstrip(".log") + "1.json"
+    out = "logs/output/" + log.rstrip(".log") + ".json"
     count = 0
     inpt = open(path + log, "r")
     output = open(out, "w")
@@ -41,7 +41,6 @@ def process(log):
         tmp = re.findall("soccerball.obj|models/naobody", line)
         if len(tmp) == 23 and not re.search("matTeam",line):
             timestamp = re.findall("time \d+[.]?\d*", line)[0].split(" ")[1]
-            count += 1
             tmp = re.split("\(nd", line)
             #print(tmp[:10])
             tmp2 = [(tmp[i-1].strip(),i) for i in range(len(tmp)) if re.search("soccerball.obj", tmp[i])]
@@ -70,6 +69,7 @@ def process(log):
             break
     
     old_timestamp = timestamp
+    count = 0
     for line in inpt:
         
         #if re.search("soccerball.obj|models/naobody", line):
@@ -77,21 +77,23 @@ def process(log):
         if old_timestamp == timestamp:
             break
         old_timestamp = timestamp
-        tmp = re.split("\(nd", line)
-        
-        for entity in entities:
-            i = entity.index
-            o = entity.offset
-            if tmp[i-o]:
-                entity.position = position_to_array(tmp[i-o].strip())
-            #print(tmp[:10])
-            #print(tmp[i])
-            #print(tmp[i-o])
-            #break
-        output.write(f',\n"{timestamp}":')
-        json.dump([entity.to_json() for entity in entities], output)
-        #break
+        if not skip_flg or not count % skip == 0:
             
+            tmp = re.split("\(nd", line)
+
+            for entity in entities:
+                i = entity.index
+                o = entity.offset
+                if tmp[i-o]:
+                    entity.position = position_to_array(tmp[i-o].strip())
+                #print(tmp[:10])
+                #print(tmp[i])
+                #print(tmp[i-o])
+                #break
+            output.write(f',\n"{timestamp}":')
+            json.dump([entity.to_json() for entity in entities], output)
+            #break
+        count += 1  
         
     output.write("}")
     output.close()
@@ -99,7 +101,12 @@ def process(log):
 
 if __name__ == "__main__":
     log = sys.argv[1]
-    process(log)
+    skip_lines = 1
+    flg = False
+    if len(sys.argv) > 2:
+        flg = True
+        skip_lines = int(sys.argv[2])
+    process(log, skip=skip_lines, skip_flg=flg)
 
 
 
