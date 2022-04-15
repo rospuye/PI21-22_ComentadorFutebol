@@ -1,0 +1,17 @@
+Label {
+    color: white;
+}
+
+.btn {
+    border-radius: 1.5rem;
+}
+
+.btn-primary {
+    background-color: #6577ab;
+    border-color: #6577ab60;
+}
+
+.btn-primary:hover {
+    background-color: #6577abc0;
+    border-color: #6577ab60;
+}
