@@ -47,16 +47,17 @@ def main():
         with open(f"{filename}_updated", "w") as outp:
             # 0:44.24,0:47.67,kick_off
             next_line = next(inpt)
-
+            count = 1
             while next_line:
                 try:
                     line = update_line(next_line, start_time)
                     outp.write(line)
                     next_line = next(inpt)
+                    count += 1
                 except StopIteration:
                     break
                 except Exception:
-                    print(f"ERROR PARSING LINE: '{next_line}'. PLEASE CHECK IT AND TRY AGAIN")
+                    print(f"ERROR PARSING LINE {count}: '{next_line}'. PLEASE CHECK IT AND TRY AGAIN")
                     break
 
 
