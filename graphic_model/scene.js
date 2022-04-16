@@ -73,12 +73,6 @@ function onDocumentKeyUp(event) {
 function load3DObjects(sceneGraph) {
 
     // ************************** //
-    // Textures
-    // ************************** //
-    const textureLoader = new THREE.TextureLoader();
-    const gradientTexture = textureLoader.load('5.jpg');
-
-    // ************************** //
     // Create a ground plane
     // ************************** //
     const planeGeometry = new THREE.PlaneGeometry(15, 15);
@@ -98,16 +92,108 @@ function load3DObjects(sceneGraph) {
     robot.name = "robot";
 
     // ************************** //
+    // Creating the head
+    // ************************** //
+    const head = new THREE.Group();
+    head.name = "head";
+    const material_head1 = new THREE.MeshPhongMaterial({ color: 0xffffff });
+    const material_head2 = new THREE.MeshPhongMaterial({ color: 0x000000 });
+    const material_eyes = new THREE.MeshPhongMaterial({ color: 0xc3be32 });
+    const material_ears = new THREE.MeshPhongMaterial({ color: 0x8a8a8a });
+
+    // Main head parts
+
+    const geometry_head1 = new THREE.BoxGeometry(1.5, 1, 1.2);
+    const head1 = new THREE.Mesh(geometry_head1, material_head1);
+    head1.position.y = 1;
+
+    const geometry_head2 = new THREE.CylinderGeometry(0.6, 0.6, 1.2, 32);
+    const head2 = new THREE.Mesh(geometry_head2, material_head1);
+    head2.position.y = 1.5;
+    head2.rotation.x = Math.PI/2;
+    head2.scale.set(1.25, 1, 0.5);
+
+    const head3 = new THREE.Mesh(geometry_head1, material_head2);
+    head3.position.set(0, 1, 0.165);
+    head3.scale.set(0.8, 0.8, 0.8);
+
+    const head4 = new THREE.Mesh(geometry_head2, material_head2);
+    head4.position.set(0, 1.4, 0.165);
+    head4.rotation.x = Math.PI/2;
+    head4.scale.set(1, 0.8, 0.4);
+
+    // Eyes
+
+    const eyes = new THREE.Group();
+    eyes.name = "eyes";
+
+    const eye_geometry = new THREE.CylinderGeometry(0.3, 0.3, 0.2, 32);
+    const eye1 = new THREE.Mesh(eye_geometry, material_eyes);
+    eye1.position.set(-0.25, 1, 0.61);
+    eye1.rotation.x = Math.PI/2;
+    eye1.scale.set(0.5, 1, 0.8);
+
+    const eye2 = new THREE.Mesh(eye_geometry, material_eyes);
+    eye2.position.set(0.25, 1, 0.61);
+    eye2.rotation.x = Math.PI/2;
+    eye2.scale.set(0.5, 1, 0.8);
+
+    const eyebrow_geometry = new THREE.BoxGeometry(0.3, 0.07, 0.2);
+    const eyebrow1 = new THREE.Mesh(eyebrow_geometry, material_head1);
+    eyebrow1.position.set(-0.25, 1.35, 0.61);
+
+    const eyebrow2 = new THREE.Mesh(eyebrow_geometry, material_head1);
+    eyebrow2.position.set(0.25, 1.35, 0.61);
+
+    eyes.add(eye1, eye2);
+    eyes.add(eyebrow1, eyebrow2);
+
+    // Antennas
+
+    const antennas = new THREE.Group();
+
+    const ear_geometry = new THREE.BoxGeometry(0.2, 0.7, 0.35);
+    const ear1 = new THREE.Mesh(ear_geometry, material_ears);
+    ear1.position.set(-0.85,1.1,0);
+    const ear2 = new THREE.Mesh(ear_geometry, material_ears);
+    ear2.position.set(0.85,1.1,0);
+
+    antennas.add(ear1, ear2);
+
+    const antenna_stick_geometry = new THREE.CylinderGeometry(0.05, 0.05, 0.5, 8);
+    const antenna_point_geometry = new THREE.SphereGeometry(0.08);
+
+    const antenna_stick1 = new THREE.Mesh(antenna_stick_geometry, material_head1);
+    antenna_stick1.position.set(-0.85, 1.6, 0);
+    const antenna_point1 = new THREE.Mesh(antenna_point_geometry, material_head1);
+    antenna_point1.position.set(-0.85, 1.8, 0);
+
+    const antenna1 = new THREE.Group();
+    antenna1.name = "antenna1";
+    antenna1.add(antenna_stick1, antenna_point1);
+
+    const antenna_stick2 = new THREE.Mesh(antenna_stick_geometry, material_head1);
+    antenna_stick2.position.set(0.85, 1.6, 0);
+    const antenna_point2 = new THREE.Mesh(antenna_point_geometry, material_head1);
+    antenna_point2.position.set(0.85, 1.8, 0);
+
+    const antenna2 = new THREE.Group();
+    antenna2.name = "antenna2";
+    antenna2.add(antenna_stick2, antenna_point2);
+    antennas.add(antenna1, antenna2);
+
+    head.add(head1, head2, head3, head4);
+    head.add(eyes);
+    head.add(antennas);
+    head.position.y = 2.7;
+    head.scale.set(1.3, 1.3, 1.3);
+
+    // ************************** //
     // Creating the torso
     // ************************** //
     const torso = new THREE.Group();
     torso.name = "torso";
-    const material_torso = new THREE.MeshToonMaterial();
-    material_torso.gradientMap = gradientTexture;
-    gradientTexture.minFilter = THREE.NearestFilter;
-    gradientTexture.magFilter = THREE.NearestFilter;
-    gradientTexture.generateMipmaps = false;
-    // const material_torso = new THREE.MeshStandardMaterial({ color: 0xffffff });
+    const material_torso = new THREE.MeshPhongMaterial({ color: 0xffffff });
 
     const geometry_torso1 = new THREE.CylinderGeometry(1.20, 1, 1.3, 32, 1);
     const torso1 = new THREE.Mesh(geometry_torso1, material_torso);
@@ -132,9 +218,11 @@ function load3DObjects(sceneGraph) {
     torso.add(torso1);
     torso.add(torso2);
     torso.add(torso3);
+    // torso.visible = false;
 
     // ... rest of body ...
 
+    robot.add(head);
     robot.add(torso);
     sceneGraph.add(robot);
 
@@ -146,24 +234,42 @@ var dispX = 0.08, dispZ = 0.08;
 
 function computeFrame(time) {
 
-    // CONTROLING THE CUBE WITH THE KEYBOARD
+    // CONTROLING THE ROBOT WITH THE KEYBOARD
     const robot = sceneElements.sceneGraph.getObjectByName("robot");
+    const head = sceneElements.sceneGraph.getObjectByName("head");
 
-    const torso1 = sceneElements.sceneGraph.getObjectByName("torso1");
     const torso2 = sceneElements.sceneGraph.getObjectByName("torso2");
     const torso3 = sceneElements.sceneGraph.getObjectByName("torso3");
 
-    if (keyD && robot.position.x < 2.5) {
+    if (keyD && robot.position.x < 5) {
         robot.translateX(dispX);
+        torso2.rotation.z = -0.45;
+        torso3.rotation.z = -0.03;
+        head.rotation.y = Math.PI/2;
     }
-    if (keyW && robot.position.z > -2.5) {
+    if (keyW && robot.position.z > -5) {
         robot.translateZ(-dispZ);
+        torso2.rotation.x = 0.45;
+        torso3.rotation.x = 0.03;
+        head.rotation.y = Math.PI;
     }
-    if (keyA && robot.position.x > -2.5) {
+    if (keyA && robot.position.x > -5) {
         robot.translateX(-dispX);
+        torso2.rotation.z = 0.45;
+        torso3.rotation.z = 0.03;
+        head.rotation.y = -Math.PI/2;
     }
-    if (keyS && robot.position.z < 2.5) {
+    if (keyS && robot.position.z < 5) {
         robot.translateZ(dispZ);
+        torso2.rotation.x = -0.45;
+        torso3.rotation.x = -0.03;
+    }
+    if (!keyD && !keyW && !keyA && !keyS) {
+        torso2.rotation.x = 0;
+        torso3.rotation.x = 0;
+        torso2.rotation.z = 0;
+        torso3.rotation.z = 0;
+        head.rotation.y = 0;
     }
 
     // Rendering
