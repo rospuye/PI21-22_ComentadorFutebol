@@ -55,17 +55,19 @@ def order_by_distance_to_ball(entities):
 
     return [ball] + teamLeft + teamRight
     
-
+def write_to_file(timestamp, entities, output):
+    output_str = f"{timestamp},"+"".join([entity.to_csv() for entity in entities]).rstrip(",")
+    output.write(output_str+"\n")
 
 def process(log, skip=1, skip_flg=False):
-
+    
     path = "logs/input/"
-    out = "logs/output/" + log.rstrip(".log") + ".json"
+    out = "logs/output/" + log.rstrip(".log") + ".csv"
     count = 0
     inpt = open(path + log, "r")
     output = open(out, "w")
     flg = False
-    output.write("{")
+    # output.write("{")
     
     entities = []
     timestamp = 0
@@ -98,8 +100,13 @@ def process(log, skip=1, skip_flg=False):
             # output.write(header_str)
 
             entities = order_by_distance_to_ball(entities)
+            # print(f"{entities = }")
+
+            # print(f"{timestamp = }")
+            write_to_file(timestamp, entities, output)
             
-            output_str = f"{timestamp},".join(f"{entity.to_csv()}," for entity in entities).rstrip(",").join("\n")
+            # print(f"{output_str =}")
+            # print([f"{entity.to_csv()}" for entity in entities])
 
 
             break
@@ -132,12 +139,14 @@ def process(log, skip=1, skip_flg=False):
                 #print(tmp[i])
                 #print(tmp[i-o])
                 #break
-            output.write(f',\n"{timestamp}":')
-            json.dump([entity.to_json() for entity in entities], output)
-            #break
+
+            entities = order_by_distance_to_ball(entities)
+            # print(f"{entities = }")
+            write_to_file(timestamp, entities, output)
+            # break
         count += 1  
         
-    output.write("}")
+    # output.write("}")
     output.close()
     #print(count)
 
