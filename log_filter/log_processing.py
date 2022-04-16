@@ -1,3 +1,4 @@
+import math
 import sys
 import re
 import json
@@ -9,9 +10,18 @@ class Entity():
         self.position = position
         self.index = index
         self.offset = offset
+        self.x = self.position[-4]
+        self.y = self.position[-3]
+        self.z = self.position[-2]
 
     def to_json(self):
         return {"id": self.id, "position": self.position}
+    
+    def to_header(self):
+        return f"{self.id}_x,{self.id}_y,{self.id}_z,"
+
+    def to_csv(self):
+        return f"{self.x},{self.y},{self.z},"
 
 def position_to_array(position):
     #print(position)
@@ -24,16 +34,40 @@ def position_to_array(position):
     assert len(pos) == 16
     return pos
 
+def order_by_distance_to_ball(entities):
+    "Given the entities, returns their position relative to the Ball entity"
+
+    ball = entities[0]
+    players = entities[1:]
+
+    teamLeft = []
+    teamRight = []
+
+    for player in players:        
+        player.x -= ball.x
+        player.y -= ball.y
+        player.z -= ball.z
+
+        teamLeft.append(player) if "Left" in player.id else teamRight.append(player)
+    
+    teamLeft.sort(key = lambda p: math.sqrt(p.x**2 + p.y**2 + p.z**2))
+    teamRight.sort(key = lambda p: math.sqrt(p.x**2 + p.y**2 + p.z**2))
+
+    return [ball] + teamLeft + teamRight
+    
+def write_to_file(timestamp, entities, output):
+    output_str = f"{timestamp},"+"".join([entity.to_csv() for entity in entities]).rstrip(",")
+    output.write(output_str+"\n")
 
 def process(log, skip=1, skip_flg=False):
-
+    
     path = "logs/input/"
-    out = "logs/output/" + log.rstrip(".log") + ".json"
+    out = "logs/output/" + log.rstrip(".log") + ".csv"
     count = 0
     inpt = open(path + log, "r")
     output = open(out, "w")
     flg = False
-    output.write("{")
+    # output.write("{")
     
     entities = []
     timestamp = 0
@@ -58,8 +92,23 @@ def process(log, skip=1, skip_flg=False):
                 robot = Entity(robotID, position_to_array(pos), i, 2)
                 entities.append(robot)
                                                       
-            output.write(f'"{timestamp}":')
-            json.dump([entity.to_json() for entity in entities], output)
+            # output.write(f'"{timestamp}":')
+            # json.dump([entity.to_json() for entity in entities], output)
+
+            # Write output
+            # header_str = "".join(f"{entity.to_header()}," for entity in entities).rstrip(",").join("\n")
+            # output.write(header_str)
+
+            entities = order_by_distance_to_ball(entities)
+            # print(f"{entities = }")
+
+            # print(f"{timestamp = }")
+            write_to_file(timestamp, entities, output)
+            
+            # print(f"{output_str =}")
+            # print([f"{entity.to_csv()}" for entity in entities])
+
+
             break
 
     for line in inpt:
@@ -90,12 +139,14 @@ def process(log, skip=1, skip_flg=False):
                 #print(tmp[i])
                 #print(tmp[i-o])
                 #break
-            output.write(f',\n"{timestamp}":')
-            json.dump([entity.to_json() for entity in entities], output)
-            #break
+
+            entities = order_by_distance_to_ball(entities)
+            # print(f"{entities = }")
+            write_to_file(timestamp, entities, output)
+            # break
         count += 1  
         
-    output.write("}")
+    # output.write("}")
     output.close()
     #print(count)
 
