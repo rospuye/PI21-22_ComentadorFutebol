@@ -4,7 +4,6 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import Title from '../components/Title'
 import SmallerTitle from '../components/SmallerTitle'
 
 import '../components/components_css/Form.css';

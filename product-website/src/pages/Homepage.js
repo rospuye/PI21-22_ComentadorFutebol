@@ -27,7 +27,9 @@ class Homepage extends Component {
           <Col></Col>
           <Col></Col>
           <Col xs lg="2">
+          <Link to="/login">
             <Button variant="light">Login/Register</Button>
+          </Link>
           </Col>
         </Row>
       </Container>
@@ -39,6 +41,7 @@ class Homepage extends Component {
           <Col>
             <div style={{ width: '100%', 'paddingLeft': '10%', paddingTop: '5%' }}>
               <img
+                alt='Robot Model'
                 src={Img}
                 className='img-thumbnail'
                 style={{ maxWidth: '24rem', marginLeft: '10%', marginTop: '2%' }}
