@@ -15,6 +15,7 @@ import Anotherpage from './pages/Anotherpage';
 import ConnectToSimulatorPage from './pages/ConnectToSimulatorPage';
 import Login from './pages/Login';
 import GameStatistics from './pages/GameStatistics';
+import PersonalitySettings from './pages/PersonalitySettings';
 
 export default function App() {
     return (
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/simulator" element={<ConnectToSimulatorPage />} />
           <Route path="/login" element={<Login/>}/>
           <Route path="/statistics" element={<GameStatistics/>}/>
+          <Route path="/personality" element={<PersonalitySettings/>}/>
         </Routes>
       </BrowserRouter>
     );
