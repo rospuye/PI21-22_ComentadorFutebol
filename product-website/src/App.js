@@ -15,6 +15,7 @@ import Anotherpage from './pages/Anotherpage';
 import ConnectToSimulatorPage from './pages/ConnectToSimulatorPage';
 import Login from './pages/Login';
 import GameStatistics from './pages/GameStatistics';
+import UploadLogPage from './pages/UploadLogPage';
 import PersonalitySettings from './pages/PersonalitySettings';
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/simulator" element={<ConnectToSimulatorPage />} />
           <Route path="/login" element={<Login/>}/>
           <Route path="/statistics" element={<GameStatistics/>}/>
+          <Route path="/upload" element={<UploadLogPage/>}/>
           <Route path="/personality" element={<PersonalitySettings/>}/>
         </Routes>
       </BrowserRouter>
