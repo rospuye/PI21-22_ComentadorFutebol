@@ -2,16 +2,13 @@ Label {
     color: white;
 }
 
-.btn {
+.formBtn {
     border-radius: 1.5rem;
-}
-
-.btn-primary {
     background-color: #6577ab;
     border-color: #6577ab60;
 }
 
-.btn-primary:hover {
+.formBtn:hover {
     background-color: #6577abc0;
     border-color: #6577ab60;
 }
@@ -24,4 +21,4 @@ Label {
     margin-left: -2px;
     top: 7%;
     border-radius: 2px;
-  }
+}

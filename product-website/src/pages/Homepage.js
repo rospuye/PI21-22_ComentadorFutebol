@@ -17,8 +17,7 @@ import { faPlay } from '@fortawesome/free-solid-svg-icons'
 
 import Img from '../images/graphic_model.PNG'
 
-class Homepage extends Component {
-  render() {
+function Homepage() {
     let intro = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc aliquam consequat nisi quis maximus. Morbi commodo eget justo a lacinia. Fusce euismod aliquet ornare. Aenean laoreet sem a neque lacinia iaculis. Suspendisse potenti. Mauris eu magna augue. Duis ac sapien eu lorem viverra eleifend cursus vitae purus.";
     return (<div style={{ padding: '1%' }}>
 
@@ -59,7 +58,6 @@ class Homepage extends Component {
       </Container>
 
     </div>);
-  }
 }
 
 export default Homepage;
