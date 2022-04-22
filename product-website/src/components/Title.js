@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import './components_css/Title.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 

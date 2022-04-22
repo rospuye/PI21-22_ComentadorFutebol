@@ -35,7 +35,7 @@ function ConnectToSimulatorPage() {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicCheckbox"></Form.Group>
                             <div style={{textAlign:"center", marginTop: '5%'}}>
-                                <Button variant="primary" type="submit" size="lg">
+                                <Button variant="primary" type="submit" size="lg" className="formBtn">
                                     Connect
                                 </Button>
                             </div>
