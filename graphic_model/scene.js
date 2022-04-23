@@ -194,6 +194,7 @@ function load3DObjects(sceneGraph) {
     const torso = new THREE.Group();
     torso.name = "torso";
     const material_torso = new THREE.MeshPhongMaterial({ color: 0xffffff });
+    const material_torso2 = new THREE.MeshPhongMaterial({ color: 0x8a8a8a });
 
     const geometry_torso1 = new THREE.CylinderGeometry(1.20, 1, 1.3, 32, 1);
     const torso1 = new THREE.Mesh(geometry_torso1, material_torso);
@@ -215,12 +216,53 @@ function load3DObjects(sceneGraph) {
     torso3.scale.set(1.2, 0.6, 1.2);
     torso3.castShadow = true;
 
+    const arms = new THREE.Group();
+    const arm1_group = new THREE.Group();
+    const arm2_group = new THREE.Group();
+
+    const shoulder_geometry = new THREE.SphereGeometry(0.2, 32, 16);
+    const hand_and_elbow_geometry = new THREE.SphereGeometry(0.15, 32, 16);
+    const arm_part_geometry = new THREE.CylinderGeometry(0.1, 0.1, 0.7, 8, 1);
+
+    const shoulder1 = new THREE.Mesh(shoulder_geometry, material_torso2);
+    shoulder1.position.set(3,2,0);
+    const shoulder2 = new THREE.Mesh(shoulder_geometry, material_torso2);
+    shoulder2.position.set(3,2,0);
+
+    const arm1 = new THREE.Mesh(arm_part_geometry, material_torso);
+    arm1.position.set(3,1.587,0);
+    const arm2 = new THREE.Mesh(arm_part_geometry, material_torso);
+    arm2.position.set(3,1.587,0);
+
+    const elbow1 = new THREE.Mesh(hand_and_elbow_geometry, material_torso2);
+    elbow1.position.set(3,1.194,0);
+    const elbow2 = new THREE.Mesh(hand_and_elbow_geometry, material_torso2);
+    elbow2.position.set(3,1.194,0);
+
+    const forearm1 = new THREE.Mesh(arm_part_geometry, material_torso);
+    forearm1.position.set(3,0.872,0);
+    const forearm2 = new THREE.Mesh(arm_part_geometry, material_torso);
+    forearm2.position.set(3,0.872,0);
+
+    const hand1 = new THREE.Mesh(hand_and_elbow_geometry, material_torso2);
+    hand1.position.set(3,0.515,0);
+    const hand2 = new THREE.Mesh(hand_and_elbow_geometry, material_torso2);
+    hand2.position.set(3,0.515,0);
+
+    arm1_group.add(shoulder1, arm1, elbow1, forearm1, hand1);
+    arm1_group.position.set(-2.3,0.4,0);
+    arm1_group.scale.set(1.2,1.2,1.2);
+    arm2_group.add(shoulder2, arm2, elbow2, forearm2, hand2);
+    arm2_group.position.set(-4.9,0.4,0);
+    arm2_group.scale.set(1.2,1.2,1.2);
+    arms.add(arm1_group, arm2_group);
+    arms.name = "arms";
+
     torso.add(torso1);
     torso.add(torso2);
     torso.add(torso3);
+    torso.add(arms);
     // torso.visible = false;
-
-    // ... rest of body ...
 
     robot.add(head);
     robot.add(torso);
@@ -237,6 +279,7 @@ function computeFrame(time) {
     // CONTROLING THE ROBOT WITH THE KEYBOARD
     const robot = sceneElements.sceneGraph.getObjectByName("robot");
     const head = sceneElements.sceneGraph.getObjectByName("head");
+    const arms = sceneElements.sceneGraph.getObjectByName("arms");
 
     const torso2 = sceneElements.sceneGraph.getObjectByName("torso2");
     const torso3 = sceneElements.sceneGraph.getObjectByName("torso3");
@@ -246,18 +289,21 @@ function computeFrame(time) {
         torso2.rotation.z = -0.45;
         torso3.rotation.z = -0.03;
         head.rotation.y = Math.PI/2;
+        arms.rotation.y = Math.PI/2;
     }
     if (keyW && robot.position.z > -5) {
         robot.translateZ(-dispZ);
         torso2.rotation.x = 0.45;
         torso3.rotation.x = 0.03;
         head.rotation.y = Math.PI;
+        arms.rotation.y = Math.PI;
     }
     if (keyA && robot.position.x > -5) {
         robot.translateX(-dispX);
         torso2.rotation.z = 0.45;
         torso3.rotation.z = 0.03;
         head.rotation.y = -Math.PI/2;
+        arms.rotation.y = -Math.PI/2;
     }
     if (keyS && robot.position.z < 5) {
         robot.translateZ(dispZ);
@@ -270,6 +316,7 @@ function computeFrame(time) {
         torso2.rotation.z = 0;
         torso3.rotation.z = 0;
         head.rotation.y = 0;
+        arms.rotation.y = 0;
     }
 
     // Rendering
