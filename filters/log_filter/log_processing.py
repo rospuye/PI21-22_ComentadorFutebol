@@ -13,6 +13,7 @@ class Entity():
         self.x = self.position[-4]
         self.y = self.position[-3]
         self.z = self.position[-2]
+        self.distance_to_ball = 0
 
     def to_json(self):
         return {"id": self.id, "position": self.position}
@@ -22,6 +23,11 @@ class Entity():
 
     def to_csv(self):
         return f"{self.x},{self.y},{self.z},"
+    
+    def to_distance_csv(self):
+        return f"{self.distance_to_ball},"
+
+    
 
 def position_to_array(position):
     #print(position)
@@ -47,16 +53,18 @@ def order_by_distance_to_ball(entities):
         player.x -= ball.x
         player.y -= ball.y
         player.z -= ball.z
+        player.distance_to_ball = math.sqrt(player.x**2 + player.y**2 + player.z**2)
 
         teamLeft.append(player) if "Left" in player.id else teamRight.append(player)
     
-    teamLeft.sort(key = lambda p: math.sqrt(p.x**2 + p.y**2 + p.z**2))
-    teamRight.sort(key = lambda p: math.sqrt(p.x**2 + p.y**2 + p.z**2))
+    teamLeft.sort(key = lambda p: p.distance_to_ball)
+    teamRight.sort(key = lambda p: p.distance_to_ball)
 
     return [ball] + teamLeft + teamRight
     
 def write_to_file(timestamp, entities, output):
-    output_str = f"{timestamp},"+"".join([entity.to_csv() for entity in entities]).rstrip(",")
+    output_str = f"{timestamp},"+"".join([entity.to_distance_csv() for entity in entities[1:]]).rstrip(",")
+
     output.write(output_str+"\n")
 
 def process(log, skip=1, skip_flg=False):
@@ -143,7 +151,7 @@ def process(log, skip=1, skip_flg=False):
             entities = order_by_distance_to_ball(entities)
             # print(f"{entities = }")
             write_to_file(timestamp, entities, output)
-            # break
+        
         count += 1  
         
     # output.write("}")
