@@ -14,6 +14,7 @@ from keras.layers import Dropout
 
 # File Management
 import sys
+import os
 
 def get_filtered_data(path="", starting_row=0, ending_row=-1, n_closest_players = 11):
     """Given a path to a csv file, returns the timestamp and the matrix """
@@ -33,12 +34,12 @@ def main():
         print("USAGE: python lstm_nn.py <n_epoch> <n_neurons> <n_batches> <past_timestamps> <n_layers> <n_closest_players> <optimizer>")
         return
     
-    EPOCHS =  sys.argv[1]
-    N_NEURONS_LSTM =  sys.argv[2]
-    BATCH_SIZE =  sys.argv[3]
-    PAST_TIME_STEPS = sys.argv[4]
-    N_LAYERS = sys.argv[5]
-    N_CLOSEST_PLAYERS =  sys.argv[6]
+    EPOCHS =  int(sys.argv[1])
+    N_NEURONS_LSTM =  int(sys.argv[2])
+    BATCH_SIZE =  int(sys.argv[3])
+    PAST_TIME_STEPS = int(sys.argv[4])
+    N_LAYERS = int(sys.argv[5])
+    N_CLOSEST_PLAYERS =  int(sys.argv[6])
     OPTIMIZER = sys.argv[7]
 
     TRAINING_PATH = "./training_model/dinis_game_1_labelled.csv"
@@ -50,15 +51,23 @@ def main():
     TEST_START_ROW = 5000 # default 0
     TEST_END_ROW = 7500 # default -1
 
-    with open(f"{EPOCHS}_{N_NEURONS_LSTM}_{BATCH_SIZE}_{PAST_TIME_STEPS}_{N_LAYERS}_{N_CLOSEST_PLAYERS}_{OPTIMIZER}","w") as file:
+    dir = "./output_generated_hyper_params"
 
-        file.write(f"{EPOCHS = }")
-        file.write(f"{N_NEURONS_LSTM = }")
-        file.write(f"{BATCH_SIZE = }")
-        file.write(f"{PAST_TIME_STEPS = }")
-        file.write(f"{N_LAYERS = }")
-        file.write(f"{N_CLOSEST_PLAYERS = }")
-        file.write(f"{OPTIMIZER = }")
+    if not os.path.isdir(dir):
+        os.mkdir(dir)
+
+    filename = f"{dir}/{EPOCHS}_{N_NEURONS_LSTM}_{BATCH_SIZE}_{PAST_TIME_STEPS}_{N_LAYERS}_{N_CLOSEST_PLAYERS}_{OPTIMIZER}"
+
+
+    with open(filename,"w") as file:
+
+        file.write(f"{EPOCHS = }\n")
+        file.write(f"{N_NEURONS_LSTM = }\n")
+        file.write(f"{BATCH_SIZE = }\n")
+        file.write(f"{PAST_TIME_STEPS = }\n")
+        file.write(f"{N_LAYERS = }\n")
+        file.write(f"{N_CLOSEST_PLAYERS = }\n")
+        file.write(f"{OPTIMIZER = }\n")
 
         timestamps_training, positions_training = get_filtered_data(path=TRAINING_PATH, starting_row=TRAINING_START_ROW, ending_row=TRAINING_END_ROW)
         n_examples = len(positions_training)
@@ -115,10 +124,8 @@ def main():
         # Training the model
         history = model.fit(features_set, labels, epochs = EPOCHS, batch_size = BATCH_SIZE) # batch_size does a lot of improvement
 
-        file.write(f"{history.history.get('loss') = }")
-
-        file.write(f"{history.history.get('accuracy')}")
-
+        np.savetxt(f"{filename}_loss", history.history.get('loss'))
+        np.savetxt(f"{filename}_accuracy", history.history.get('accuracy'))
 
         # Testing zone
         timestamps_testing, positions_testing = get_filtered_data(path=TEST_PATH, starting_row=TEST_START_ROW, ending_row=TEST_END_ROW)
@@ -142,15 +149,16 @@ def main():
         test_features = np.reshape(test_features, (test_features.shape[0], test_features.shape[1], test_features.shape[2]))
 
         test_loss, test_accuracy = model.evaluate(test_features, test_labels, verbose=2)
-        file.write(f"{test_loss = }")
-        file.write(f"{test_accuracy = }")
+        file.write(f"{test_loss = }\n")
+        file.write(f"{test_accuracy = }\n")
 
         training_loss, training_accuracy = model.evaluate(features_set, labels, verbose=2)
-        file.write(f"{training_loss = }")
-        file.write(f"{training_accuracy = }")
+        file.write(f"{training_loss = }\n")
+        file.write(f"{training_accuracy = }\n")
 
         predictions = model.predict(test_features)
-        file.write(f"{predictions[:,:] = }") # probabilidade das 4 classes
+        np.savetxt(f"{filename}_predictions", predictions)
+
         print("Output generated!")
 
 
