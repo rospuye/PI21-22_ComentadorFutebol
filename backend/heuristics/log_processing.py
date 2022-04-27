@@ -2,35 +2,10 @@ import math
 import sys
 import re
 import json
-
-
-class Entity():
-    def __init__(self, id, position, index, offset):
-        self.id = id
-        self.position = position
-        self.index = index
-        self.offset = offset
-        self.x = self.position[-4]
-        self.y = self.position[-3]
-        self.z = self.position[-2]
-        self.distance_to_ball = 0
-
-    def to_json(self):
-        return {"id": self.id, "position": self.position}
-    
-    def to_header(self):
-        return f"{self.id}_x,{self.id}_y,{self.id}_z,"
-
-    def to_csv(self):
-        return f"{self.x},{self.y},{self.z},"
-    
-    def to_distance_csv(self):
-        return f"{self.distance_to_ball},"
-
-    
+from heuristics import process
+from entities import Position, Entity, Ball, Player
 
 def position_to_array(position):
-    #print(position)
     tmp = position.split(" ")
     pos = []
     for i in range(2, len(tmp)):
@@ -75,20 +50,39 @@ def process(log, skip=1, skip_flg=False):
     inpt = open(path + log, "r")
     output = open(out, "w")
     flg = False
-    # output.write("{")
     
+
+    fieldParams = {}
+    # fieldParams["width"] = 0
+    # fieldParams["length"] = 0
+    # fieldParams["goal_width"] = 0
+    # fieldParams["goal_height"] = 0
+    # fieldParams["goal_depth"] = 0
     entities = []
     timestamp = 0
+    # ((FieldLength 30)(FieldWidth 20)(FieldHeight 40)(GoalWidth 2.1)(GoalDepth 0.6)(GoalHeight 0.8)
+    # ((FieldLength-30-(FieldWidth-20-(FieldHeight-40-(GoalWidth-2.1)-GoalDepth-0.6-(GoalHeight-0.8-
+    for line in inpt:
+        tmp = re.split('\s|\)', line)
+        fieldParams["length"] = float(tmp[1])
+        fieldParams["width"] = float(tmp[3])
+        fieldParams["goal_width"] = float(tmp[7])
+        fieldParams["goal_depth"] = float(tmp[9])
+        fieldParams["goal_height"] = float(tmp[11])
+        break
+
     for line in inpt:
         tmp = re.findall("soccerball.obj|models/naobody", line)
         if len(tmp) == 23 and not re.search("matTeam",line):
             timestamp = re.findall("time \d+[.]?\d*", line)[0].split(" ")[1]
             tmp = re.split("\(nd", line)
-            #print(tmp[:10])
             tmp2 = [(tmp[i-1].strip(),i) for i in range(len(tmp)) if re.search("soccerball.obj", tmp[i])]
             for pos,i in tmp2:
                 
-                ball = Entity("ball",position_to_array(pos),i, 1)
+                ball = Ball("ball",i, 1)
+                position_array = position_to_array(pos)
+                position = Position(position=position_array, timestamp=timestamp)
+                robot.add_position(position)
                 entities.append(ball)
 
             pattern = "\(resetMaterials .*?\)"
@@ -97,26 +91,16 @@ def process(log, skip=1, skip_flg=False):
             for pos, n, i in tmp4:
                 l = n.split(" ")
                 robotID = l[1] + l[2]
-                robot = Entity(robotID, position_to_array(pos), i, 2)
+                team = True if "Right" in robotID else False
+                position_array = position_to_array(pos)
+                position = Position(position=position_array, timestamp=timestamp)
+                robot = Player(id=robotID, index=i, offset=2, team=team)
+                robot.add_position(position)
                 entities.append(robot)
                                                       
-            # output.write(f'"{timestamp}":')
-            # json.dump([entity.to_json() for entity in entities], output)
-
-            # Write output
-            # header_str = "".join(f"{entity.to_header()}," for entity in entities).rstrip(",").join("\n")
-            # output.write(header_str)
-
-            entities = order_by_distance_to_ball(entities)
-            # print(f"{entities = }")
-
-            # print(f"{timestamp = }")
-            write_to_file(timestamp, entities, output)
+            write_to_file(timestamp, entities, output) # substituir por heuristics
+            process(entities)
             
-            # print(f"{output_str =}")
-            # print([f"{entity.to_csv()}" for entity in entities])
-
-
             break
 
     for line in inpt:
@@ -142,15 +126,10 @@ def process(log, skip=1, skip_flg=False):
                 i = entity.index
                 o = entity.offset
                 if tmp[i-o]:
-                    entity.position = position_to_array(tmp[i-o].strip())
-                #print(tmp[:10])
-                #print(tmp[i])
-                #print(tmp[i-o])
-                #break
+                    new_pos = Position(position=position_to_array(tmp[i-o].strip()), timestamp=timestamp)
+                    entity.add_position(new_pos)
 
-            entities = order_by_distance_to_ball(entities)
-            # print(f"{entities = }")
-            write_to_file(timestamp, entities, output)
+            write_to_file(timestamp, entities, output) # Substituir pela heuristic
         
         count += 1  
         
