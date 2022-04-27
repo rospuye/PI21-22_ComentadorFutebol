@@ -17,6 +17,7 @@ import Login from './pages/Login';
 import GameStatistics from './pages/GameStatistics';
 import UploadLogPage from './pages/UploadLogPage';
 import PersonalitySettings from './pages/PersonalitySettings';
+import SelectGamePage from './pages/SelectGamePage';
 
 export default function App() {
     return (
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/statistics" element={<GameStatistics/>}/>
           <Route path="/upload" element={<UploadLogPage/>}/>
           <Route path="/personality" element={<PersonalitySettings/>}/>
+          <Route path="/selectgame" element={<SelectGamePage/>}/>
         </Routes>
       </BrowserRouter>
     );
