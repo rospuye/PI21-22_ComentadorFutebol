@@ -17,7 +17,7 @@ def main():
                         for closest_player in closest_players:
                             for optimizer in optimizers:
                                 os.system(f"python lstm_nn.py {epoch} {neuron} {batch} {past_timestamp} {n_layer} {closest_player} {optimizer}")
-
+  
 
 if __name__ == "__main__":
     main()
