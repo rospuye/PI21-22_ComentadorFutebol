@@ -42,7 +42,7 @@ def write_to_file(timestamp, entities, output):
 
     output.write(output_str+"\n")
 
-def process(log, skip=1, skip_flg=False):
+def process_log(log, skip=1, skip_flg=False):
     
     path = "logs/input/"
     out = "logs/output/" + log.rstrip(".log") + ".csv"
@@ -53,6 +53,7 @@ def process(log, skip=1, skip_flg=False):
     
 
     fieldParams = {}
+    goalParams = {}
     # fieldParams["width"] = 0
     # fieldParams["length"] = 0
     # fieldParams["goal_width"] = 0
@@ -66,9 +67,9 @@ def process(log, skip=1, skip_flg=False):
         tmp = re.split('\s|\)', line)
         fieldParams["length"] = float(tmp[1])
         fieldParams["width"] = float(tmp[3])
-        fieldParams["goal_width"] = float(tmp[7])
-        fieldParams["goal_depth"] = float(tmp[9])
-        fieldParams["goal_height"] = float(tmp[11])
+        goalParams["width"] = float(tmp[7])
+        goalParams["depth"] = float(tmp[9])
+        goalParams["height"] = float(tmp[11])
         break
 
     for line in inpt:
@@ -98,8 +99,8 @@ def process(log, skip=1, skip_flg=False):
                 robot.add_position(position)
                 entities.append(robot)
                                                       
-            write_to_file(timestamp, entities, output) # substituir por heuristics
-            process(entities)
+            # write_to_file(timestamp, entities, output) # substituir por heuristics
+            process(entities, fieldParams, goalParams)
             
             break
 
@@ -129,7 +130,8 @@ def process(log, skip=1, skip_flg=False):
                     new_pos = Position(position=position_to_array(tmp[i-o].strip()), timestamp=timestamp)
                     entity.add_position(new_pos)
 
-            write_to_file(timestamp, entities, output) # Substituir pela heuristic
+            # write_to_file(timestamp, entities, output) # Substituir pela heuristic
+            process(entities, fieldParams, goalParams)
         
         count += 1  
         
@@ -144,7 +146,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 2:
         flg = True
         skip_lines = int(sys.argv[2])
-    process(log, skip=skip_lines, skip_flg=flg)
+    process_log(log, skip=skip_lines, skip_flg=flg)
 
 
 
