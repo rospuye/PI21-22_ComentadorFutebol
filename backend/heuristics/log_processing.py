@@ -1,9 +1,8 @@
 import math
 import sys
 import re
-import json
-from heuristics import process
 from entities import Position, Entity, Ball, Player
+from heuristics import process
 
 def position_to_array(position):
     tmp = position.split(" ")
@@ -38,7 +37,7 @@ def order_by_distance_to_ball(entities):
     return [ball] + teamLeft + teamRight
     
 def write_to_file(timestamp, entities, output):
-    output_str = f"{timestamp},"+"".join([entity.to_distance_csv() for entity in entities[1:]]).rstrip(",")
+    output_str = f"{timestamp},"+"".join([entity.to_csv() for entity in entities]).rstrip(",")
 
     output.write(output_str+"\n")
 
@@ -50,6 +49,7 @@ def process_log(log, skip=1, skip_flg=False):
     inpt = open(path + log, "r")
     output = open(out, "w")
     flg = False
+    events = []
     
 
     fieldParams = {}
@@ -83,7 +83,7 @@ def process_log(log, skip=1, skip_flg=False):
                 ball = Ball("ball",i, 1)
                 position_array = position_to_array(pos)
                 position = Position(position=position_array, timestamp=timestamp)
-                robot.add_position(position)
+                ball.add_position(position)
                 entities.append(ball)
 
             pattern = "\(resetMaterials .*?\)"
@@ -99,8 +99,8 @@ def process_log(log, skip=1, skip_flg=False):
                 robot.add_position(position)
                 entities.append(robot)
                                                       
-            # write_to_file(timestamp, entities, output) # substituir por heuristics
-            process(entities, fieldParams, goalParams)
+            #write_to_file(timestamp, entities, output) # substituir por heuristics
+            events += process(entities, fieldParams, goalParams, timestamp)
             
             break
 
@@ -131,13 +131,14 @@ def process_log(log, skip=1, skip_flg=False):
                     entity.add_position(new_pos)
 
             # write_to_file(timestamp, entities, output) # Substituir pela heuristic
-            process(entities, fieldParams, goalParams)
+            events += process(entities, fieldParams, goalParams, timestamp)
         
         count += 1  
         
     # output.write("}")
     output.close()
     #print(count)
+    return events
 
 if __name__ == "__main__":
     log = sys.argv[1]
@@ -146,7 +147,8 @@ if __name__ == "__main__":
     if len(sys.argv) > 2:
         flg = True
         skip_lines = int(sys.argv[2])
-    process_log(log, skip=skip_lines, skip_flg=flg)
+    events = process_log(log, skip=skip_lines, skip_flg=flg)
+    print(f"{events = }")
 
 
 
