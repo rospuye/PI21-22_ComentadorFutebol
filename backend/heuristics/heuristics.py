@@ -1,9 +1,10 @@
 from entities import Position, Entity, Ball
 from message import Message, Aggresion, Goal, Kick_Off, Pass
 
-AGGRESSION_DISTANCE_MARGIN = 2      # Distance to be considered collision between players
 CONTACT_DISTANCE = 0.1              # Distance to be considered contact between entities
+AGGRESSION_DISTANCE_MARGIN = 1      # Distance to be considered collision between players
 TIMESTAMPS_TO_KICKOFF = 900         # Around 18 seconds from goal (15 segs when restart positions)
+
 events = {}                         # TODO, add start when game starts
 
 def process(entities : list, field : dict, goal : dict, curr_timestamp : float):
@@ -15,6 +16,8 @@ def process(entities : list, field : dict, goal : dict, curr_timestamp : float):
     messages = []
     if curr_timestamp == 0:
         events["start"] = None
+    
+    # print(f"Start {events = }")
     
     # TODO, ball sometimes doesn't have an owner, some methods in heuristics depend on ball always having owner
     # TODO, fix aggression, player's timestamps aren't uniform
@@ -202,12 +205,27 @@ def detect_defense(ball : Ball, teamA : list, teamB : list, timestamp : float):
 
 def detect_aggressions(teamA : list, teamB : list, distance_margin=AGGRESSION_DISTANCE_MARGIN):
     """Given teams, returns a list of Aggressions."""
+    
+    # {
+        # aggressions: {
+            # id1_id2: [
+                # {start: time, end: time, has_been_printed: bool}
+            # ]
+        # }
+    # }
+    
+    if events.get("aggressions") is None:
+        events["aggressions"] = {}
 
-    aggressions = {} 
+    aggressions = events.get("aggressions")
+    
 
     for entity1 in teamA:
+        # print(f"======================= {entity1.id = }")                
+        
         key = ""
         for entity2 in teamB:
+            
             # Ignore if some entity is ball
             if isinstance(entity1, Ball) or isinstance(entity2, Ball):
                 continue
@@ -221,35 +239,47 @@ def detect_aggressions(teamA : list, teamB : list, distance_margin=AGGRESSION_DI
                 
                 positions2 : list = entity2.get_recent_positions()
                 pos2 : Position = positions2[i]
-                
+                                
                 distance = pos1.distance_between(pos2)
 
                 id1 = entity1.id
                 id2 = entity2.id
-                key = f"{id1}_{id2}" if id1 < id2 else f"{id2}_{id1}"
+                key = f"{id1}_{id2}" # if id1 < id2 else f"{id2}_{id1}"
 
                 if distance < distance_margin:
-                    isNewTimeStamp = False
+                    
                     aggression_times = aggressions.get(key)
 
                     if aggression_times is None:
                         aggressions[key] = []
-                    message = Aggresion(id1, id2)
-                    message.start = pos1.timestamp
-                    aggressions[key].append(message)
+                        
+                    # If is the first aggression on key, or the last one has ended, create a new one
+                    if len(aggressions[key]) == 0:
+                        aggressions[key].append({"start": pos1.timestamp, "end": -1, "has_been_printed": False})
+                        
+                    else:
+                        past = aggressions[key][-1]
+                        if past["end"] != -1 and past["end"] < pos1.timestamp:
+                            aggressions[key].append({"start": pos1.timestamp, "end": -1, "has_been_printed": False})
+                            
+                    isNewTimeStamp = False
+                    
             
                 elif not isNewTimeStamp: # end time range condition
                     isNewTimeStamp = True    
-                    aggressions.get(key)[-1].end = pos1.timestamp
-
-        # If one Aggression still haven't finish
-        if not isNewTimeStamp:
-            aggressions.get(key).pop(-1)
+                    aggressions.get(key)[-1]["end"] = pos1.timestamp
 
     aggressions_list = []
-
-    for aggression in aggressions.values():
-        aggressions_list += aggression
+    
+    # For each aggression on events, print output if hasn§t been printed yet
+    for k, v in aggressions.items():
+        for aggression in v:
+            
+            # If aggression had finished (-1) and hasn't been printed yet, then create message
+            if aggression["end"] != -1 and not aggression["has_been_printed"]:
+                ids = k.split("_")
+                aggression["has_been_printed"] = True
+                aggressions_list += [Aggresion(ids[0], ids[1], aggression["start"], aggression["end"])]
 
     return aggressions_list
 

@@ -5,6 +5,9 @@ class Message():
         self.event = event
         self.start = start
         self.end = end
+        
+    def __str__(self):
+        return f"Message: {self.event}, {self.start}, {self.end}"
 
 class Aggresion(Message):
     def __init__(self, id1, id2, start=0, end=0) -> None:
@@ -12,10 +15,16 @@ class Aggresion(Message):
         self.id1 = id1
         self.id2 = id2
 
+    def __str__(self):
+        return f"Message: {self.event} ({self.id1} - {self.id2}), {self.start}, {self.end}"
+
 class Goal(Message):
     def __init__(self, team, start, end) -> None:
         super().__init__("goal", start, end)
         self.team = team
+        
+    def __str__(self):
+        return f"Message: {self.event} from team {self.team}, {self.start}, {self.end}"
 
 class Kick_Off(Message):
     def __init__(self, instant, playerid) -> None:
