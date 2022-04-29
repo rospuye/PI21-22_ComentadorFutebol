@@ -219,10 +219,7 @@ def detect_aggressions(teamA : list, teamB : list, distance_margin=AGGRESSION_DI
 
     aggressions = events.get("aggressions")
     
-
-    for entity1 in teamA:
-        # print(f"======================= {entity1.id = }")                
-        
+    for entity1 in teamA:        
         key = ""
         for entity2 in teamB:
             
@@ -261,9 +258,17 @@ def detect_aggressions(teamA : list, teamB : list, distance_margin=AGGRESSION_DI
                         past = aggressions[key][-1]
                         if past["end"] != -1 and past["end"] < pos1.timestamp:
                             aggressions[key].append({"start": pos1.timestamp, "end": -1, "has_been_printed": False})
-                            
-                    isNewTimeStamp = False
                     
+                    # Remove useless aggressions from events
+                    if i == 0: 
+                        # if it's the oldest on memory, and already surpass oldest aggression
+                        # then aggression should be removed
+                        oldest_aggression = aggressions[key][0]
+                        
+                        if oldest_aggression["end"] != -1 and oldest_aggression["end"] < pos1.timestamp:
+                            aggressions[key].pop(0)                            
+                    
+                    isNewTimeStamp = False
             
                 elif not isNewTimeStamp: # end time range condition
                     isNewTimeStamp = True    
