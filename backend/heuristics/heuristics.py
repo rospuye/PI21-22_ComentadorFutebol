@@ -16,13 +16,15 @@ def process(entities : list, field : dict, goal : dict, curr_timestamp : float) 
     if curr_timestamp == 0:
         events["start"] = None
     
+    # TODO, ball sometimes doesn't have an owner, some methods in heuristics depend on ball always having owner
+    # TODO, fix aggression, player's timestamps aren't uniform
     # Event detection
     messages += detect_kick_off(ball, teamA, teamB, curr_timestamp)
     messages += detect_outs(field, ball)
     messages += detect_corner_shot(ball, teamA, teamB, curr_timestamp)
     messages += detect_goal_shot(ball, field, goal, curr_timestamp)
     messages += detect_goal(ball, field, goal, curr_timestamp)
-    messages += detect_aggressions(teamA=teamA, teamB=teamB)
+    # messages += detect_aggressions(teamA=teamA, teamB=teamB)
     messages += detect_defense(ball, teamA, teamB, curr_timestamp)
     messages += detect_pass_or_dribble(ball, entities[1:], curr_timestamp) 
 
@@ -38,6 +40,7 @@ def detect_kick_off(ball : Ball, teamA, teamB, timestamp):
         player = ball.get_closest_player(teamA+teamB)
         if ball.get_distance_from(player) <= CONTACT_DISTANCE: # kick_off!
             events.pop("start")
+            ball.owner = player
             return [Kick_Off(timestamp, player.id)]
         else: return [] # still waiting on kick_off
     elif "goal" in events:
@@ -48,6 +51,7 @@ def detect_kick_off(ball : Ball, teamA, teamB, timestamp):
         player = ball.get_closest_player(teamA+teamB)
         if ball.get_distance_from(player) <= CONTACT_DISTANCE: # kick_off!
             events.pop("goal")
+            ball.owner = player
             return [Kick_Off(timestamp, player.id)]
         else: return [] # still waiting on kick_off
     elif "out" in events:
@@ -58,6 +62,7 @@ def detect_kick_off(ball : Ball, teamA, teamB, timestamp):
         player = ball.get_closest_player(teamA+teamB)
         if ball.get_distance_from(player) <= CONTACT_DISTANCE: # kick_off!
             events.pop("out")
+            ball.owner = player
             return [Kick_Off(timestamp, player.id)]
         else: return [] # still waiting on kick_off
 
@@ -118,6 +123,10 @@ def has_ball_stopped(ball : Ball, teamA : list, teamB : list):
     
 def detect_outs(field : dict, ball : Ball):
     """Given the field and the ball, detect if the ball has exited the field"""
+    # if ball has no owner (beginning of the game), then no need to detect outs, TODO confirm with Lucius e Dinis
+    if not ball.owner:
+        return []
+    
     position : Position = ball.positions[-1]
     length = field["length"]
     width = field["width"]
@@ -155,7 +164,10 @@ def detect_goal(ball: Ball, field : dict, goal : dict, timestamp : float):
 
 def detect_goal_shot(ball: Ball, field : dict, goal : dict, timestamp : float):
     """Detects if a goal shot is currently happening"""
-    
+    # if ball doesn't have owner, skip detection, TODO confirm with Dinis if ok
+    if not ball.owner:
+        return []
+
     # check if ball is in goal area and the owner is correct
     if not (ball.positions[-1].x < -field["length"]/4 and not ball.owner.isTeamRight or ball.positions[-1].x > field["length"]/4 and ball.owner.isTeamRight):
         return []
@@ -202,10 +214,6 @@ def detect_aggressions(teamA : list, teamB : list, distance_margin=AGGRESSION_DI
             # TODO
             for i in range(len(entity1.positions)):
                 pos1 : Position = entity1.positions[i]
-
-                print(f"{len(entity1.positions) = }")
-                print(f"{len(entity2.positions) = }")
-            
                 pos2 : Position = entity2.positions[i]
                 
                 distance = pos1.distance_between(pos2)
@@ -254,7 +262,7 @@ def detect_pass_or_dribble(ball : Ball, players : list, timestamp : float):
             
             # The dribble/pass was initialized
             if "dribble/pass" not in events:
-                events["dribble/pass"] = Pass(ball.position[-1],  "dribble/pass", timestamp, timestamp)
+                events["dribble/pass"] = Pass(ball.positions[-1],  "dribble/pass", timestamp, timestamp)
                 ball.owner = player
                 return []
         
@@ -295,3 +303,4 @@ def detect_pass_or_dribble(ball : Ball, players : list, timestamp : float):
                 ball.owner = player
 
                 return [m1, m2]
+    return []

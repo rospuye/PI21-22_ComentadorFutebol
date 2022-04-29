@@ -44,10 +44,10 @@ def write_to_file(timestamp, entities, output):
 def process_log(log, skip=1, skip_flg=False):
     
     path = "logs/input/"
-    out = "logs/output/" + log.rstrip(".log") + ".csv"
+    # out = "logs/output/" + log.rstrip(".log") + ".csv"
     count = 0
     inpt = open(path + log, "r")
-    output = open(out, "w")
+    # output = open(out, "w")
     flg = False
     events = []
     
@@ -75,11 +75,11 @@ def process_log(log, skip=1, skip_flg=False):
     for line in inpt:
         tmp = re.findall("soccerball.obj|models/naobody", line)
         if len(tmp) == 23 and not re.search("matTeam",line):
-            timestamp = re.findall("time \d+[.]?\d*", line)[0].split(" ")[1]
+            timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
+            #print(type(timestamp), timestamp)
             tmp = re.split("\(nd", line)
             tmp2 = [(tmp[i-1].strip(),i) for i in range(len(tmp)) if re.search("soccerball.obj", tmp[i])]
             for pos,i in tmp2:
-                
                 ball = Ball("ball",i, 1)
                 position_array = position_to_array(pos)
                 position = Position(position=position_array, timestamp=timestamp)
@@ -98,15 +98,20 @@ def process_log(log, skip=1, skip_flg=False):
                 robot = Player(id=robotID, index=i, offset=2, team=team)
                 robot.add_position(position)
                 entities.append(robot)
-                                                      
+
+            # for entity in entities:
+            #     print(entity.id, [pos.timestamp for pos in entity.positions])
+            # print("======")
+
             #write_to_file(timestamp, entities, output) # substituir por heuristics
             events += process(entities, fieldParams, goalParams, timestamp)
             
             break
 
+    
+
     for line in inpt:
-        new_timestamp = re.findall("time \d+[.]?\d*", line)[0].split(" ")[1]
-        
+        new_timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
         if new_timestamp != timestamp:
             break
     
@@ -115,7 +120,8 @@ def process_log(log, skip=1, skip_flg=False):
     for line in inpt:
         
         #if re.search("soccerball.obj|models/naobody", line):
-        timestamp = re.findall("time \d+[.]?\d*", line)[0].split(" ")[1]
+        timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
+        # print(type(timestamp), timestamp)
         if old_timestamp == timestamp:
             break
         old_timestamp = timestamp
@@ -130,14 +136,18 @@ def process_log(log, skip=1, skip_flg=False):
                     new_pos = Position(position=position_to_array(tmp[i-o].strip()), timestamp=timestamp)
                     entity.add_position(new_pos)
 
+            # for entity in entities:
+            #     print(entity.id, [pos.timestamp for pos in entity.positions])
+            # print("======")
+
             # write_to_file(timestamp, entities, output) # Substituir pela heuristic
             events += process(entities, fieldParams, goalParams, timestamp)
-        
         count += 1  
         
+        
+    
     # output.write("}")
-    output.close()
-    #print(count)
+    # output.close()
     return events
 
 if __name__ == "__main__":

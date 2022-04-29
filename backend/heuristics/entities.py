@@ -66,6 +66,7 @@ class Ball(Entity):
     def __init__(self, id, index, offset):
         super().__init__(id, index, offset)
         self.state = "stoped"
+        self.owner = None
 
     def get_distance_from(self, player):
         return self.positions[-1].distance_between(player.positions[-1])
