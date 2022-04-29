@@ -6,7 +6,7 @@ CONTACT_DISTANCE = 0.1              # Distance to be considered contact between 
 TIMESTAMPS_TO_KICKOFF = 900         # Around 18 seconds from goal (15 segs when restart positions)
 events = {}                         # TODO, add start when game starts
 
-def process(entities : list, field : dict, goal : dict, curr_timestamp : float) -> list:
+def process(entities : list, field : dict, goal : dict, curr_timestamp : float):
     """If event is detected, the positions related to the event's timestamp are deleted from all entities.
     It returns a string event"""
     ball = entities[0]
@@ -24,7 +24,7 @@ def process(entities : list, field : dict, goal : dict, curr_timestamp : float) 
     messages += detect_corner_shot(ball, teamA, teamB, curr_timestamp)
     messages += detect_goal_shot(ball, field, goal, curr_timestamp)
     messages += detect_goal(ball, field, goal, curr_timestamp)
-    # messages += detect_aggressions(teamA=teamA, teamB=teamB)
+    messages += detect_aggressions(teamA=teamA, teamB=teamB)
     messages += detect_defense(ball, teamA, teamB, curr_timestamp)
     messages += detect_pass_or_dribble(ball, entities[1:], curr_timestamp) 
 
@@ -153,13 +153,16 @@ def detect_goal(ball: Ball, field : dict, goal : dict, timestamp : float):
         elif -field["length"]/2 < ball_pos.x < field["length"]/2+goal["depth"]:
             team = "Right"
         if team:
+            messages = []
             m1 = Goal(team, timestamp, timestamp)
             events["goal"] = m1
+            messages.append(m1)
             if "goal_shot" in events:
                 m2 = events["goal_shot"]
                 m2.end = timestamp
                 events.pop("goal_shot", None)
-            return [m2, m1]
+                messages.append(m2)
+            return messages
     return []
 
 def detect_goal_shot(ball: Ball, field : dict, goal : dict, timestamp : float):
@@ -212,9 +215,12 @@ def detect_aggressions(teamA : list, teamB : list, distance_margin=AGGRESSION_DI
             isNewTimeStamp = True
 
             # TODO
-            for i in range(len(entity1.positions)):
-                pos1 : Position = entity1.positions[i]
-                pos2 : Position = entity2.positions[i]
+            positions1 : list = entity1.get_recent_positions()
+            for i in range(len(positions1)):
+                pos1 : Position = positions1[i]
+                
+                positions2 : list = entity2.get_recent_positions()
+                pos2 : Position = positions2[i]
                 
                 distance = pos1.distance_between(pos2)
 

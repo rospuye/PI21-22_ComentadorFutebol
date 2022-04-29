@@ -1,6 +1,7 @@
 import math
 import sys
 import re
+import copy
 from entities import Position, Entity, Ball, Player
 from heuristics import process
 
@@ -126,23 +127,38 @@ def process_log(log, skip=1, skip_flg=False):
             break
         old_timestamp = timestamp
         if not skip_flg or not count % skip == 0:
+            # print(f"======== Count: {count} ===========")
+            
             
             tmp = re.split("\(nd", line)
-
-            for entity in entities:
+            had_changes = [False] * len(entities)
+            for idx in range(len(entities)):
+                entity = entities[idx]
                 i = entity.index
                 o = entity.offset
                 if tmp[i-o]:
+                    had_changes[idx] = True
                     new_pos = Position(position=position_to_array(tmp[i-o].strip()), timestamp=timestamp)
                     entity.add_position(new_pos)
+            
+            # If at least one entity has an updated value, other entities who didn't update should repeat the last position
+            if any(had_changes):
+                for idx in range(len(entities)):
+                    if not had_changes[idx]:
+                        entity = entities[idx]
+                        new_pos = copy.deepcopy(entity.positions[-1])
+                        new_pos.timestamp = timestamp
+                        entity.add_position(new_pos)
 
             # for entity in entities:
             #     print(entity.id, [pos.timestamp for pos in entity.positions])
-            # print("======")
 
             # write_to_file(timestamp, entities, output) # Substituir pela heuristic
             events += process(entities, fieldParams, goalParams, timestamp)
         count += 1  
+        
+        if count == 5:
+            break
         
         
     
@@ -158,7 +174,8 @@ if __name__ == "__main__":
         flg = True
         skip_lines = int(sys.argv[2])
     events = process_log(log, skip=skip_lines, skip_flg=flg)
-    print(f"{events = }")
+    print("Log processed!")
+    # print(f"{events = }")
 
 
 
