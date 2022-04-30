@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSolid,faPen } from '@fortawesome/free-solid-svg-icons'
 
 
-function VideoThumbnail({title,Img,date}) {
+function VideoThumbnail({title,Img,date,login}) {
   return (
     <Col style={{paddingLeft:'15%',paddingRight:'15%',paddingBottom:'15%'}}>
         <Row style={{marginBottom:'10px'}}>
@@ -24,9 +24,11 @@ function VideoThumbnail({title,Img,date}) {
             </Row>
         </Col>
         <Col style={{display:'flex',justifyContent:'right'}}>
-        <Button style={{height:'65%',width:'70%'}} variant="primary" type="submit" size="lg" className='formBtn'>
-            <FontAwesomeIcon icon={faPen}/>
-        </Button>
+        {login ?
+            <Button style={{height:'65%',width:'70%'}} variant="primary" type="submit" size="lg" className='formBtn'>
+                <FontAwesomeIcon icon={faPen}/>
+            </Button>
+        : <></> }
         </Col>
         </Row>
     </Col>

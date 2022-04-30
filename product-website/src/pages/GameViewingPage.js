@@ -25,19 +25,19 @@ function GameViewingPage() {
             <Container fluid >
                 <Row>
                     <Col>
-                        <Link to="/another_page">
+                        <Link to="/">
                             <FontAwesomeIcon icon={faHouse} style={{ color: 'white', fontSize: '30px', marginTop: '20px', marginLeft: '20px' }} />
                         </Link>
                     </Col>
                     <Col style={{ display: 'flex', justifyContent: 'right' }}>
                         <Row style={{ width: '33%' }}>
                             <Col>
-                                <Link to="/another_page" style={{ textDecoration: 'none' }}>
+                                <Link to="/statistics" style={{ textDecoration: 'none' }}>
                                     <h5 style={{ color: 'white', marginTop: '20px', marginRight: '20px' }}>Skip to end</h5>
                                 </Link>
                             </Col>
                             <Col>
-                                <Link to="/another_page">
+                                <Link to="/statistics">
                                     <FontAwesomeIcon icon={faArrowRight} style={{ color: 'white', fontSize: '30px', marginTop: '20px', marginRight: '20px' }} />
                                 </Link>
                             </Col>
