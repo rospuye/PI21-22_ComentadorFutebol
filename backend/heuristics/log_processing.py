@@ -62,6 +62,7 @@ def process_log(log, skip=1, skip_flg=False):
     # fieldParams["goal_depth"] = 0
     entities = []
     timestamp = 0
+    # TODO get fields when all 3 exist on the line
     # ((FieldLength 30)(FieldWidth 20)(FieldHeight 40)(GoalWidth 2.1)(GoalDepth 0.6)(GoalHeight 0.8)
     # ((FieldLength-30-(FieldWidth-20-(FieldHeight-40-(GoalWidth-2.1)-GoalDepth-0.6-(GoalHeight-0.8-
     for line in inpt:
@@ -157,7 +158,7 @@ def process_log(log, skip=1, skip_flg=False):
             events += process(entities, fieldParams, goalParams, timestamp)
         count += 1  
         
-        if count == 5:
+        if count == 5000: # 1000 ~= 40 seg
             break
         
         
@@ -175,7 +176,8 @@ if __name__ == "__main__":
         skip_lines = int(sys.argv[2])
     events = process_log(log, skip=skip_lines, skip_flg=flg)
     print("Log processed!")
-    # print(f"{events = }")
+    for event in events:
+        print(event)
 
 
 

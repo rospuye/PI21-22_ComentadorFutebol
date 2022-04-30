@@ -1,8 +1,8 @@
 from entities import Position, Entity, Ball
 from message import Message, Aggresion, Goal, Kick_Off, Pass
 
-CONTACT_DISTANCE = 0.1              # Distance to be considered contact between entities
-AGGRESSION_DISTANCE_MARGIN = 1      # Distance to be considered collision between players
+CONTACT_DISTANCE = 0.5              # Distance to be considered contact between entities
+AGGRESSION_DISTANCE_MARGIN = 0.5    # Distance to be considered collision between players
 TIMESTAMPS_TO_KICKOFF = 900         # Around 18 seconds from goal (15 segs when restart positions)
 
 events = {}                         # TODO, add start when game starts
@@ -18,7 +18,7 @@ def process(entities : list, field : dict, goal : dict, curr_timestamp : float):
         events["start"] = None
     
     # print(f"Start {events = }")
-    
+    print(f"{curr_timestamp = }")
     # TODO, ball sometimes doesn't have an owner, some methods in heuristics depend on ball always having owner
     # TODO, fix aggression, player's timestamps aren't uniform
     # Event detection
@@ -99,7 +99,7 @@ def start_outside_shot(event : str, ball : Ball, teamA : list, teamB : list, cur
 
         # If attacking team has a player that entered in contact with the ball
         if ball.get_distance_from(player) < CONTACT_DISTANCE:
-            events.pop("corner")
+            events.pop(event)
             events["{event}_shot"] = {"start": curr_timestamp}
             return True
             
@@ -127,21 +127,28 @@ def has_ball_stopped(ball : Ball, teamA : list, teamB : list):
 def detect_outs(field : dict, ball : Ball):
     """Given the field and the ball, detect if the ball has exited the field"""
     # if ball has no owner (beginning of the game), then no need to detect outs, TODO confirm with Lucius e Dinis
-    if not ball.owner:
+    # Also, if had goal, the ball didn't go out
+    if not ball.owner or "goal" in events or "corner" in events or "out" in events:
         return []
     
     position : Position = ball.positions[-1]
     length = field["length"]
     width = field["width"]
+    # print(f"{length = }")
+    # print(f"{position.x =}")
+    # print(f"{events.get('goal') = }")
+
     if position.x < -length/2 or position.x > length/2 or position.y < -width/2 or position.y > width/2:
         message = Message(event="out", start=position.timestamp, end=position.timestamp)
-
-        # If ball exited by the opposite side of a team
+        # If ball exited by the opposite side of a team and hasn't been a goal
         if (position.x > length/2 and ball.owner.isTeamRight) or (position.x < -length/2 and not ball.owner.isTeamRight):
             message = Message(event="corner", start=position.timestamp, end=position.timestamp)
             events["corner"] = message
+            # print("Corner made it")
         else:
             events["out"] = message
+            # print("Out made it")
+            
 
         return [message]
     return []
@@ -150,10 +157,12 @@ def detect_goal(ball: Ball, field : dict, goal : dict, timestamp : float):
     """Length is the bigger field parameter"""
     ball_pos = ball.positions[-1]
     team = None
+
+    
     if -goal["width"]/2 < ball_pos.y < goal["width"]/2 and 0 < ball_pos.z < goal["height"]:
         if -field["length"]/2-goal["depth"] < ball_pos.x < -field["length"]/2:
             team = "Left"
-        elif -field["length"]/2 < ball_pos.x < field["length"]/2+goal["depth"]:
+        elif field["length"]/2 < ball_pos.x < field["length"]/2+goal["depth"]:
             team = "Right"
         if team:
             messages = []
@@ -260,6 +269,7 @@ def detect_aggressions(teamA : list, teamB : list, distance_margin=AGGRESSION_DI
                             aggressions[key].append({"start": pos1.timestamp, "end": -1, "has_been_printed": False})
                     
                     # Remove useless aggressions from events
+                    # TODO test this more
                     if i == 0: 
                         # if it's the oldest on memory, and already surpass oldest aggression
                         # then aggression should be removed
@@ -337,7 +347,7 @@ def detect_pass_or_dribble(ball : Ball, players : list, timestamp : float):
                 m1.end = timestamp
                 m1.event = event
                 m1.final_pos = ball.positions[-1]
-                message.check_type()
+                m1.check_type()
                 events.pop("dribble/pass")
 
                 m2 = Message("intersect", timestamp, timestamp)
