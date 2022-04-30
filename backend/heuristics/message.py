@@ -32,16 +32,26 @@ class Kick_Off(Message):
         self.id = playerid # if playerid = -1 kick_off was failed
         
 class Pass(Message):
-    def __init__(self, init_pos : Position, event, start=0, end=0) -> None:
+    def __init__(self, init_pos : Position, event, fromId, toId, start=0, end=0) -> None:
         super().__init__(event, start, end)
         self.init_pos = init_pos
         self.final_pos = 0
+        self.fromId = fromId
+        self.toId = toId
 
     def check_type(self) -> None:
-        if self.event == "dribble":
-            return
-
         if self.init_pos.distance_between(self.final_pos) > 5:
             self.event = "long_pass"
         else:
             self.event = "short_pass"
+
+    def __str__(self):
+        return super().__str__() + f", from: {self.fromId}, to: {self.toId}"
+
+class Dribble(Message):
+    def __init__(self, event, id, start=0, end=0) -> None:
+        super().__init__(event, start, end)
+        self.id = id
+
+    def __str__(self):
+            return super().__str__() + f", {self.id}"

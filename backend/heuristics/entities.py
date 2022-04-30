@@ -75,7 +75,7 @@ class Ball(Entity):
         self.owner = None
 
     def get_distance_from(self, player):
-        return self.positions[-1].distance_between(player.positions[-1])
+        return min(self.positions[-1].distance_between(player.positions_rfoot[-1]), self.positions[-1].distance_between(player.positions_lfoot[-1]))
 
     def get_closest_player(self, players):
         return min(players, key=lambda x: x.positions[-1].distance_between(self.positions[-1]))
@@ -97,6 +97,16 @@ class Player(Entity):
     def __init__(self, id, index, offset, team : boolean):
         super().__init__(id, index, offset)
         self.isTeamRight = team
+        self.lfootIndex = 0
+        self.rfootIndex = 0
+        self.positions_rfoot = []
+        self.positions_lfoot = []
+    
+    def add_position_rfoot(self, position):
+        self.positions_rfoot.append(position)
+
+    def add_position_lfoot(self, position):
+        self.positions_lfoot.append(position)  
 
 
 
