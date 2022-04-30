@@ -14,9 +14,16 @@ import Col from 'react-bootstrap/Col'
 // CSS
 import '../components/components_css/Form.css';
 
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+
 function ConnectToSimulatorPage() {
     return (
         <div style={{ padding: '1%' }}>
+            <Link to="/select_game">
+                <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '2%', marginLeft: '2%' }} />
+            </Link>
             <Title title="Commentator" subtitle="Connect To Simulator"></Title>
 
             <Container>

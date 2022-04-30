@@ -6,6 +6,9 @@ import Title from '../components/Title'
 import Statistics from '../components/Statistics'
 import Img from '../images/Field.png'
 
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHouse } from '@fortawesome/free-solid-svg-icons'
 
 
 function GameStatistics() {
@@ -18,6 +21,9 @@ function GameStatistics() {
   return (
     <Container>
         <div style={{marginBottom:"5%"}}>
+        <Link to="/another_page">
+                            <FontAwesomeIcon icon={faHouse} style={{ color: 'white', fontSize: '30px', marginTop: '20px', marginLeft: '20px' }} />
+                        </Link>
             <Title title="Commentator" subtitle="Game Statistics"/>
         </div>
         <Row>

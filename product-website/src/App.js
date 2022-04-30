@@ -31,7 +31,7 @@ export default function App() {
           <Route path="/statistics" element={<GameStatistics/>}/>
           <Route path="/upload" element={<UploadLogPage/>}/>
           <Route path="/personality" element={<PersonalitySettings/>}/>
-          <Route path="/selectgame" element={<SelectGamePage/>}/>
+          <Route path="/select_game" element={<SelectGamePage/>}/>
           <Route path="/game_viewing" element={<GameViewingPage/>}/>
         </Routes>
       </BrowserRouter>

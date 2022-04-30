@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{ useState } from 'react'
 import { Container,Row,Col, Button } from 'react-bootstrap'
 import SearchBox from '../components/SearchBox'
 import SortInput from '../components/SortInput'
@@ -7,10 +7,21 @@ import Title from '../components/Title'
 import '../components/components_css/Form.css';
 import VideoGrid from '../components/VideoGrid'
 
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+
 
 function SelectGamePage() {
+
+    const [login, setLogin] = useState(true);
+
+
   return (
     <>
+    <Link to="/">
+        <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '2%', marginLeft: '2%' }} />
+    </Link>
     <Title title='Commentator' subtitle="Select Your Game" />
     <Container>
         <Row>
@@ -19,15 +30,23 @@ function SelectGamePage() {
         <Row style={{marginTop:'20px'}}>
             <Col xs={3}>
             {/* Filters and Buttons */}
-                <SearchBox/>
-                <div className='searchBoxDiv'>
-                    <Button variant="primary" type="submit" size="lg" className='formBtn searchBoxDivInput'>Your Games</Button>
-                    <Button variant="primary" type="submit" size="lg" className='formBtn searchBoxDivInput'>Upload Your Game</Button>
-                    <Button variant="primary" type="submit" size="lg" className='formBtn searchBoxDivInput'>Connect to Simulator</Button>
-                </div>
+                <SearchBox login={login}/>
+                {login ? 
+                    <div className='searchBoxDiv'>
+                        <Link to="/another_page">
+                            <Button variant="primary" type="submit" size="lg" className='formBtn searchBoxDivInput'>Your Games</Button>
+                        </Link>
+                        <Link to="/upload">
+                            <Button variant="primary" type="submit" size="lg" className='formBtn searchBoxDivInput'>Upload Your Game</Button>
+                        </Link>
+                        <Link to="/simulator">
+                            <Button variant="primary" type="submit" size="lg" className='formBtn searchBoxDivInput'>Connect to Simulator</Button>
+                        </Link>
+                    </div> 
+                : <></>}
             </Col>
             <Col xs={9}>
-                <VideoGrid/>
+                <VideoGrid login={login}/>
             {/* Grid with videos and pages */}
             </Col>
         </Row>

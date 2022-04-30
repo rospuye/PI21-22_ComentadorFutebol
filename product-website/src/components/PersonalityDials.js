@@ -45,7 +45,7 @@ function PersonalityDials(props) {
                     <Col><Form.Label>Team B</Form.Label></Col>
                 </Row>
                 <Row className="dialRow">
-                    <Link to="/another_page">
+                    <Link to="/game_viewing">
                         <Button variant="success" size="lg">Start <FontAwesomeIcon icon={faPlay} /></Button>
                     </Link>
                 </Row>

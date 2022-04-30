@@ -6,10 +6,16 @@ import { Col } from 'react-bootstrap'
 import Img from '../images/upload.jpeg'
 import { Button } from 'react-bootstrap'
 import '../components/components_css/Form.css';
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 function UploadLogPage() {
   return (
     <>
+    <Link to="/select_game">
+        <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '2%', marginLeft: '2%' }} />
+    </Link>
     <Title title='Commentator' subtitle="Upload your Log File" />
     <Container>
         <Col style={{marginLeft:'10%',marginRight:'10%'}}>
