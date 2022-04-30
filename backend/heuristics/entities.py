@@ -1,6 +1,8 @@
 import math
 from xmlrpc.client import boolean
 
+POSITIONS_SIZE = 2 # TODO random choice ()
+
 class Position():
     def __init__(self, position, timestamp):
         self.x = position[-4]
@@ -13,6 +15,9 @@ class Position():
     def distance_between(self, position):
         """Returns the euclidian distance to given position."""
         return math.sqrt((self.x - position.x)**2 + (self.y - position.y)**2 + (self.z - position.z)**2)
+    
+    def __str__(self):
+        return f"{self.timestamp = }, {self.x = }, {self.y = }, {self.z = }"
 
 class Entity():
     def __init__(self, id, index, offset):
@@ -46,7 +51,8 @@ class Entity():
         distance = now.distance_between(then)
         return distance/time_delta
 
-
+    def get_recent_positions(self):
+        return self.positions[-POSITIONS_SIZE:]
 
     def to_json(self):
         return {"id": self.id, "position": self.position}
