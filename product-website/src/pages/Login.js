@@ -15,7 +15,7 @@ import '../components/components_css/Form.css';
 function Login() {
   return (
     <Container>
-        <Link to="/another_page">
+        <Link to="/">
           <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '2%', marginLeft: '2%' }} />
         </Link>
         <Row>

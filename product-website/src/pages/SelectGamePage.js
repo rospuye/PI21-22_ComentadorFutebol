@@ -33,7 +33,7 @@ function SelectGamePage() {
                 <SearchBox login={login}/>
                 {login ? 
                     <div className='searchBoxDiv'>
-                        <Link to="/another_page">
+                        <Link to="/your_games">
                             <Button variant="primary" type="submit" size="lg" className='formBtn searchBoxDivInput'>Your Games</Button>
                         </Link>
                         <Link to="/upload">
@@ -46,7 +46,7 @@ function SelectGamePage() {
                 : <></>}
             </Col>
             <Col xs={9}>
-                <VideoGrid login={login}/>
+                <VideoGrid login={false}/>
             {/* Grid with videos and pages */}
             </Col>
         </Row>

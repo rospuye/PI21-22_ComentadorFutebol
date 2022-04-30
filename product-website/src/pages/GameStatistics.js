@@ -21,7 +21,7 @@ function GameStatistics() {
   return (
     <Container>
         <div style={{marginBottom:"5%"}}>
-        <Link to="/another_page">
+        <Link to="/">
                             <FontAwesomeIcon icon={faHouse} style={{ color: 'white', fontSize: '30px', marginTop: '20px', marginLeft: '20px' }} />
                         </Link>
             <Title title="Commentator" subtitle="Game Statistics"/>
