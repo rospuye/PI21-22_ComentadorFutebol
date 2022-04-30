@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from "react-router-dom";
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -6,6 +7,9 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import SmallerTitle from '../components/SmallerTitle'
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 import '../components/components_css/Form.css'
 
@@ -169,7 +173,7 @@ function Login() {
     return (
         <Container>
             <Row>
-                <Col style={{ padding: "50px" }}>
+                <Col xs={5} style={{ padding: "50px" }}>
                     <SmallerTitle title="Login" />
                     {/* onSubmit={() => { handleLogin(loginUsername, loginPassword) }} */}
                     <Form onSubmit={() => { handleLogin(loginUsername, loginPassword) }} >
@@ -197,8 +201,10 @@ function Login() {
                         </div>
                     </Form>
                 </Col>
-                <div className="vl"></div>
-                <Col style={{ padding: "50px" }}>
+                <Col xs={2}>
+                    <div class="vl"></div>
+                </Col>
+                <Col xs={5} style={{ padding: "50px" }}>
                     <SmallerTitle title="Register" />
                     <Form>
                         <Form.Group className="mb-3" id="registerUsername">

@@ -6,6 +6,7 @@ h1 {
     letter-spacing: -1px;
     line-height: 1;
     text-align: center;
+    margin-top: 5%;
 }
 
 h3 {
@@ -28,6 +29,14 @@ h4 {
     margin-top: 2%;
     margin-inline: 10%;
     text-align: center;
+}
+
+h5 {
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 32px;
 }
 
 p {

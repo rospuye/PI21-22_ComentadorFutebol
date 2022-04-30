@@ -39,8 +39,8 @@ function PersonalitySettings() {
     login ?
 
       <div>
-
-        <Link to="/another_page">
+        
+        <Link to="/select_game">
           <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '2%', marginLeft: '2%' }} />
         </Link>
 
@@ -93,7 +93,7 @@ function PersonalitySettings() {
 
       <div>
 
-        <Link to="/another_page">
+        <Link to="/select_game">
           <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '2%', marginLeft: '2%' }} />
         </Link>
 

@@ -49,7 +49,7 @@ function Homepage() {
           </Col>
           <Col>
             <div style={{ width: '100%', paddingLeft: '25%', paddingTop: '20%' }}>
-              <Link to="/another_page">
+              <Link to="/select_game">
                 <Button variant="success" size="lg">Start <FontAwesomeIcon icon={faPlay} /></Button>
               </Link>
             </div>

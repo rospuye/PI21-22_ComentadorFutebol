@@ -9,7 +9,7 @@ function StatisticLine({paramA,condition,paramB}) {
             <h3>{paramA}</h3>
         </Col>
         <Col>
-            <p>{condition}</p>
+            <p id='statisticLineP'>{condition}</p>
         </Col>
         <Col>
             <h3>{paramB}</h3>

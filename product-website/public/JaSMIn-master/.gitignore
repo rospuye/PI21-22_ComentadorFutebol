@@ -21,3 +21,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.sublime-gulp.cache
+JaSMIn.sublime-workspace
+node_modules/
+dist/
