@@ -31,8 +31,8 @@ def process(entities : list, field : dict, goal : dict, curr_timestamp : float):
     messages += detect_goal_shot(ball, field, goal, curr_timestamp)
     #messages += detect_goal(ball, field, goal, curr_timestamp)
     messages += detect_aggressions(teamA=teamA, teamB=teamB, ball=ball)
-    messages += detect_defense(ball, teamA, teamB, curr_timestamp)
     messages += detect_pass_or_dribble(ball, entities[1:], curr_timestamp) 
+    messages += detect_defense(ball, teamA, teamB, curr_timestamp)
 
     return messages
 
@@ -90,7 +90,7 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
             team = "Left"
         elif field["length"]/2 < ball_pos.x < field["length"]/2+goal["depth"]:
             team = "Right"
-        if team:
+        if team and "goal" not in events:
             messages = []
             m1 = Goal(team, timestamp, timestamp)
             events["goal"] = m1
@@ -99,6 +99,7 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
                 m2 = events["goal_shot"]
                 m2.end = timestamp
                 events.pop("goal_shot", None)
+                print("pop out_goal")
                 messages.append(m2)
             return messages
         
@@ -115,7 +116,7 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
                 # print("Corner made it")
                 return [message]
         
-    # TODO this else shouldn't be tabbed?
+    # TODO dont think this should be a else
     else: # It's an out
         if "out" not in events:
             message = Message(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp)
@@ -227,6 +228,7 @@ def detect_goal(ball: Ball, field : dict, goal : dict, timestamp : float):
                 m2 = events["goal_shot"]
                 m2.end = timestamp
                 events.pop("goal_shot", None)
+                print("pop goal")
                 messages.append(m2)
             return messages
     return []
@@ -238,23 +240,32 @@ def detect_goal_shot(ball: Ball, field : dict, goal : dict, timestamp : float):
         return []
 
     # check if ball is in goal area and the owner is correct
-    if not (ball.positions[-1].x < -field["length"]/4 and not ball.owner.isTeamRight or ball.positions[-1].x > field["length"]/4 and ball.owner.isTeamRight):
+    if not (ball.positions[-1].x > field["length"]/4 and not ball.owner.isTeamRight or ball.positions[-1].x < -field["length"]/4 and ball.owner.isTeamRight):
         return []
     # ball velocity increases in direction of goal
     if not ball.is_in_goal_direction(not ball.owner.isTeamRight, field, goal):
+        # If ball stop moving after a goal_shot
+        if "goal_shot" in events:
+            events["goal_shot"].end = timestamp
+            print(f"{timestamp}: end of goal_shot")
+            events.pop("goal_shot")
         return []
     
-    if "goal_shot" in events:
-        events["goal_shot"].end = timestamp
-    else:
+    # if "goal_shot" in events:
+    #     events["goal_shot"].end = timestamp
+    #     print("end of goal_shot")
+    if "goal_shot" not in events:
         message = Message(event="goal_shot", start=timestamp, end=timestamp)
         events["goal_shot"] = message
+        if 96 < timestamp < 97:
+            print(f"{ball.owner.isTeamRight = }")
+        print(f"{timestamp}: creation of a goal_shot")
     return []
 
 def detect_defense(ball : Ball, teamA : list, teamB : list, timestamp : float):
     if not "goal_shot" in events:
         return []
-    oponent_team = teamB if ball.owner.isTeamRight else teamA
+    oponent_team = teamA if ball.owner.isTeamRight else teamB
     
     for player in oponent_team:
         if ball.get_distance_from(player) < CONTACT_DISTANCE:
@@ -262,6 +273,8 @@ def detect_defense(ball : Ball, teamA : list, teamB : list, timestamp : float):
             m2 = events["goal_shot"]
             m2.end = timestamp
             events.pop("goal_shot", None)
+            print("pop defense")
+            print(f"{ball.owner.isTeamRight = }")
             ball.owner = player
             return [m1, m2]
     return []
