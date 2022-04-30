@@ -90,6 +90,9 @@ class Ball(Entity):
         operand = 1 if team else -1
         # Get the y of the intersection between goal line and ball tragectory 
         intersection = m*((field["length"]/2)*operand)+b
+        print(f"{intersection = }")
+        print(f"{m = }")
+        print(f"{b = }")
         return True if -1*goal["width"]/2 < intersection < goal["width"]/2 else False
     
 

@@ -243,14 +243,21 @@ def detect_goal_shot(ball: Ball, field : dict, goal : dict, timestamp : float):
     if not (ball.positions[-1].x > field["length"]/4 and not ball.owner.isTeamRight or ball.positions[-1].x < -field["length"]/4 and ball.owner.isTeamRight):
         return []
     # ball velocity increases in direction of goal
-    if not ball.is_in_goal_direction(not ball.owner.isTeamRight, field, goal):
+    if 90 < timestamp < 91: print("Sussy moment")
+    if not ball.is_in_goal_direction(ball.owner.isTeamRight, field, goal):
         # If ball stop moving after a goal_shot
+        if 90 < timestamp < 91: print(f"{timestamp}: not in goal direction")
         if "goal_shot" in events:
             events["goal_shot"].end = timestamp
             print(f"{timestamp}: end of goal_shot")
             events.pop("goal_shot")
         return []
-    
+    else:
+        if 90 < timestamp < 91: 
+            print(f"{timestamp}: Going in goal direction")
+            print(ball.positions[-1])
+            print(ball.positions[-2])
+            
     # if "goal_shot" in events:
     #     events["goal_shot"].end = timestamp
     #     print("end of goal_shot")
