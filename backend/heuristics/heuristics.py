@@ -3,7 +3,8 @@ from message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble
 
 KICK_OFF_CONTACT_DISTANCE = 0.1              # Distance to be considered contact between entities
 CONTACT_DISTANCE = 0.2
-AGGRESSION_DISTANCE_MARGIN = 0.2    # Distance to be considered collision between players
+AGGRESSION_DISTANCE_MARGIN = 0.3            # Distance to be considered collision between players
+AGGRESSION_DISTANCE_TO_BALL = 3             # Just notify aggressions at that distance from ball
 
 events = {}                         
 
@@ -29,7 +30,7 @@ def process(entities : list, field : dict, goal : dict, curr_timestamp : float):
     messages += detect_corner_shot(ball, teamA, teamB, curr_timestamp)
     messages += detect_goal_shot(ball, field, goal, curr_timestamp)
     #messages += detect_goal(ball, field, goal, curr_timestamp)
-    messages += detect_aggressions(teamA=teamA, teamB=teamB)
+    messages += detect_aggressions(teamA=teamA, teamB=teamB, ball=ball)
     messages += detect_defense(ball, teamA, teamB, curr_timestamp)
     messages += detect_pass_or_dribble(ball, entities[1:], curr_timestamp) 
 
@@ -115,6 +116,9 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
         events["out"] = message
         # print("Out made it")
         return [message]
+    
+    return []
+    
 
 def detect_corner_shot(ball : Ball, teamA : list, teamB : list, curr_timestamp : float):
     if "corner" in events:
@@ -256,7 +260,7 @@ def detect_defense(ball : Ball, teamA : list, teamB : list, timestamp : float):
             return [m1, m2]
     return []
 
-def detect_aggressions(teamA : list, teamB : list, distance_margin=AGGRESSION_DISTANCE_MARGIN):
+def detect_aggressions(teamA : list, teamB : list, ball : Ball, distance_margin=AGGRESSION_DISTANCE_MARGIN):
     """Given teams, returns a list of Aggressions."""
     
     # {
@@ -267,7 +271,7 @@ def detect_aggressions(teamA : list, teamB : list, distance_margin=AGGRESSION_DI
         # }
     # }
     
-    if events.get("aggressions") is None:
+    if "aggressions" not in events:
         events["aggressions"] = {}
 
     aggressions = events.get("aggressions")
@@ -276,14 +280,9 @@ def detect_aggressions(teamA : list, teamB : list, distance_margin=AGGRESSION_DI
         key = ""
         for entity2 in teamB:
             
-            # Ignore if some entity is ball
-            if isinstance(entity1, Ball) or isinstance(entity2, Ball):
-                continue
-
             isNewTimeStamp = True
-
-            # TODO
             positions1 : list = entity1.get_recent_positions()
+            
             for i in range(len(positions1)):
                 pos1 : Position = positions1[i]
                 
@@ -294,9 +293,10 @@ def detect_aggressions(teamA : list, teamB : list, distance_margin=AGGRESSION_DI
 
                 id1 = entity1.id
                 id2 = entity2.id
-                key = f"{id1}_{id2}" # if id1 < id2 else f"{id2}_{id1}"
+                key = f"{id1}_{id2}"
 
-                if distance < distance_margin:
+                if distance < distance_margin and (ball.get_distance_from(entity1) < AGGRESSION_DISTANCE_TO_BALL \
+                or ball.get_distance_from(entity2) < AGGRESSION_DISTANCE_TO_BALL):
                     
                     aggression_times = aggressions.get(key)
 
@@ -312,7 +312,7 @@ def detect_aggressions(teamA : list, teamB : list, distance_margin=AGGRESSION_DI
                         if past["end"] != -1 and past["end"] < pos1.timestamp:
                             aggressions[key].append({"start": pos1.timestamp, "end": -1, "has_been_printed": False})
                     
-                    # Remove useless aggressions from events
+                    # Remove useless aggressions from events array
                     # TODO test this more
                     if i == 0: 
                         # if it's the oldest on memory, and already surpass oldest aggression
@@ -330,11 +330,11 @@ def detect_aggressions(teamA : list, teamB : list, distance_margin=AGGRESSION_DI
 
     aggressions_list = []
     
-    # For each aggression on events, print output if hasn§t been printed yet
+    # For each aggression on events, print output if hasn't been printed yet
     for k, v in aggressions.items():
         for aggression in v:
             
-            # If aggression had finished (-1) and hasn't been printed yet, then create message
+            # If aggression had finished (!= -1) and hasn't been printed yet, then create message
             if aggression["end"] != -1 and not aggression["has_been_printed"]:
                 ids = k.split("_")
                 aggression["has_been_printed"] = True

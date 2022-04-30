@@ -16,7 +16,7 @@ class Aggresion(Message):
         self.id2 = id2
 
     def __str__(self):
-        return f"Message: {self.event} ({self.id1} - {self.id2}), {self.start}, {self.end}"
+        return f"Message: {self.event}, {self.start}, {self.end}, ({self.id1} - {self.id2})"
 
 class Goal(Message):
     def __init__(self, team, start, end) -> None:
