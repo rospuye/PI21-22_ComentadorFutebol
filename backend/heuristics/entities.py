@@ -80,20 +80,32 @@ class Ball(Entity):
     def get_closest_player(self, players):
         return min(players, key=lambda x: x.positions[-1].distance_between(self.positions[-1]))
 
-    def is_in_goal_direction(self, team : boolean, field : dict, goal : dict):
+    def is_in_goal_direction(self, teamRight : boolean, field : dict, goal : dict, flag = False):
         ball_pos_i = self.positions[-2]
         ball_pos_f = self.positions[-1]
+        delta_x = (ball_pos_f.x-ball_pos_i.x)
+        # Moving in goal direction at all?
+        if (delta_x == 0): return False
+        # Moving towards desired goal?
+        directionRight = True if ball_pos_f.x - ball_pos_i.x > 0 else False
+        #if not (teamRight == directionRight): return False # not moving toward goal
         # Get tragectory slope and offset
-        m = (ball_pos_f.y-ball_pos_i.y)/(ball_pos_f.x-ball_pos_f.y)
+        m = (ball_pos_f.y-ball_pos_i.y)/delta_x
         b = ball_pos_i.y-(m*ball_pos_i.x)
         # Decides which goal we're evaluating
-        operand = 1 if team else -1
+        operand = 1 if teamRight else -1
         # Get the y of the intersection between goal line and ball tragectory 
         intersection = m*((field["length"]/2)*operand)+b
-        print(f"{intersection = }")
-        print(f"{m = }")
-        print(f"{b = }")
-        return True if -1*goal["width"]/2 < intersection < goal["width"]/2 else False
+        if flag:
+            print("====DEBUG====")
+            print("i", ball_pos_i)
+            print("f", ball_pos_f)
+            print(f"{m = }")
+            print(f"{b = }")
+            print(f"{intersection = }")
+            print(f"{teamRight = }")
+            print(f"{directionRight = }")
+        return True if abs(intersection) < goal["width"]/2 else False
     
 
 class Player(Entity):
