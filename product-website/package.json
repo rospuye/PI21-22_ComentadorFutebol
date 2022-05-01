@@ -45,6 +45,7 @@
     ]
   },
   "browser": {
-    "crypto": false
+    "crypto": false,
+    "fs": false
   }
 }
