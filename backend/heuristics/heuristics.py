@@ -78,8 +78,11 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
     # First things first, is it outside the field?
     ball_pos = ball.positions[-1]
     # if 52 < ball_pos.timestamp < 57: print(ball_pos)
+
+        
     if not (abs(ball_pos.x) > field["length"]/2 or abs(ball_pos.y) > field["width"]/2):
         return []
+    
     
     # Is it a goal?
     if abs(ball_pos.y) <= goal["width"]/2 and 0 < ball_pos.z < goal["height"] and abs(ball_pos.x) > field["length"]/2:
@@ -99,30 +102,42 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
                 m2 = events["goal_shot"]
                 m2.end = timestamp
                 events.pop("goal_shot", None)
-                print("pop out_goal")
                 messages.append(m2)
             return messages
         
-    # Is it a corner?
-    if abs(ball_pos.x) > field["length"]/2:
-        teamRight = False if ball_pos.x < 0 else True
-        # If ball exited by the opposite side of a team and hasn't been a goal
+       
+    # if 179 < timestamp < 180:
+    #     print(f"{timestamp}: Sussy corner") 
+    #     print(ball_pos)
+    #     print("goal" in events)
         
-        if (teamRight == ball.owner.isTeamRight):
-            # Verify if is the same corner event
-            if "corner" not in events:
-                message = Message(event="corner", start=ball_pos.timestamp, end=ball_pos.timestamp)
-                events["corner"] = message
-                # print("Corner made it")
+    if "goal" not in events:
+        # Is it a corner?
+        if abs(ball_pos.x) > field["length"]/2:
+            teamRight = False if ball_pos.x < 0 else True
+            # If ball exited by the opposite side of a team and hasn't been a goal
+            if 113 < timestamp < 114:
+                print("Sussy first if")
+            
+            if (teamRight == ball.owner.isTeamRight):
+                # Verify if is the same corner event
+                
+                if 113 < timestamp < 114:
+                    print("Second if passed")
+                    
+                if "corner" not in events:
+                    message = Message(event="corner", start=ball_pos.timestamp, end=ball_pos.timestamp)
+                    events["corner"] = message
+                    # print("Corner made it")
+                    return [message]
+            
+        # TODO dont think this should be a else
+        else: # It's an out
+            if "out" not in events:
+                message = Message(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp)
+                events["out"] = message
+                # print("Out made it")
                 return [message]
-        
-    # TODO dont think this should be a else
-    else: # It's an out
-        if "out" not in events:
-            message = Message(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp)
-            events["out"] = message
-            # print("Out made it")
-            return [message]
     
     return []
     
@@ -236,27 +251,34 @@ def detect_goal(ball: Ball, field : dict, goal : dict, timestamp : float):
 def detect_goal_shot(ball: Ball, field : dict, goal : dict, timestamp : float):
     """Detects if a goal shot is currently happening"""
     # if ball doesn't have owner, skip detection, TODO confirm with Dinis if ok
+   
+    
     if not ball.owner:
         return []
 
+    # if 112 < timestamp < 113: 
+    #     print("Sussy moment")
+    #     print(ball.owner.isTeamRight)
     # check if ball is in goal area and the owner is correct
     if not (ball.positions[-1].x > field["length"]/4 and not ball.owner.isTeamRight or ball.positions[-1].x < -field["length"]/4 and ball.owner.isTeamRight):
         return []
     # ball velocity increases in direction of goal
-    if 90 < timestamp < 91: print("Sussy moment")
-    if not ball.is_in_goal_direction(ball.owner.isTeamRight, field, goal):
+    
+    # if 76 < timestamp < 77: 
+    #     print("before if")
+    if not ball.is_in_goal_direction(not ball.owner.isTeamRight, field, goal):
         # If ball stop moving after a goal_shot
-        if 90 < timestamp < 91: 
-            print(f"{timestamp}: not in goal direction")
+        # if 112 < timestamp < 113: 
+        #     print(f"{timestamp}: not in goal direction")
         if "goal_shot" in events:
             events["goal_shot"].end = timestamp
-            print(f"{timestamp}: end of goal_shot")
+            # print(f"{timestamp}: end of goal_shot")
             events.pop("goal_shot")
         return []
-    else:
-        if 90 < timestamp < 91: 
-            print(f"{timestamp}: Going in goal direction")
-            ball.is_in_goal_direction(ball.owner.isTeamRight, field, goal, True)
+    # else:
+    #     if 76 < timestamp < 77: 
+    #         print(f"{timestamp}: Going in goal direction")
+    #         ball.is_in_goal_direction(ball.owner.isTeamRight, field, goal, True)
             
     # if "goal_shot" in events:
     #     events["goal_shot"].end = timestamp
@@ -264,24 +286,25 @@ def detect_goal_shot(ball: Ball, field : dict, goal : dict, timestamp : float):
     if "goal_shot" not in events:
         message = Message(event="goal_shot", start=timestamp, end=timestamp)
         events["goal_shot"] = message
-        if 96 < timestamp < 97:
-            print(f"{ball.owner.isTeamRight = }")
-        print(f"{timestamp}: creation of a goal_shot")
+        # print(f"{timestamp}: creation of a goal_shot")
     return []
 
 def detect_defense(ball : Ball, teamA : list, teamB : list, timestamp : float):
     if not "goal_shot" in events:
         return []
     oponent_team = teamA if ball.owner.isTeamRight else teamB
-    
+    # if 63 < timestamp < 64:
+    #     print(f"{timestamp}: Defense team right {ball.owner.isTeamRight}")
+    #     print("=======================")   
+        
     for player in oponent_team:
+        # if 63 < timestamp < 64:
+        #     print(f"{ball.get_distance_from(player) = }")
         if ball.get_distance_from(player) < CONTACT_DISTANCE:
             m1 = Message("defense", start=timestamp, end=timestamp)
             m2 = events["goal_shot"]
             m2.end = timestamp
             events.pop("goal_shot", None)
-            print("pop defense")
-            print(f"{ball.owner.isTeamRight = }")
             ball.owner = player
             return [m1, m2]
     return []
