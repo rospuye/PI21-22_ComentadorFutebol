@@ -11,6 +11,7 @@ import Avatar from '../components/Avatar';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Button from 'react-bootstrap/Button'
 
 // Fontawesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -18,6 +19,8 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 import Img from '../images/graphic_model.PNG'
 import Img2 from '../images/plus.PNG'
+
+import { useCookies } from 'react-cookie'
 
 function PersonalitySettings() {
 
@@ -33,18 +36,32 @@ function PersonalitySettings() {
   ];
 
   const [login, setLogin] = useState(true);
+  const [cookies, setCookie] = useCookies(['logged_user'])
+  console.log("cookies_another_page: " + cookies.logged_user)
 
   return (
 
-    login ?
+    cookies.logged_user !== '' ?
 
       <div>
-        
-        <Link to="/select_game">
-          <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '2%', marginLeft: '2%' }} />
-        </Link>
 
-        <Title title="Commentator" subtitle="Personality Settings" style={{ marginTop: '-5%' }}></Title>
+        <Container>
+          <Row>
+            <Col>
+              <Link to="/select_game">
+                <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '5%', marginLeft: '2%' }} />
+              </Link>
+            </Col>
+            <Col>
+              <Title title="Commentator" subtitle="Personality Settings"></Title>
+            </Col>
+            <Col style={{ display: 'flex', justifyContent: 'right' }}>
+              <Button variant="light" style={{ height: '40px', marginTop: '5%' }} onClick={() => {
+                setCookie('logged_user', '', { path: '/' })
+              }}>Logout</Button>
+            </Col>
+          </Row>
+        </Container>
 
         <Container>
           <Row>
@@ -93,11 +110,19 @@ function PersonalitySettings() {
 
       <div>
 
-        <Link to="/select_game">
-          <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '2%', marginLeft: '2%' }} />
-        </Link>
-
-        <Title title="Commentator" subtitle="Personality Settings" style={{ marginTop: '-5%' }}></Title>
+        <Container>
+          <Row>
+            <Col>
+              <Link to="/select_game">
+                <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '10%', marginLeft: '2%' }} />
+              </Link>
+            </Col>
+            <Col>
+              <Title title="Commentator" subtitle="Personality Settings"></Title>
+            </Col>
+            <Col style={{ display: 'flex', justifyContent: 'right' }}></Col>
+          </Row>
+        </Container>
 
         <Container>
           <Row>

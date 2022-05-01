@@ -26,22 +26,13 @@ function GameViewingPage() {
                 <Row>
                     <Col>
                         <Link to="/">
-                            <FontAwesomeIcon icon={faHouse} style={{ color: 'white', fontSize: '30px', marginTop: '20px', marginLeft: '20px' }} />
+                            <FontAwesomeIcon icon={faHouse} style={{ color: 'white', fontSize: '30px', marginTop: '40px', marginLeft: '40px' }} />
                         </Link>
                     </Col>
                     <Col style={{ display: 'flex', justifyContent: 'right' }}>
-                        <Row style={{ width: '33%' }}>
-                            <Col>
-                                <Link to="/statistics" style={{ textDecoration: 'none' }}>
-                                    <h5 style={{ color: 'white', marginTop: '20px', marginRight: '20px' }}>Skip to end</h5>
-                                </Link>
-                            </Col>
-                            <Col>
-                                <Link to="/statistics">
-                                    <FontAwesomeIcon icon={faArrowRight} style={{ color: 'white', fontSize: '30px', marginTop: '20px', marginRight: '20px' }} />
-                                </Link>
-                            </Col>
-                        </Row>
+                        <Link to="/statistics">
+                            <FontAwesomeIcon icon={faArrowRight} style={{ color: 'white', fontSize: '30px', marginTop: '40px', marginRight: '40px' }} />
+                        </Link>
                     </Col>
                 </Row>
                 <Row>
@@ -53,10 +44,10 @@ function GameViewingPage() {
                         <ToastContainer style={{ marginTop: '2%', width: '100%' }}>
                             <Toast style={{ width: '80%', height: '300px', overflowY: 'scroll' }}>
                                 <Toast.Body>
-                                    00:00 - Lorem Ipsum<br/>
-                                    00:23 - Ball ball ball<br/>
-                                    00:32 - AAAAAAAAA<br/>
-                                    01:01 - MAMA MIA<br/>
+                                    00:00 - Lorem Ipsum<br />
+                                    00:23 - Ball ball ball<br />
+                                    00:32 - AAAAAAAAA<br />
+                                    01:01 - MAMA MIA<br />
                                 </Toast.Body>
                             </Toast>
                         </ToastContainer>

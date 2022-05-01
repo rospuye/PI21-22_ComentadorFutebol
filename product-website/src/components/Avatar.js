@@ -5,7 +5,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Row from 'react-bootstrap/Row'
 
 function Avatar(props) {
-    console.log(props);
     let img_key;
     for(var key in props.avatar.src) {
         img_key = props.avatar.src[key];

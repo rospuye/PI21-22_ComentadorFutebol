@@ -8,6 +8,8 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import SmallerTitle from '../components/SmallerTitle'
 
+import { useCookies } from 'react-cookie';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
@@ -77,7 +79,7 @@ function validateRegisterForm(username, email, password, conf_password) {
     return [validUsername, validEmail, validPassword, equalPasswords]
 }
 
-function handleLogin(username, password) {
+function handleLogin(username, password, setCookie) {
 
     const loginValidation = validateLoginForm(username, password)
     let allGood = true
@@ -97,23 +99,26 @@ function handleLogin(username, password) {
 
         axios.post(`http://127.0.0.1:8000/users/login/`, user)
             .then(res => {
-                // console.log(res);
-                if (res.data==='login_success') {
-                    // TODO: login success
+                console.log(res);
+                if (res.data === 'login_success') {
+                    setCookie('logged_user', username, {path: '/'})
+                    // select_game
+                    window.location.href = '../select_game'
                 }
-                else if (res.data==='login_failure') {
+                else if (res.data === 'login_failure') {
                     document.getElementById("loginWarning").style.display = 'block'
+                    setCookie('logged_user', '', {path: '/'})
                 }
             })
     }
 
 }
 
-function handleRegister(username, email, password, conf_password) {
+function handleRegister(username, email, password, conf_password, setCookie) {
 
     let allGood = true
     const registerValidation = validateRegisterForm(username, email, password, conf_password)
-    
+
     if (!registerValidation[0]) {
         allGood = false
         document.getElementById("registerUsernameWarning").style.display = 'block'
@@ -144,15 +149,17 @@ function handleRegister(username, email, password, conf_password) {
             email: email,
             password: password
         }
-    
+
         axios.post(`http://127.0.0.1:8000/users/register/`, user)
             .then(res => {
-                // console.log(res.data);
-                if (res.data==='register_success') {
-                    // TODO: register success
+                console.log(res.data);
+                if (res.data === 'register_success') {
+                    setCookie('logged_user', username, {path: '/'})
+                    window.location.href = '../select_game'
                 }
-                else if (res.data==='username_already_in_use') {
+                else if (res.data === 'username_already_in_use') {
                     document.getElementById("registerUniqueUsernameWarning").style.display = 'block'
+                    setCookie('logged_user', '', {path: '/'})
                 }
             })
 
@@ -170,6 +177,10 @@ function Login() {
     const [registerPassword, setRegisterPassword] = useState('');
     const [registerConfirmPassword, setRegisterConfirmPassword] = useState('');
 
+    const [cookies, setCookie] = useCookies(['logged_user'])
+    // setCookie('logged_user', '', {path: '/'})
+    console.log("cookies: " + cookies.logged_user)
+
     return (
         <Container>
             <Row>
@@ -185,7 +196,7 @@ function Login() {
                         <Form.Group className="mb-3" id="loginPassword">
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" placeholder="Password" onChange={(e) => { setLoginPassword(e.target.value) }} />
-                            <Form.Text className="text-muted" id="loginWarning" style={{display: 'none'}}>
+                            <Form.Text className="text-muted" id="loginWarning" style={{ display: 'none' }}>
                                 Your login credentials are incorrect.
                             </Form.Text>
                         </Form.Group>
@@ -193,16 +204,18 @@ function Login() {
                             <Form.Check type="checkbox" label="Remember me" />
                         </Form.Group>
                         <div style={{ textAlign: "center" }}>
-                            {/* onClick={() => { console.log("button clicked");}} */}
                             {/* type="submit" */}
-                            <Button variant="primary" onClick={() => { handleLogin(loginUsername, loginPassword) }}>
+                            <Button variant="primary" onClick={() => {
+                                handleLogin(loginUsername, loginPassword, setCookie)
+                                // console.log("logged in: " + cookies.logged_user)
+                            }}>
                                 Submit
                             </Button>
                         </div>
                     </Form>
                 </Col>
                 <Col xs={2}>
-                    <div class="vl"></div>
+                    <div className="vl"></div>
                 </Col>
                 <Col xs={5} style={{ padding: "50px" }}>
                     <SmallerTitle title="Register" />
@@ -210,17 +223,17 @@ function Login() {
                         <Form.Group className="mb-3" id="registerUsername">
                             <Form.Label>Username</Form.Label>
                             <Form.Control type="text" placeholder="Enter Username" onChange={(e) => { setRegisterUsername(e.target.value) }} />
-                            <Form.Text className="text-muted" id="registerUniqueUsernameWarning" style={{display: 'none'}}>
+                            <Form.Text className="text-muted" id="registerUniqueUsernameWarning" style={{ display: 'none' }}>
                                 Your username must be unique.<br />
                             </Form.Text>
-                            <Form.Text className="text-muted" id="registerUsernameWarning" style={{display: 'none'}}>
+                            <Form.Text className="text-muted" id="registerUsernameWarning" style={{ display: 'none' }}>
                                 Your username must have a minimum of 3 characters, start with a letter and contain only letters and numbers.
                             </Form.Text>
                         </Form.Group>
                         <Form.Group className="mb-3" id="registerEmail">
                             <Form.Label>Email address</Form.Label>
                             <Form.Control type="email" placeholder="Enter email" onChange={(e) => { setRegisterEmail(e.target.value) }} />
-                            <Form.Text className="text-muted" id="registerEmailWarning" style={{display: 'none'}}>
+                            <Form.Text className="text-muted" id="registerEmailWarning" style={{ display: 'none' }}>
                                 You must enter a valid e-mail address.
                             </Form.Text>
                         </Form.Group>
@@ -228,7 +241,7 @@ function Login() {
                         <Form.Group className="mb-3" id="registerPassword">
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" placeholder="Password" onChange={(e) => { setRegisterPassword(e.target.value) }} />
-                            <Form.Text className="text-muted" id="registerPasswordWarning" style={{display: 'none'}}>
+                            <Form.Text className="text-muted" id="registerPasswordWarning" style={{ display: 'none' }}>
                                 Your password must have a minimum of 8 characters and contain both lowercase and uppercase letters, at least one
                                 digit and at least one non-alphanumeric character.
                             </Form.Text>
@@ -236,7 +249,7 @@ function Login() {
                         <Form.Group className="mb-3" id="registerConfirmPassword">
                             <Form.Label>Confirm Password</Form.Label>
                             <Form.Control type="password" placeholder="Password" onChange={(e) => { setRegisterConfirmPassword(e.target.value) }} />
-                            <Form.Text className="text-muted" id="registerConfPasswordWarning" style={{display: 'none'}}>
+                            <Form.Text className="text-muted" id="registerConfPasswordWarning" style={{ display: 'none' }}>
                                 Your password confirmation is different from your initial password.
                             </Form.Text>
                         </Form.Group>
@@ -244,7 +257,10 @@ function Login() {
                             <Form.Check type="checkbox" label="Remember me" />
                         </Form.Group>
                         <div style={{ textAlign: "center" }}>
-                            <Button variant="primary" onClick={() => { handleRegister(registerUsername, registerEmail, registerPassword, registerConfirmPassword) }}>
+                            <Button variant="primary" onClick={() => {
+                                handleRegister(registerUsername, registerEmail, registerPassword, registerConfirmPassword, setCookie)
+                                // console.log("registered: " + cookies.logged_user)
+                            }}>
                                 Submit
                             </Button>
                         </div>
