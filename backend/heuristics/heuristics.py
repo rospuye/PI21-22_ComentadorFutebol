@@ -1,7 +1,8 @@
+import math
 from entities import Position, Entity, Ball
 from message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble
 
-KICK_OFF_CONTACT_DISTANCE = 0.1              # Distance to be considered contact between entities
+KICK_OFF_CONTACT_DISTANCE = 0.08              # Distance to be considered contact between entities
 CONTACT_DISTANCE = 0.2
 AGGRESSION_DISTANCE_MARGIN = 0.3            # Distance to be considered collision between players
 AGGRESSION_DISTANCE_TO_BALL = 3             # Just notify aggressions at maximum that distance from ball
@@ -100,7 +101,7 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
                 m2 = events["goal_shot"]
                 m2.end = timestamp
                 events.pop("goal_shot", None)
-                messages.append(m2)
+                messages = [m2] + messages 
             return messages
         
        
@@ -184,52 +185,6 @@ def has_ball_stopped(ball : Ball, teamA : list, teamB : list):
             return True
 
     return False
-    
-def detect_outs(field : dict, ball : Ball):
-    """Given the field and the ball, detect if the ball has exited the field"""
-    # if ball has no owner (beginning of the game), then no need to detect outs, TODO confirm with Lucius e Dinis
-    # Also, if had goal, the ball didn't go out
-    if not ball.owner or "goal" in events or "corner" in events or "out" in events:
-        return []
-    
-    position : Position = ball.positions[-1]
-    length = field["length"]
-    width = field["width"]
-
-    if position.x < -length/2 or position.x > length/2 or position.y < -width/2 or position.y > width/2:
-        message = Message(event="out", start=position.timestamp, end=position.timestamp)
-        # If ball exited by the opposite side of a team and hasn't been a goal
-        if (position.x > length/2 and ball.owner.isTeamRight) or (position.x < -length/2 and not ball.owner.isTeamRight):
-            message = Message(event="corner", start=position.timestamp, end=position.timestamp)
-            events["corner"] = message
-        else:
-            events["out"] = message
-
-        return [message]
-    return []
-       
-def detect_goal(ball: Ball, field : dict, goal : dict, timestamp : float):
-    """Length is the bigger field parameter"""
-    ball_pos = ball.positions[-1]
-    team = None
-    
-    if -goal["width"]/2 < ball_pos.y < goal["width"]/2 and 0 < ball_pos.z < goal["height"]:
-        if -field["length"]/2-goal["depth"] < ball_pos.x < -field["length"]/2:
-            team = "Left"
-        elif field["length"]/2 < ball_pos.x < field["length"]/2+goal["depth"]:
-            team = "Right"
-        if team:
-            messages = []
-            m1 = Goal(team, timestamp, timestamp)
-            events["goal"] = m1
-            messages.append(m1)
-            if "goal_shot" in events:
-                m2 = events["goal_shot"]
-                m2.end = timestamp
-                events.pop("goal_shot", None)
-                messages.append(m2)
-            return messages
-    return []
 
 def detect_goal_shot(ball: Ball, field : dict, goal : dict, timestamp : float):
     """Detects if a goal shot is currently happening"""
@@ -357,12 +312,12 @@ def detect_aggressions(teamA : list, teamB : list, ball : Ball, distance_margin=
 def detect_pass_or_dribble(ball : Ball, players : list, timestamp : float):
     """Given the entities checks if a pass or dribble is hapening"""
     
-    # If Ball isn't moving then there isn't a pass/dribble
-    if ball.get_current_velocity() == 0:
-
+    # If Ball isn't moving then there isn't a pass/dribble or it finished
+        
+    if math.floor(ball.get_current_velocity() * 100) / 100.0 == 0:
         if "dribble/pass" in events:
             m = events["dribble/pass"]
-            message = Dribble("pass", m["fromId"], m["start"], timestamp)
+            message = Dribble("dribble", m["fromId"], m["start"], timestamp)
             # message.end = timestamp
             # message.event = "dribble"
             # message.id = ball.owner.id
@@ -370,8 +325,61 @@ def detect_pass_or_dribble(ball : Ball, players : list, timestamp : float):
             return [message]
 
         return []
-
-
+    
+    # Uius Style
+    
+    # player = ball.get_closest_player(players)
+    
+    # if ball.get_distance_from(player) < CONTACT_DISTANCE:
+    #     # The dribble/pass was initialized
+        
+    #     if "dribble/pass" not in events:
+    #         events["dribble/pass"] = {"pos": ball.positions[-1], "fromId": player.id, "start": timestamp}
+    #         #Pass(ball.positions[-1],  "dribble/pass", player.id, timestamp, timestamp)
+    #         ball.owner = player
+    #         return []
+        
+    #     prev_player = ball.owner
+    #     messages = []
+    #     previous_action = events["dribble/pass"]
+        
+    #     if player.id != prev_player.id:
+    #         # Check if it's a pass
+    #         if player.isTeamRight == prev_player.isTeamRight:
+    #             previous_message = Pass(previous_action["pos"], "pass", previous_action["fromId"], player.id, previous_action["start"], timestamp)
+    #             previous_message.final_pos = ball.positions[-1]
+    #             previous_message.check_type()
+    #             messages.append(previous_message)
+    #             # Pass(m["pos"], "pass", m["fromId"], player.id, m["start"], timestamp)
+            
+    #         # Intersect
+    #         else:
+    #             # Previous Action should be terminated
+    #             # if the closest player to the ball of the same team is the owner then dribble
+    #             previous_event = "dribble"
+    #             for p in players:
+    #                 if p.isTeamRight == ball.owner.isTeamRight and ball.get_distance_from(p) < ball.get_distance_from(ball.owner):
+    #                     previous_event = "pass"
+    #                     break
+    #             if previous_event == "dribble":
+    #                 previous_message = Dribble("dribble", previous_action["fromId"], previous_action["start"], timestamp)
+    #                 messages.append(previous_message)
+    #             else:
+    #                 previous_message = Pass(previous_action["pos"], "pass", previous_action["fromId"], player.id, previous_action["start"], timestamp)
+    #                 previous_message.final_pos = ball.positions[-1]
+    #                 previous_message.check_type()
+    #                 messages.append(previous_message)
+                    
+    #             events.pop("dribble/pass")
+                
+    #             intersect = Message("intersect", timestamp, timestamp)
+    #             messages.append(intersect)
+            
+    #     ball.owner = player
+        
+    #     return messages
+    # A dribble or it's intercepted or it is passed
+    
     for player in players:        
         # If player touch the ball
         if ball.get_distance_from(player) < CONTACT_DISTANCE:
@@ -414,7 +422,7 @@ def detect_pass_or_dribble(ball : Ball, players : list, timestamp : float):
                 
                 m = events["dribble/pass"]
                 if event == "dribble":
-                    m1 = Dribble("pass", m["fromId"], m["start"], timestamp)
+                    m1 = Dribble("dribble", m["fromId"], m["start"], timestamp)
                 else:
                     m1 = Pass(m["pos"], "pass", m["fromId"], player.id, m["start"], timestamp)
                     m1.final_pos = ball.positions[-1]
@@ -423,11 +431,11 @@ def detect_pass_or_dribble(ball : Ball, players : list, timestamp : float):
                 # m1.event = event
                 # m1.final_pos = ball.positions[-1]
                 # m1.check_type()
-                # events.pop("dribble/pass")
+                events.pop("dribble/pass")
 
                 m2 = Message("intersect", timestamp, timestamp)
                 ball.owner = player
 
                 return [m1, m2]
-                
+    
     return []
