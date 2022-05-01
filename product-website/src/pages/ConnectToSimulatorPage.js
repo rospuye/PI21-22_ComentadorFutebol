@@ -18,19 +18,43 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
+import { useCookies } from 'react-cookie'
+
 function ConnectToSimulatorPage() {
+
+    const [cookies, setCookie] = useCookies(['logged_user'])
+
     return (
         <div style={{ padding: '1%' }}>
-            <Link to="/select_game">
-                <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '2%', marginLeft: '2%' }} />
-            </Link>
-            <Title title="Commentator" subtitle="Connect To Simulator"></Title>
+
+            <Container>
+                <Row>
+                    <Col>
+                        <Link to="/select_game">
+                            <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '10%', marginLeft: '2%' }} />
+                        </Link>
+                    </Col>
+                    <Col>
+                        <Title title="Commentator" subtitle="Connect To Simulator"></Title>
+                    </Col>
+                    <Col style={{ display: 'flex', justifyContent: 'right' }}>
+                        {cookies.logged_user !== '' ?
+                            <Button variant="light" style={{ height: '40px', marginTop: '5%' }} onClick={() => {
+                                setCookie('logged_user', '', { path: '/' })
+                                window.location.href = '../select_game'
+                            }}>Logout</Button>
+                            :
+                            <></>
+                        }
+                    </Col>
+                </Row>
+            </Container>
 
             <Container>
                 <Row>
                     <Col></Col>
                     <Col xs={6}>
-                        <Form style={{marginTop: '5%'}}>
+                        <Form style={{ marginTop: '5%' }}>
                             <Form.Group className="mb-3" controlId="formIPAddress">
                                 <Form.Label>IP Address:</Form.Label>
                                 <Form.Control placeholder="Enter IP address" />
@@ -41,7 +65,7 @@ function ConnectToSimulatorPage() {
                                 <Form.Control placeholder="Enter port" />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicCheckbox"></Form.Group>
-                            <div style={{textAlign:"center", marginTop: '5%'}}>
+                            <div style={{ textAlign: "center", marginTop: '5%' }}>
                                 <Button variant="primary" type="submit" size="lg" className="formBtn">
                                     Connect
                                 </Button>

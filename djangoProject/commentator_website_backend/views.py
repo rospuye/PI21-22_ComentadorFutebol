@@ -8,7 +8,6 @@ import json
 
 @csrf_exempt
 def new_login(request):
-
     user_str = request.body.decode()
     user_json = json.loads(user_str)
     username = user_json["username"]
