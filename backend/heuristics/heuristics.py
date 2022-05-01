@@ -78,7 +78,6 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
     # First things first, is it outside the field?
     ball_pos = ball.positions[-1]
     # if 52 < ball_pos.timestamp < 57: print(ball_pos)
-
         
     if not (abs(ball_pos.x) > field["length"]/2 or abs(ball_pos.y) > field["width"]/2):
         return []
@@ -106,10 +105,7 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
             return messages
         
        
-    # if 179 < timestamp < 180:
-    #     print(f"{timestamp}: Sussy corner") 
-    #     print(ball_pos)
-    #     print("goal" in events)
+    
         
     if "goal" not in events:
         # Is it a corner?
