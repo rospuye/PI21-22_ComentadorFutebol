@@ -22,7 +22,6 @@ def process(entities : list, field : dict, goal : dict, curr_timestamp : float):
     # print(f"Start {events = }")
     # # print(f"{curr_timestamp = }")
     # TODO, ball sometimes doesn't have an owner, some methods in heuristics depend on ball always having owner
-    # TODO, fix aggression, player's timestamps aren't uniform
     # Event detection
     messages += detect_kick_off(ball, teamA, teamB, curr_timestamp)
     messages += detect_out_goal(ball, field, goal, curr_timestamp)
@@ -112,15 +111,10 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
         if abs(ball_pos.x) > field["length"]/2:
             teamRight = False if ball_pos.x < 0 else True
             # If ball exited by the opposite side of a team and hasn't been a goal
-            if 113 < timestamp < 114:
-                print("Sussy first if")
             
             if (teamRight == ball.owner.isTeamRight):
                 # Verify if is the same corner event
                 
-                if 113 < timestamp < 114:
-                    print("Second if passed")
-                    
                 if "corner" not in events:
                     message = Message(event="corner", start=ball_pos.timestamp, end=ball_pos.timestamp)
                     events["corner"] = message
@@ -201,9 +195,6 @@ def detect_outs(field : dict, ball : Ball):
     position : Position = ball.positions[-1]
     length = field["length"]
     width = field["width"]
-    # print(f"{length = }")
-    # print(f"{position.x =}")
-    # print(f"{events.get('goal') = }")
 
     if position.x < -length/2 or position.x > length/2 or position.y < -width/2 or position.y > width/2:
         message = Message(event="out", start=position.timestamp, end=position.timestamp)
@@ -211,11 +202,8 @@ def detect_outs(field : dict, ball : Ball):
         if (position.x > length/2 and ball.owner.isTeamRight) or (position.x < -length/2 and not ball.owner.isTeamRight):
             message = Message(event="corner", start=position.timestamp, end=position.timestamp)
             events["corner"] = message
-            # print("Corner made it")
         else:
             events["out"] = message
-            # print("Out made it")
-            
 
         return [message]
     return []
@@ -239,7 +227,6 @@ def detect_goal(ball: Ball, field : dict, goal : dict, timestamp : float):
                 m2 = events["goal_shot"]
                 m2.end = timestamp
                 events.pop("goal_shot", None)
-                print("pop goal")
                 messages.append(m2)
             return messages
     return []
@@ -252,50 +239,29 @@ def detect_goal_shot(ball: Ball, field : dict, goal : dict, timestamp : float):
     if not ball.owner:
         return []
 
-    # if 112 < timestamp < 113: 
-    #     print("Sussy moment")
-    #     print(ball.owner.isTeamRight)
     # check if ball is in goal area and the owner is correct
     if not (ball.positions[-1].x > field["length"]/4 and not ball.owner.isTeamRight or ball.positions[-1].x < -field["length"]/4 and ball.owner.isTeamRight):
         return []
     # ball velocity increases in direction of goal
-    
-    # if 76 < timestamp < 77: 
-    #     print("before if")
+
     if not ball.is_in_goal_direction(not ball.owner.isTeamRight, field, goal):
         # If ball stop moving after a goal_shot
-        # if 112 < timestamp < 113: 
-        #     print(f"{timestamp}: not in goal direction")
         if "goal_shot" in events:
             events["goal_shot"].end = timestamp
-            # print(f"{timestamp}: end of goal_shot")
             events.pop("goal_shot")
         return []
-    # else:
-    #     if 76 < timestamp < 77: 
-    #         print(f"{timestamp}: Going in goal direction")
-    #         ball.is_in_goal_direction(ball.owner.isTeamRight, field, goal, True)
-            
-    # if "goal_shot" in events:
-    #     events["goal_shot"].end = timestamp
-    #     print("end of goal_shot")
+
     if "goal_shot" not in events:
         message = Message(event="goal_shot", start=timestamp, end=timestamp)
         events["goal_shot"] = message
-        # print(f"{timestamp}: creation of a goal_shot")
     return []
 
 def detect_defense(ball : Ball, teamA : list, teamB : list, timestamp : float):
     if not "goal_shot" in events:
         return []
     oponent_team = teamA if ball.owner.isTeamRight else teamB
-    # if 63 < timestamp < 64:
-    #     print(f"{timestamp}: Defense team right {ball.owner.isTeamRight}")
-    #     print("=======================")   
         
     for player in oponent_team:
-        # if 63 < timestamp < 64:
-        #     print(f"{ball.get_distance_from(player) = }")
         if ball.get_distance_from(player) < CONTACT_DISTANCE:
             m1 = Message("defense", start=timestamp, end=timestamp)
             m2 = events["goal_shot"]
