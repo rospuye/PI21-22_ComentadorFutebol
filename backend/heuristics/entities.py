@@ -88,7 +88,7 @@ class Ball(Entity):
         if (delta_x == 0): return False
         # Moving towards desired goal?
         directionRight = True if ball_pos_f.x - ball_pos_i.x > 0 else False
-        #if not (teamRight == directionRight): return False # not moving toward goal
+        if not (teamRight == directionRight): return False # not moving toward goal
         # Get tragectory slope and offset
         m = (ball_pos_f.y-ball_pos_i.y)/delta_x
         b = ball_pos_i.y-(m*ball_pos_i.x)
