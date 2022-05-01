@@ -77,7 +77,6 @@ def detect_kick_off(ball : Ball, teamA, teamB, timestamp):
 def detect_out_goal(ball : Ball, field, goal, timestamp):
     # First things first, is it outside the field?
     ball_pos = ball.positions[-1]
-    # if 52 < ball_pos.timestamp < 57: print(ball_pos)
         
     if not (abs(ball_pos.x) > field["length"]/2 or abs(ball_pos.y) > field["width"]/2):
         return []
@@ -86,7 +85,6 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
     # Is it a goal?
     if abs(ball_pos.y) <= goal["width"]/2 and 0 < ball_pos.z < goal["height"] and abs(ball_pos.x) > field["length"]/2:
         # It's a goal! Which team?
-        #print("Goal?")
         team = None
         if -field["length"]/2-goal["depth"] < ball_pos.x < -field["length"]/2:
             team = "Left"
@@ -103,10 +101,7 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
                 events.pop("goal_shot", None)
                 messages = [m2] + messages 
             return messages
-        
-       
-    
-        
+            
     if "goal" not in events:
         # Is it a corner?
         if abs(ball_pos.x) > field["length"]/2:
@@ -121,13 +116,20 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
                     events["corner"] = message
                     # print("Corner made it")
                     return [message]
+            else:
+                # Goal Keeper kickoff
+                if "goalkeeper_out" not in events:
+                    message = Message(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp)
+                events["goalkeeper_out"] = message
+                # print("Out made it")
+                return [message]
             
         # TODO dont think this should be a else
         else: # It's an out
             if "out" not in events:
                 message = Message(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp)
                 events["out"] = message
-                # print("Out made it")
+                print(f"{timestamp}: Out made it")
                 return [message]
     
     return []
@@ -140,6 +142,11 @@ def detect_corner_shot(ball : Ball, teamA : list, teamB : list, curr_timestamp :
     
     elif "out" in events:
         if start_outside_shot("out", ball, teamA, teamB, curr_timestamp):
+            print(f"{curr_timestamp}: Out Start")
+            return []
+        
+    elif "goalkeeper_out" in events:
+        if start_outside_shot("goalkeeper_out", ball, teamA, teamB, curr_timestamp):
             return []
 
     elif "corner_shot" in events:
@@ -150,8 +157,13 @@ def detect_corner_shot(ball : Ball, teamA : list, teamB : list, curr_timestamp :
     elif "out_shot" in events:
         message = outside_shot("out", ball, teamA, teamB, curr_timestamp)
         if message is not None:
+            print(f"{curr_timestamp}: Out Shot")
             return [message]
 
+    elif "goalkeeper_out_shot" in events:
+        message = outside_shot("goalkeeper_out", ball, teamA, teamB, curr_timestamp)
+        if message is not None:
+            return [message]
     return []
 
 def start_outside_shot(event : str, ball : Ball, teamA : list, teamB : list, curr_timestamp : float):
@@ -163,7 +175,8 @@ def start_outside_shot(event : str, ball : Ball, teamA : list, teamB : list, cur
         # If attacking team has a player that entered in contact with the ball
         if ball.get_distance_from(player) < CONTACT_DISTANCE:
             events.pop(event)
-            events["{event}_shot"] = {"start": curr_timestamp}
+            events[f"{event}_shot"] = {"start": curr_timestamp}
+            # print(f"after {events[event + '_shot'] = }")
             return True
             
     return False
@@ -172,12 +185,12 @@ def outside_shot(event : str, ball : Ball, teamA : list, teamB : list, curr_time
     # The shot ends when the ball stops moving
     if has_ball_stopped(ball, teamA, teamB):
         message = Message(event=f"{event}_shot", start=events[f"{event}_shot"]["start"], end=curr_timestamp)
-        events.pop("corner_shot")
-        return [message]
+        events.pop(f"{event}_shot")
+        return message
             
 def has_ball_stopped(ball : Ball, teamA : list, teamB : list):
     """Returns True if the ball collides with some player of if its velocity is 0"""
-    if ball.get_current_velocity == 0:
+    if ball.get_current_velocity() == 0:
         return True
 
     for player in teamA + teamB:
@@ -312,6 +325,11 @@ def detect_aggressions(teamA : list, teamB : list, ball : Ball, distance_margin=
 def detect_pass_or_dribble(ball : Ball, players : list, timestamp : float):
     """Given the entities checks if a pass or dribble is hapening"""
     
+    if "goal" in events:
+        if "dribble/pass" in events:
+            events.pop("dribble/pass")
+        return []
+        
     # If Ball isn't moving then there isn't a pass/dribble or it finished
         
     if math.floor(ball.get_current_velocity() * 100) / 100.0 == 0:
