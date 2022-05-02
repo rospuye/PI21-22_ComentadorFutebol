@@ -23,17 +23,19 @@ function UploadLogPage() {
   function processFile(file) {
     if (file) {
 
-      const fileData = {
-        name: file.name,
-        file: file
-      }
-
-      console.log(fileData)
-
-      axios.post(`http://127.0.0.1:8000/file_upload/`, fileData)
-      .then(res => {
-          // console.log(res)
-      })
+      const url = 'http://127.0.0.1:8000/file_upload/';
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('fileName', file.name);
+      const config = {
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
+      };
+      axios.post(url, formData, config).then((response) => {
+        console.log(response.data);
+      });
+      
     }
   }
 
