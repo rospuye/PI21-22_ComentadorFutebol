@@ -60,9 +60,11 @@ function UploadLogPage() {
           </Row>
           <Row style={{ marginBottom: '10%', textAlign: 'center' }}>
             <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} />
-            <Button variant="primary" type="submit" size="lg" style={{ width: '18%', margin: 'auto' }} className="formBtn" onClick={onButtonClick}>
-              Load
-            </Button>
+            <Link to="/game_viewing">
+              <Button variant="primary" type="submit" size="lg" style={{ width: '18%', margin: 'auto' }} className="formBtn" onClick={onButtonClick}>
+                Load
+              </Button>
+            </Link>
           </Row>
         </Col>
       </Container>

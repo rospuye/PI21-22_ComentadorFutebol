@@ -66,9 +66,11 @@ function ConnectToSimulatorPage() {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicCheckbox"></Form.Group>
                             <div style={{ textAlign: "center", marginTop: '5%' }}>
+                            <Link to="/game_viewing">
                                 <Button variant="primary" type="submit" size="lg" className="formBtn">
                                     Connect
                                 </Button>
+                            </Link>
                             </div>
                         </Form>
                     </Col>
