@@ -2,6 +2,7 @@ import React from 'react'
 import { Container,Row,Col, Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSolid,faPen } from '@fortawesome/free-solid-svg-icons'
+import { Link } from "react-router-dom";
 
 
 function VideoThumbnail({title,Img,date,login}) {
@@ -25,9 +26,11 @@ function VideoThumbnail({title,Img,date,login}) {
         </Col>
         <Col style={{display:'flex',justifyContent:'right'}}>
         {login ?
+            <Link to="/edit_video">
             <Button style={{height:'65%',width:'70%'}} variant="primary" type="submit" size="lg" className='formBtn'>
                 <FontAwesomeIcon icon={faPen}/>
             </Button>
+            </Link>
         : <></> }
         </Col>
         </Row>
