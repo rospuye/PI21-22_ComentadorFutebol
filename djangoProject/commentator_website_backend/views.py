@@ -34,3 +34,13 @@ def new_register(request):
         return HttpResponse("register_success")
     except django.db.utils.IntegrityError:
         return HttpResponse("username_already_in_use")
+
+
+@csrf_exempt
+def file_upload(request):
+    uploaded_file = request.FILES['file']
+    for line in uploaded_file:
+        print(line.decode())
+    # print(uploaded_file.content_type)
+    return HttpResponse("file_upload_success")
+

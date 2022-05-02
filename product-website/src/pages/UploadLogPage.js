@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import Title from '../components/Title'
 import { Container } from 'react-bootstrap'
 import { Row } from 'react-bootstrap'
@@ -11,16 +11,37 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 import { useCookies } from 'react-cookie'
+import axios from 'axios'
 
 function UploadLogPage() {
 
   const [cookies, setCookie] = useCookies(['logged_user'])
   const inputFile = useRef(null)
 
+  const [file, setFile] = useState(null)
+
+  function processFile(file) {
+    if (file) {
+
+      const url = 'http://127.0.0.1:8000/file_upload/';
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('fileName', file.name);
+      const config = {
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
+      };
+      axios.post(url, formData, config).then((response) => {
+        console.log(response.data);
+      });
+      
+    }
+  }
+
   const onButtonClick = () => {
-    // `current` points to the mounted file input element
-    inputFile.current.click();
-  };
+    inputFile.current.click()
+  }
 
   return (
     <>
@@ -59,9 +80,15 @@ function UploadLogPage() {
             />
           </Row>
           <Row style={{ marginBottom: '10%', textAlign: 'center' }}>
-            <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} />
+            <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(event) => {
+              setFile(event.target.files[0])
+              document.getElementById('confirmBtn').disabled = false
+            }} />
             <Button variant="primary" type="submit" size="lg" style={{ width: '18%', margin: 'auto' }} className="formBtn" onClick={onButtonClick}>
               Load
+            </Button>
+            <Button id='confirmBtn' variant="primary" type="submit" size="lg" style={{ width: '18%', margin: 'auto' }} className="formBtn" onClick={processFile(file)} disabled>
+              Confirm
             </Button>
           </Row>
         </Col>
