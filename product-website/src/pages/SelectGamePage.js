@@ -72,7 +72,7 @@ function SelectGamePage() {
                             : <></>}
                     </Col>
                     <Col xs={9}>
-                        <VideoGrid login={false} />
+                        <VideoGrid login={false} yourGames={false}/>
                         {/* Grid with videos and pages */}
                     </Col>
                 </Row>

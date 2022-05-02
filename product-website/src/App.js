@@ -20,6 +20,7 @@ import PersonalitySettings from './pages/PersonalitySettings';
 import SelectGamePage from './pages/SelectGamePage';
 import GameViewingPage from './pages/GameViewingPage';
 import YourGamesPage from './pages/YourGamesPage';
+import EditVideoPage from './pages/EditVideoPage';
 
 export default function App() {
     return (
@@ -34,7 +35,8 @@ export default function App() {
           <Route path="/personality" element={<PersonalitySettings/>}/>
           <Route path="/select_game" element={<SelectGamePage/>}/>
           <Route path="/game_viewing" element={<GameViewingPage/>}/>
-          <Route path="your_games" element={<YourGamesPage/>}/>
+          <Route path="/your_games" element={<YourGamesPage/>}/>
+          <Route path="/edit_video" element={<EditVideoPage/>}/>
         </Routes>
       </BrowserRouter>
     );
