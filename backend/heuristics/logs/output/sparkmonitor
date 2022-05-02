@@ -1,0 +1,1314 @@
+Message: kick_off, 3.1, 3.1
+Message: long_pass, 3.1, 8.3, from: matNum8matLeft, to: matNum4matLeft
+Message: pass, 8.34, 9.66003, matNum4matLeft
+Message: pass, 11.4601, 11.5001, matNum4matLeft
+Message: pass, 11.8201, 11.8601, matNum4matLeft
+Message: short_pass, 12.3001, 13.8201, from: matNum4matLeft, to: matNum5matLeft
+Message: pass, 13.8601, 16.5002, matNum5matLeft
+Message: intersect, 16.5002, 16.5002
+Message: short_pass, 13.8601, 18.6202, from: matNum5matLeft, to: matNum3matRight
+Message: pass, 18.6602, 20.3003, matNum3matRight
+Message: intersect, 20.3003, 20.3003
+Message: short_pass, 18.6602, 22.3803, from: matNum3matRight, to: matNum3matLeft
+Message: pass, 22.4203, 25.7404, matNum3matLeft
+Message: pass, 25.7804, 25.8204, matNum3matLeft
+Message: pass, 25.8604, 25.9004, matNum3matLeft
+Message: pass, 25.9404, 25.9804, matNum3matLeft
+Message: pass, 26.0204, 26.0604, matNum3matLeft
+Message: pass, 26.1004, 26.1404, matNum3matLeft
+Message: pass, 26.1804, 26.2204, matNum3matLeft
+Message: pass, 26.2604, 27.5804, matNum3matLeft
+Message: intersect, 27.5804, 27.5804
+Message: pass, 26.2604, 27.9804, matNum3matLeft
+Message: intersect, 27.9804, 27.9804
+Message: pass, 26.2604, 28.0205, matNum3matLeft
+Message: intersect, 28.0205, 28.0205
+Message: pass, 26.2604, 28.0605, matNum3matLeft
+Message: intersect, 28.0605, 28.0605
+Message: pass, 26.2604, 28.1005, matNum3matLeft
+Message: intersect, 28.1005, 28.1005
+Message: pass, 26.2604, 28.1405, matNum3matLeft
+Message: intersect, 28.1405, 28.1405
+Message: pass, 26.2604, 28.1805, matNum3matLeft
+Message: intersect, 28.1805, 28.1805
+Message: pass, 26.2604, 28.2205, matNum3matLeft
+Message: intersect, 28.2205, 28.2205
+Message: pass, 26.2604, 28.2605, matNum3matLeft
+Message: intersect, 28.2605, 28.2605
+Message: pass, 26.2604, 28.3005, matNum3matLeft
+Message: intersect, 28.3005, 28.3005
+Message: pass, 26.2604, 28.3405, matNum3matLeft
+Message: intersect, 28.3405, 28.3405
+Message: pass, 26.2604, 28.3805, matNum3matLeft
+Message: intersect, 28.3805, 28.3805
+Message: pass, 26.2604, 28.4205, matNum3matLeft
+Message: intersect, 28.4205, 28.4205
+Message: pass, 26.2604, 28.4605, matNum3matLeft
+Message: intersect, 28.4605, 28.4605
+Message: pass, 26.2604, 28.5005, matNum3matLeft
+Message: intersect, 28.5005, 28.5005
+Message: pass, 26.2604, 28.5405, matNum3matLeft
+Message: intersect, 28.5405, 28.5405
+Message: pass, 26.2604, 28.5805, matNum3matLeft
+Message: intersect, 28.5805, 28.5805
+Message: pass, 26.2604, 30.2205, matNum3matLeft
+Message: intersect, 30.2205, 30.2205
+Message: pass, 26.2604, 31.5405, matNum3matLeft
+Message: intersect, 31.5405, 31.5405
+Message: pass, 26.2604, 31.5805, matNum3matLeft
+Message: intersect, 31.5805, 31.5805
+Message: pass, 26.2604, 31.6205, matNum3matLeft
+Message: intersect, 31.6205, 31.6205
+Message: pass, 26.2604, 31.6605, matNum3matLeft
+Message: intersect, 31.6605, 31.6605
+Message: pass, 26.2604, 31.7005, matNum3matLeft
+Message: intersect, 31.7005, 31.7005
+Message: short_pass, 26.2604, 35.2606, from: matNum3matLeft, to: matNum6matRight
+Message: long_pass, 35.3006, 38.0607, from: matNum6matRight, to: matNum2matLeft
+Message: intersect, 38.0607, 38.0607
+Message: pass, 35.3006, 42.4608, matNum6matRight
+Message: pass, 42.5008, 42.5408, matNum2matLeft
+Message: pass, 42.5808, 42.6208, matNum2matLeft
+Message: pass, 42.6608, 42.7008, matNum2matLeft
+Message: pass, 42.7408, 42.7808, matNum2matLeft
+Message: pass, 42.8208, 42.8608, matNum2matLeft
+Message: pass, 42.9008, 42.9408, matNum2matLeft
+Message: short_pass, 43.7808, 48.1009, from: matNum3matLeft, to: matNum2matRight
+Message: intersect, 48.1009, 48.1009
+Message: long_pass, 43.7808, 53.261, from: matNum3matLeft, to: matNum1matLeft
+Message: intersect, 53.261, 53.261
+Message: goal from team Left, 53.541, 53.541
+Message: goal_shot, 53.301, 53.541
+Message: goal from team Left, 53.581, 53.581
+Message: goal_shot, 53.541, 53.581
+Message: goal from team Left, 53.621, 53.621
+Message: goal_shot, 53.581, 53.621
+Message: goal from team Left, 53.661, 53.661
+Message: goal_shot, 53.621, 53.661
+Message: goal from team Left, 53.701, 53.701
+Message: goal from team Left, 53.741, 53.741
+Message: goal from team Left, 53.781, 53.781
+Message: goal_shot, 53.741, 53.781
+Message: goal from team Left, 53.821, 53.821
+Message: goal_shot, 53.781, 53.821
+Message: goal from team Left, 53.861, 53.861
+Message: goal_shot, 53.821, 53.861
+Message: goal from team Left, 53.901, 53.901
+Message: goal_shot, 53.861, 53.901
+Message: goal from team Left, 53.941, 53.941
+Message: goal_shot, 53.901, 53.941
+Message: goal from team Left, 53.981, 53.981
+Message: goal_shot, 53.941, 53.981
+Message: goal from team Left, 54.021, 54.021
+Message: goal_shot, 53.981, 54.021
+Message: goal from team Left, 54.061, 54.061
+Message: goal_shot, 54.021, 54.061
+Message: goal from team Left, 54.101, 54.101
+Message: goal_shot, 54.061, 54.101
+Message: goal from team Left, 54.141, 54.141
+Message: goal_shot, 54.101, 54.141
+Message: goal from team Left, 54.181, 54.181
+Message: goal_shot, 54.141, 54.181
+Message: goal from team Left, 54.2211, 54.2211
+Message: goal_shot, 54.181, 54.2211
+Message: goal from team Left, 54.2611, 54.2611
+Message: goal_shot, 54.2211, 54.2611
+Message: goal from team Left, 54.3011, 54.3011
+Message: goal_shot, 54.2611, 54.3011
+Message: goal from team Left, 54.3411, 54.3411
+Message: goal_shot, 54.3011, 54.3411
+Message: goal from team Left, 54.3811, 54.3811
+Message: goal_shot, 54.3411, 54.3811
+Message: goal from team Left, 54.4211, 54.4211
+Message: goal_shot, 54.3811, 54.4211
+Message: goal from team Left, 54.4611, 54.4611
+Message: goal_shot, 54.4211, 54.4611
+Message: goal from team Left, 54.5011, 54.5011
+Message: goal_shot, 54.4611, 54.5011
+Message: goal from team Left, 54.5411, 54.5411
+Message: goal_shot, 54.5011, 54.5411
+Message: goal from team Left, 54.5811, 54.5811
+Message: goal_shot, 54.5411, 54.5811
+Message: goal from team Left, 54.6211, 54.6211
+Message: goal_shot, 54.5811, 54.6211
+Message: goal from team Left, 54.6611, 54.6611
+Message: goal_shot, 54.6211, 54.6611
+Message: goal from team Left, 54.7011, 54.7011
+Message: goal_shot, 54.6611, 54.7011
+Message: goal from team Left, 54.7411, 54.7411
+Message: goal_shot, 54.7011, 54.7411
+Message: goal from team Left, 54.7811, 54.7811
+Message: goal_shot, 54.7411, 54.7811
+Message: goal from team Left, 54.8211, 54.8211
+Message: goal_shot, 54.7811, 54.8211
+Message: goal from team Left, 54.8611, 54.8611
+Message: goal_shot, 54.8211, 54.8611
+Message: goal from team Left, 54.9011, 54.9011
+Message: goal_shot, 54.8611, 54.9011
+Message: goal from team Left, 54.9411, 54.9411
+Message: goal_shot, 54.9011, 54.9411
+Message: goal from team Left, 54.9811, 54.9811
+Message: goal_shot, 54.9411, 54.9811
+Message: goal from team Left, 55.0211, 55.0211
+Message: goal_shot, 54.9811, 55.0211
+Message: goal from team Left, 55.0611, 55.0611
+Message: goal_shot, 55.0211, 55.0611
+Message: goal from team Left, 55.1011, 55.1011
+Message: goal_shot, 55.0611, 55.1011
+Message: goal from team Left, 55.1411, 55.1411
+Message: goal_shot, 55.1011, 55.1411
+Message: goal from team Left, 55.1811, 55.1811
+Message: goal_shot, 55.1411, 55.1811
+Message: goal from team Left, 55.2211, 55.2211
+Message: goal_shot, 55.1811, 55.2211
+Message: goal from team Left, 55.2611, 55.2611
+Message: goal_shot, 55.2211, 55.2611
+Message: goal from team Left, 55.3011, 55.3011
+Message: goal_shot, 55.2611, 55.3011
+Message: goal from team Left, 55.3411, 55.3411
+Message: goal_shot, 55.3011, 55.3411
+Message: goal from team Left, 55.3811, 55.3811
+Message: goal_shot, 55.3411, 55.3811
+Message: goal from team Left, 55.4211, 55.4211
+Message: goal_shot, 55.3811, 55.4211
+Message: goal from team Left, 55.4611, 55.4611
+Message: goal_shot, 55.4211, 55.4611
+Message: goal from team Left, 55.5011, 55.5011
+Message: goal_shot, 55.4611, 55.5011
+Message: goal from team Left, 55.5411, 55.5411
+Message: goal_shot, 55.5011, 55.5411
+Message: goal from team Left, 55.5811, 55.5811
+Message: goal_shot, 55.5411, 55.5811
+Message: goal from team Left, 55.6211, 55.6211
+Message: goal_shot, 55.5811, 55.6211
+Message: goal from team Left, 55.6611, 55.6611
+Message: goal_shot, 55.6211, 55.6611
+Message: goal from team Left, 55.7011, 55.7011
+Message: goal_shot, 55.6611, 55.7011
+Message: goal from team Left, 55.7411, 55.7411
+Message: goal_shot, 55.7011, 55.7411
+Message: goal from team Left, 55.7811, 55.7811
+Message: goal_shot, 55.7411, 55.7811
+Message: goal from team Left, 55.8211, 55.8211
+Message: goal_shot, 55.7811, 55.8211
+Message: goal from team Left, 55.8611, 55.8611
+Message: goal_shot, 55.8211, 55.8611
+Message: goal from team Left, 55.9011, 55.9011
+Message: goal_shot, 55.8611, 55.9011
+Message: goal from team Left, 55.9411, 55.9411
+Message: goal_shot, 55.9011, 55.9411
+Message: goal from team Left, 55.9811, 55.9811
+Message: goal_shot, 55.9411, 55.9811
+Message: goal from team Left, 56.0211, 56.0211
+Message: goal_shot, 55.9811, 56.0211
+Message: goal from team Left, 56.0611, 56.0611
+Message: goal_shot, 56.0211, 56.0611
+Message: goal from team Left, 56.1011, 56.1011
+Message: goal_shot, 56.0611, 56.1011
+Message: goal from team Left, 56.1411, 56.1411
+Message: goal_shot, 56.1011, 56.1411
+Message: goal from team Left, 56.1811, 56.1811
+Message: goal_shot, 56.1411, 56.1811
+Message: goal from team Left, 56.2211, 56.2211
+Message: goal_shot, 56.1811, 56.2211
+Message: goal from team Left, 56.2611, 56.2611
+Message: goal_shot, 56.2211, 56.2611
+Message: goal from team Left, 56.3011, 56.3011
+Message: goal_shot, 56.2611, 56.3011
+Message: goal from team Left, 56.3411, 56.3411
+Message: goal_shot, 56.3011, 56.3411
+Message: goal from team Left, 56.3811, 56.3811
+Message: goal_shot, 56.3411, 56.3811
+Message: goal from team Left, 56.4211, 56.4211
+Message: goal_shot, 56.3811, 56.4211
+Message: goal from team Left, 56.4611, 56.4611
+Message: goal_shot, 56.4211, 56.4611
+Message: goal from team Left, 56.5011, 56.5011
+Message: goal_shot, 56.4611, 56.5011
+Message: goal from team Left, 56.5411, 56.5411
+Message: goal_shot, 56.5011, 56.5411
+Message: pass, 43.7808, 56.6211, matNum3matLeft
+Message: defense, 60.3412, 60.3412
+Message: goal_shot, 56.5411, 60.3412
+Message: kick_off, 61.2212, 61.2212
+Message: short_pass, 64.2212, 68.1406, from: matNum4matLeft, to: matNum9matRight
+Message: intersect, 68.1406, 68.1406
+Message: pass, 64.2212, 69.0204, matNum4matLeft
+Message: intersect, 69.0204, 69.0204
+Message: pass, 64.2212, 69.0604, matNum4matLeft
+Message: intersect, 69.0604, 69.0604
+Message: pass, 64.2212, 69.1004, matNum4matLeft
+Message: intersect, 69.1004, 69.1004
+Message: pass, 64.2212, 69.1404, matNum4matLeft
+Message: intersect, 69.1404, 69.1404
+Message: pass, 64.2212, 69.1804, matNum4matLeft
+Message: intersect, 69.1804, 69.1804
+Message: pass, 64.2212, 69.2204, matNum4matLeft
+Message: intersect, 69.2204, 69.2204
+Message: pass, 64.2212, 69.2604, matNum4matLeft
+Message: intersect, 69.2604, 69.2604
+Message: pass, 64.2212, 69.3004, matNum4matLeft
+Message: intersect, 69.3004, 69.3004
+Message: pass, 64.2212, 69.3404, matNum4matLeft
+Message: intersect, 69.3404, 69.3404
+Message: pass, 64.2212, 69.3804, matNum4matLeft
+Message: intersect, 69.3804, 69.3804
+Message: pass, 64.2212, 69.4204, matNum4matLeft
+Message: intersect, 69.4204, 69.4204
+Message: aggression (matNum6matLeft - matNum9matRight), 69.2204, 69.4604
+Message: pass, 64.2212, 69.4604, matNum4matLeft
+Message: intersect, 69.4604, 69.4604
+Message: pass, 64.2212, 69.5004, matNum4matLeft
+Message: intersect, 69.5004, 69.5004
+Message: pass, 64.2212, 69.5403, matNum4matLeft
+Message: intersect, 69.5403, 69.5403
+Message: pass, 64.2212, 69.5803, matNum4matLeft
+Message: intersect, 69.5803, 69.5803
+Message: pass, 64.2212, 69.6203, matNum4matLeft
+Message: intersect, 69.6203, 69.6203
+Message: pass, 64.2212, 69.6603, matNum4matLeft
+Message: intersect, 69.6603, 69.6603
+Message: pass, 64.2212, 69.7003, matNum4matLeft
+Message: intersect, 69.7003, 69.7003
+Message: pass, 64.2212, 69.7403, matNum4matLeft
+Message: intersect, 69.7403, 69.7403
+Message: pass, 64.2212, 69.7803, matNum4matLeft
+Message: intersect, 69.7803, 69.7803
+Message: pass, 64.2212, 69.8203, matNum4matLeft
+Message: intersect, 69.8203, 69.8203
+Message: pass, 64.2212, 69.8603, matNum4matLeft
+Message: intersect, 69.8603, 69.8603
+Message: pass, 64.2212, 69.9003, matNum4matLeft
+Message: intersect, 69.9003, 69.9003
+Message: aggression (matNum5matLeft - matNum8matRight), 72.3399, 72.3799
+Message: short_pass, 64.2212, 73.9796, from: matNum4matLeft, to: matNum3matRight
+Message: intersect, 73.9796, 73.9796
+Message: pass, 64.2212, 74.7795, matNum4matLeft
+Message: intersect, 74.7795, 74.7795
+Message: pass, 64.2212, 74.8195, matNum4matLeft
+Message: intersect, 74.8195, 74.8195
+Message: pass, 64.2212, 74.8595, matNum4matLeft
+Message: intersect, 74.8595, 74.8595
+Message: pass, 64.2212, 74.8994, matNum4matLeft
+Message: intersect, 74.8994, 74.8994
+Message: pass, 64.2212, 74.9394, matNum4matLeft
+Message: intersect, 74.9394, 74.9394
+Message: pass, 64.2212, 74.9794, matNum4matLeft
+Message: intersect, 74.9794, 74.9794
+Message: pass, 64.2212, 75.0194, matNum4matLeft
+Message: intersect, 75.0194, 75.0194
+Message: pass, 64.2212, 75.0594, matNum4matLeft
+Message: intersect, 75.0594, 75.0594
+Message: pass, 64.2212, 75.0994, matNum4matLeft
+Message: intersect, 75.0994, 75.0994
+Message: pass, 64.2212, 75.1394, matNum4matLeft
+Message: intersect, 75.1394, 75.1394
+Message: pass, 64.2212, 75.1794, matNum4matLeft
+Message: intersect, 75.1794, 75.1794
+Message: pass, 64.2212, 75.2194, matNum4matLeft
+Message: intersect, 75.2194, 75.2194
+Message: pass, 64.2212, 75.2594, matNum4matLeft
+Message: intersect, 75.2594, 75.2594
+Message: pass, 64.2212, 75.2994, matNum4matLeft
+Message: intersect, 75.2994, 75.2994
+Message: pass, 64.2212, 75.3394, matNum4matLeft
+Message: intersect, 75.3394, 75.3394
+Message: pass, 64.2212, 75.3794, matNum4matLeft
+Message: intersect, 75.3794, 75.3794
+Message: short_pass, 64.2212, 78.9388, from: matNum4matLeft, to: matNum4matLeft
+Message: intersect, 78.9388, 78.9388
+Message: pass, 64.2212, 79.3387, matNum4matLeft
+Message: short_pass, 79.3787, 81.5383, from: matNum4matLeft, to: matNum3matLeft
+Message: long_pass, 81.5783, 88.4972, from: matNum3matLeft, to: matNum10matRight
+Message: intersect, 88.4972, 88.4972
+Message: pass, 81.5783, 89.0571, matNum3matLeft
+Message: intersect, 89.0571, 89.0571
+Message: pass, 81.5783, 89.0971, matNum3matLeft
+Message: intersect, 89.0971, 89.0971
+Message: pass, 81.5783, 89.1371, matNum3matLeft
+Message: intersect, 89.1371, 89.1371
+Message: pass, 81.5783, 89.177, matNum3matLeft
+Message: intersect, 89.177, 89.177
+Message: pass, 81.5783, 89.217, matNum3matLeft
+Message: intersect, 89.217, 89.217
+Message: long_pass, 81.5783, 91.6966, from: matNum3matLeft, to: matNum3matLeft
+Message: pass, 91.7366, 92.8964, matNum3matLeft
+Message: intersect, 92.8964, 92.8964
+Message: pass, 91.7366, 95.376, matNum3matLeft
+Message: intersect, 95.376, 95.376
+Message: pass, 91.7366, 95.416, matNum3matLeft
+Message: intersect, 95.416, 95.416
+Message: pass, 91.7366, 95.456, matNum3matLeft
+Message: intersect, 95.456, 95.456
+Message: pass, 91.7366, 95.496, matNum3matLeft
+Message: intersect, 95.496, 95.496
+Message: pass, 91.7366, 100.775, matNum3matLeft
+Message: intersect, 100.775, 100.775
+Message: pass, 91.7366, 100.815, matNum3matLeft
+Message: intersect, 100.815, 100.815
+Message: pass, 91.7366, 100.855, matNum3matLeft
+Message: intersect, 100.855, 100.855
+Message: pass, 91.7366, 100.895, matNum3matLeft
+Message: intersect, 100.895, 100.895
+Message: pass, 91.7366, 100.935, matNum3matLeft
+Message: intersect, 100.935, 100.935
+Message: pass, 91.7366, 100.975, matNum3matLeft
+Message: intersect, 100.975, 100.975
+Message: pass, 91.7366, 101.015, matNum3matLeft
+Message: intersect, 101.015, 101.015
+Message: pass, 91.7366, 101.055, matNum3matLeft
+Message: intersect, 101.055, 101.055
+Message: pass, 91.7366, 101.095, matNum3matLeft
+Message: intersect, 101.095, 101.095
+Message: pass, 91.7366, 101.135, matNum3matLeft
+Message: intersect, 101.135, 101.135
+Message: pass, 91.7366, 101.175, matNum3matLeft
+Message: intersect, 101.175, 101.175
+Message: pass, 91.7366, 101.215, matNum3matLeft
+Message: intersect, 101.215, 101.215
+Message: aggression (matNum9matLeft - matNum7matRight), 101.135, 101.255
+Message: pass, 91.7366, 101.255, matNum3matLeft
+Message: intersect, 101.255, 101.255
+Message: pass, 91.7366, 101.295, matNum3matLeft
+Message: intersect, 101.295, 101.295
+Message: pass, 91.7366, 101.335, matNum3matLeft
+Message: intersect, 101.335, 101.335
+Message: pass, 91.7366, 101.375, matNum3matLeft
+Message: intersect, 101.375, 101.375
+Message: short_pass, 91.7366, 104.494, from: matNum3matLeft, to: matNum7matLeft
+Message: intersect, 104.494, 104.494
+Message: pass, 91.7366, 106.654, matNum3matLeft
+Message: pass, 106.694, 106.734, matNum7matLeft
+Message: pass, 106.774, 106.814, matNum7matLeft
+Message: pass, 106.854, 106.894, matNum7matLeft
+Message: pass, 106.934, 106.974, matNum7matLeft
+Message: pass, 113.413, 113.453, matNum8matLeft
+Message: intersect, 113.453, 113.453
+Message: pass, 113.413, 113.493, matNum8matLeft
+Message: intersect, 113.493, 113.493
+Message: pass, 113.413, 113.533, matNum8matLeft
+Message: intersect, 113.533, 113.533
+Message: pass, 113.413, 113.613, matNum8matLeft
+Message: intersect, 113.613, 113.613
+Message: pass, 113.413, 113.653, matNum8matLeft
+Message: intersect, 113.653, 113.653
+Message: pass, 113.413, 113.693, matNum8matLeft
+Message: intersect, 113.693, 113.693
+Message: pass, 113.413, 113.733, matNum8matLeft
+Message: intersect, 113.733, 113.733
+Message: pass, 113.413, 113.773, matNum8matLeft
+Message: intersect, 113.773, 113.773
+Message: pass, 113.413, 113.813, matNum8matLeft
+Message: intersect, 113.813, 113.813
+Message: pass, 113.413, 113.853, matNum8matLeft
+Message: intersect, 113.853, 113.853
+Message: pass, 113.413, 113.893, matNum8matLeft
+Message: intersect, 113.893, 113.893
+Message: pass, 113.413, 113.933, matNum8matLeft
+Message: intersect, 113.933, 113.933
+Message: pass, 113.413, 113.973, matNum8matLeft
+Message: intersect, 113.973, 113.973
+Message: pass, 113.413, 114.013, matNum8matLeft
+Message: intersect, 114.013, 114.013
+Message: pass, 113.413, 114.053, matNum8matLeft
+Message: intersect, 114.053, 114.053
+Message: aggression (matNum8matLeft - matNum4matRight), 113.853, 114.093
+Message: pass, 113.413, 114.093, matNum8matLeft
+Message: intersect, 114.093, 114.093
+Message: pass, 113.413, 114.133, matNum8matLeft
+Message: intersect, 114.133, 114.133
+Message: pass, 113.413, 114.173, matNum8matLeft
+Message: intersect, 114.173, 114.173
+Message: pass, 113.413, 114.213, matNum8matLeft
+Message: intersect, 114.213, 114.213
+Message: pass, 113.413, 115.173, matNum8matLeft
+Message: intersect, 115.173, 115.173
+Message: pass, 113.413, 116.612, matNum8matLeft
+Message: intersect, 116.612, 116.612
+Message: pass, 113.413, 116.652, matNum8matLeft
+Message: intersect, 116.652, 116.652
+Message: pass, 113.413, 116.692, matNum8matLeft
+Message: intersect, 116.692, 116.692
+Message: pass, 113.413, 116.732, matNum8matLeft
+Message: intersect, 116.732, 116.732
+Message: pass, 113.413, 116.772, matNum8matLeft
+Message: intersect, 116.772, 116.772
+Message: pass, 113.413, 116.812, matNum8matLeft
+Message: intersect, 116.812, 116.812
+Message: pass, 113.413, 116.852, matNum8matLeft
+Message: intersect, 116.852, 116.852
+Message: pass, 113.413, 116.892, matNum8matLeft
+Message: intersect, 116.892, 116.892
+Message: pass, 113.413, 116.932, matNum8matLeft
+Message: intersect, 116.932, 116.932
+Message: pass, 113.413, 116.972, matNum8matLeft
+Message: intersect, 116.972, 116.972
+Message: pass, 113.413, 117.012, matNum8matLeft
+Message: intersect, 117.012, 117.012
+Message: pass, 113.413, 117.052, matNum8matLeft
+Message: intersect, 117.052, 117.052
+Message: pass, 113.413, 117.092, matNum8matLeft
+Message: intersect, 117.092, 117.092
+Message: pass, 113.413, 117.132, matNum8matLeft
+Message: intersect, 117.132, 117.132
+Message: pass, 113.413, 117.172, matNum8matLeft
+Message: intersect, 117.172, 117.172
+Message: pass, 113.413, 119.132, matNum8matLeft
+Message: intersect, 119.132, 119.132
+Message: short_pass, 113.413, 120.852, from: matNum8matLeft, to: matNum4matLeft
+Message: pass, 121.012, 121.092, matNum4matLeft
+Message: intersect, 121.092, 121.092
+Message: pass, 121.012, 121.132, matNum4matLeft
+Message: intersect, 121.132, 121.132
+Message: pass, 121.012, 121.172, matNum4matLeft
+Message: intersect, 121.172, 121.172
+Message: pass, 121.012, 121.212, matNum4matLeft
+Message: intersect, 121.212, 121.212
+Message: pass, 121.012, 121.252, matNum4matLeft
+Message: intersect, 121.252, 121.252
+Message: pass, 121.012, 121.292, matNum4matLeft
+Message: intersect, 121.292, 121.292
+Message: pass, 121.012, 121.332, matNum4matLeft
+Message: intersect, 121.332, 121.332
+Message: pass, 121.012, 121.372, matNum4matLeft
+Message: intersect, 121.372, 121.372
+Message: pass, 121.012, 121.412, matNum4matLeft
+Message: intersect, 121.412, 121.412
+Message: pass, 121.012, 121.452, matNum4matLeft
+Message: intersect, 121.452, 121.452
+Message: pass, 121.012, 121.492, matNum4matLeft
+Message: intersect, 121.492, 121.492
+Message: pass, 121.012, 121.532, matNum4matLeft
+Message: intersect, 121.532, 121.532
+Message: pass, 121.012, 121.572, matNum4matLeft
+Message: intersect, 121.572, 121.572
+Message: pass, 121.012, 121.612, matNum4matLeft
+Message: intersect, 121.612, 121.612
+Message: pass, 121.012, 121.652, matNum4matLeft
+Message: intersect, 121.652, 121.652
+Message: pass, 121.012, 121.692, matNum4matLeft
+Message: intersect, 121.692, 121.692
+Message: pass, 121.012, 121.732, matNum4matLeft
+Message: intersect, 121.732, 121.732
+Message: pass, 121.012, 121.772, matNum4matLeft
+Message: intersect, 121.772, 121.772
+Message: pass, 121.012, 121.812, matNum4matLeft
+Message: intersect, 121.812, 121.812
+Message: pass, 121.012, 121.852, matNum4matLeft
+Message: intersect, 121.852, 121.852
+Message: pass, 121.012, 121.892, matNum4matLeft
+Message: intersect, 121.892, 121.892
+Message: pass, 121.012, 121.932, matNum4matLeft
+Message: intersect, 121.932, 121.932
+Message: pass, 121.012, 121.972, matNum4matLeft
+Message: intersect, 121.972, 121.972
+Message: pass, 121.012, 122.012, matNum4matLeft
+Message: intersect, 122.012, 122.012
+Message: pass, 121.012, 122.052, matNum4matLeft
+Message: intersect, 122.052, 122.052
+Message: pass, 121.012, 122.092, matNum4matLeft
+Message: intersect, 122.092, 122.092
+Message: pass, 121.012, 122.132, matNum4matLeft
+Message: intersect, 122.132, 122.132
+Message: pass, 121.012, 122.172, matNum4matLeft
+Message: intersect, 122.172, 122.172
+Message: pass, 121.012, 122.212, matNum4matLeft
+Message: intersect, 122.212, 122.212
+Message: pass, 121.012, 122.251, matNum4matLeft
+Message: intersect, 122.251, 122.251
+Message: pass, 121.012, 122.291, matNum4matLeft
+Message: intersect, 122.291, 122.291
+Message: pass, 121.012, 122.331, matNum4matLeft
+Message: intersect, 122.331, 122.331
+Message: pass, 121.012, 122.371, matNum4matLeft
+Message: intersect, 122.371, 122.371
+Message: pass, 121.012, 122.411, matNum4matLeft
+Message: intersect, 122.411, 122.411
+Message: pass, 121.012, 122.451, matNum4matLeft
+Message: intersect, 122.451, 122.451
+Message: pass, 121.012, 122.491, matNum4matLeft
+Message: intersect, 122.491, 122.491
+Message: short_pass, 121.012, 124.731, from: matNum4matLeft, to: matNum10matLeft
+Message: short_pass, 124.771, 124.811, from: matNum4matLeft, to: matNum10matLeft
+Message: short_pass, 124.851, 124.891, from: matNum4matLeft, to: matNum10matLeft
+Message: short_pass, 124.931, 124.971, from: matNum4matLeft, to: matNum10matLeft
+Message: short_pass, 125.011, 125.051, from: matNum4matLeft, to: matNum10matLeft
+Message: short_pass, 125.091, 125.131, from: matNum4matLeft, to: matNum10matLeft
+Message: short_pass, 125.171, 125.211, from: matNum4matLeft, to: matNum10matLeft
+Message: pass, 125.251, 130.051, matNum10matLeft
+Message: pass, 130.091, 130.131, matNum10matLeft
+Message: pass, 130.171, 130.211, matNum10matLeft
+Message: pass, 130.251, 130.291, matNum10matLeft
+Message: pass, 130.331, 130.371, matNum10matLeft
+Message: pass, 130.411, 130.451, matNum10matLeft
+Message: pass, 130.491, 130.531, matNum10matLeft
+Message: pass, 130.571, 130.611, matNum10matLeft
+Message: pass, 130.651, 130.691, matNum10matLeft
+Message: pass, 130.731, 130.771, matNum10matLeft
+Message: pass, 130.851, 130.891, matNum10matLeft
+Message: pass, 130.971, 131.011, matNum10matLeft
+Message: pass, 131.091, 131.131, matNum10matLeft
+Message: pass, 131.251, 131.291, matNum10matLeft
+Message: intersect, 131.291, 131.291
+Message: pass, 131.251, 131.331, matNum10matLeft
+Message: pass, 131.411, 131.451, matNum10matLeft
+Message: intersect, 131.451, 131.451
+Message: pass, 131.411, 131.491, matNum10matLeft
+Message: intersect, 131.491, 131.491
+Message: pass, 131.411, 131.531, matNum10matLeft
+Message: intersect, 131.531, 131.531
+Message: pass, 131.411, 131.571, matNum10matLeft
+Message: intersect, 131.571, 131.571
+Message: pass, 131.411, 131.611, matNum10matLeft
+Message: intersect, 131.611, 131.611
+Message: pass, 131.411, 131.651, matNum10matLeft
+Message: intersect, 131.651, 131.651
+Message: pass, 131.411, 131.691, matNum10matLeft
+Message: intersect, 131.691, 131.691
+Message: pass, 131.411, 131.731, matNum10matLeft
+Message: intersect, 131.731, 131.731
+Message: pass, 131.411, 131.771, matNum10matLeft
+Message: intersect, 131.771, 131.771
+Message: pass, 131.411, 131.811, matNum10matLeft
+Message: intersect, 131.811, 131.811
+Message: pass, 131.411, 131.851, matNum10matLeft
+Message: intersect, 131.851, 131.851
+Message: pass, 131.411, 131.891, matNum10matLeft
+Message: intersect, 131.891, 131.891
+Message: pass, 131.411, 131.931, matNum10matLeft
+Message: intersect, 131.931, 131.931
+Message: pass, 131.411, 131.971, matNum10matLeft
+Message: intersect, 131.971, 131.971
+Message: aggression (matNum10matLeft - matNum6matRight), 131.811, 132.011
+Message: pass, 131.411, 132.011, matNum10matLeft
+Message: intersect, 132.011, 132.011
+Message: pass, 131.411, 132.051, matNum10matLeft
+Message: intersect, 132.051, 132.051
+Message: pass, 131.411, 132.091, matNum10matLeft
+Message: intersect, 132.091, 132.091
+Message: pass, 131.411, 133.452, matNum10matLeft
+Message: intersect, 133.452, 133.452
+Message: pass, 131.411, 134.172, matNum10matLeft
+Message: intersect, 134.172, 134.172
+Message: pass, 131.411, 134.212, matNum10matLeft
+Message: intersect, 134.212, 134.212
+Message: pass, 131.411, 134.252, matNum10matLeft
+Message: intersect, 134.252, 134.252
+Message: pass, 131.411, 134.292, matNum10matLeft
+Message: intersect, 134.292, 134.292
+Message: pass, 131.411, 134.332, matNum10matLeft
+Message: intersect, 134.332, 134.332
+Message: pass, 131.411, 134.372, matNum10matLeft
+Message: intersect, 134.372, 134.372
+Message: pass, 131.411, 134.412, matNum10matLeft
+Message: intersect, 134.412, 134.412
+Message: pass, 131.411, 134.452, matNum10matLeft
+Message: intersect, 134.452, 134.452
+Message: pass, 131.411, 134.492, matNum10matLeft
+Message: intersect, 134.492, 134.492
+Message: pass, 131.411, 134.532, matNum10matLeft
+Message: intersect, 134.532, 134.532
+Message: pass, 131.411, 134.572, matNum10matLeft
+Message: intersect, 134.572, 134.572
+Message: pass, 131.411, 134.612, matNum10matLeft
+Message: intersect, 134.612, 134.612
+Message: pass, 131.411, 134.652, matNum10matLeft
+Message: intersect, 134.652, 134.652
+Message: aggression (matNum10matLeft - matNum11matRight), 134.492, 134.972
+Message: aggression (matNum6matLeft - matNum11matRight), 137.973, 138.093
+Message: pass, 131.411, 138.653, matNum10matLeft
+Message: intersect, 138.653, 138.653
+Message: aggression (matNum2matLeft - matNum7matRight), 139.933, 139.973
+Message: pass, 131.411, 140.613, matNum10matLeft
+Message: intersect, 140.613, 140.613
+Message: pass, 131.411, 140.653, matNum10matLeft
+Message: intersect, 140.653, 140.653
+Message: pass, 131.411, 140.693, matNum10matLeft
+Message: intersect, 140.693, 140.693
+Message: pass, 131.411, 140.733, matNum10matLeft
+Message: intersect, 140.733, 140.733
+Message: pass, 131.411, 140.773, matNum10matLeft
+Message: intersect, 140.773, 140.773
+Message: pass, 131.411, 140.813, matNum10matLeft
+Message: intersect, 140.813, 140.813
+Message: pass, 131.411, 140.853, matNum10matLeft
+Message: intersect, 140.853, 140.853
+Message: pass, 131.411, 140.893, matNum10matLeft
+Message: intersect, 140.893, 140.893
+Message: pass, 131.411, 140.933, matNum10matLeft
+Message: intersect, 140.933, 140.933
+Message: pass, 131.411, 140.973, matNum10matLeft
+Message: intersect, 140.973, 140.973
+Message: pass, 131.411, 141.013, matNum10matLeft
+Message: intersect, 141.013, 141.013
+Message: pass, 131.411, 141.053, matNum10matLeft
+Message: intersect, 141.053, 141.053
+Message: pass, 131.411, 141.093, matNum10matLeft
+Message: intersect, 141.093, 141.093
+Message: pass, 131.411, 141.133, matNum10matLeft
+Message: intersect, 141.133, 141.133
+Message: pass, 131.411, 141.173, matNum10matLeft
+Message: intersect, 141.173, 141.173
+Message: pass, 131.411, 141.213, matNum10matLeft
+Message: intersect, 141.213, 141.213
+Message: pass, 131.411, 141.253, matNum10matLeft
+Message: intersect, 141.253, 141.253
+Message: pass, 131.411, 141.293, matNum10matLeft
+Message: intersect, 141.293, 141.293
+Message: pass, 131.411, 141.333, matNum10matLeft
+Message: intersect, 141.333, 141.333
+Message: pass, 131.411, 141.373, matNum10matLeft
+Message: intersect, 141.373, 141.373
+Message: pass, 131.411, 141.413, matNum10matLeft
+Message: intersect, 141.413, 141.413
+Message: pass, 131.411, 141.453, matNum10matLeft
+Message: intersect, 141.453, 141.453
+Message: pass, 131.411, 141.493, matNum10matLeft
+Message: intersect, 141.493, 141.493
+Message: pass, 131.411, 141.533, matNum10matLeft
+Message: intersect, 141.533, 141.533
+Message: pass, 131.411, 141.573, matNum10matLeft
+Message: intersect, 141.573, 141.573
+Message: pass, 131.411, 141.613, matNum10matLeft
+Message: intersect, 141.613, 141.613
+Message: pass, 131.411, 141.653, matNum10matLeft
+Message: intersect, 141.653, 141.653
+Message: pass, 131.411, 141.693, matNum10matLeft
+Message: intersect, 141.693, 141.693
+Message: pass, 131.411, 141.733, matNum10matLeft
+Message: intersect, 141.733, 141.733
+Message: pass, 131.411, 141.773, matNum10matLeft
+Message: intersect, 141.773, 141.773
+Message: pass, 131.411, 141.813, matNum10matLeft
+Message: intersect, 141.813, 141.813
+Message: pass, 131.411, 141.853, matNum10matLeft
+Message: intersect, 141.853, 141.853
+Message: pass, 131.411, 141.893, matNum10matLeft
+Message: intersect, 141.893, 141.893
+Message: defense, 147.495, 147.495
+Message: goal_shot, 144.694, 147.495
+Message: defense, 147.535, 147.535
+Message: goal_shot, 147.535, 147.535
+Message: defense, 147.575, 147.575
+Message: goal_shot, 147.575, 147.575
+Message: defense, 147.615, 147.615
+Message: goal_shot, 147.615, 147.615
+Message: pass, 131.411, 148.255, matNum10matLeft
+Message: intersect, 148.255, 148.255
+Message: defense, 148.295, 148.295
+Message: goal_shot, 147.655, 148.295
+Message: pass, 131.411, 148.415, matNum10matLeft
+Message: intersect, 148.415, 148.415
+Message: defense, 150.975, 150.975
+Message: goal_shot, 148.455, 150.975
+Message: defense, 151.376, 151.376
+Message: goal_shot, 151.015, 151.376
+Message: defense, 151.416, 151.416
+Message: goal_shot, 151.416, 151.416
+Message: defense, 151.456, 151.456
+Message: goal_shot, 151.456, 151.456
+Message: defense, 151.496, 151.496
+Message: goal_shot, 151.496, 151.496
+Message: defense, 151.536, 151.536
+Message: goal_shot, 151.536, 151.536
+Message: defense, 151.576, 151.576
+Message: goal_shot, 151.576, 151.576
+Message: defense, 151.616, 151.616
+Message: goal_shot, 151.616, 151.616
+Message: defense, 151.656, 151.656
+Message: goal_shot, 151.656, 151.656
+Message: defense, 151.696, 151.696
+Message: goal_shot, 151.696, 151.696
+Message: defense, 151.736, 151.736
+Message: goal_shot, 151.736, 151.736
+Message: defense, 151.776, 151.776
+Message: goal_shot, 151.776, 151.776
+Message: defense, 151.816, 151.816
+Message: goal_shot, 151.816, 151.816
+Message: defense, 151.856, 151.856
+Message: goal_shot, 151.856, 151.856
+Message: defense, 151.896, 151.896
+Message: goal_shot, 151.896, 151.896
+Message: defense, 151.936, 151.936
+Message: goal_shot, 151.936, 151.936
+Message: defense, 151.976, 151.976
+Message: goal_shot, 151.976, 151.976
+Message: defense, 152.016, 152.016
+Message: goal_shot, 152.016, 152.016
+Message: defense, 152.056, 152.056
+Message: goal_shot, 152.056, 152.056
+Message: defense, 152.096, 152.096
+Message: goal_shot, 152.096, 152.096
+Message: defense, 152.136, 152.136
+Message: goal_shot, 152.136, 152.136
+Message: defense, 152.176, 152.176
+Message: goal_shot, 152.176, 152.176
+Message: defense, 152.216, 152.216
+Message: goal_shot, 152.216, 152.216
+Message: defense, 152.256, 152.256
+Message: goal_shot, 152.256, 152.256
+Message: defense, 152.296, 152.296
+Message: goal_shot, 152.296, 152.296
+Message: defense, 152.336, 152.336
+Message: goal_shot, 152.336, 152.336
+Message: defense, 152.376, 152.376
+Message: goal_shot, 152.376, 152.376
+Message: defense, 152.416, 152.416
+Message: goal_shot, 152.416, 152.416
+Message: defense, 152.456, 152.456
+Message: goal_shot, 152.456, 152.456
+Message: defense, 152.496, 152.496
+Message: goal_shot, 152.496, 152.496
+Message: defense, 152.536, 152.536
+Message: goal_shot, 152.536, 152.536
+Message: defense, 152.576, 152.576
+Message: goal_shot, 152.576, 152.576
+Message: defense, 152.616, 152.616
+Message: goal_shot, 152.616, 152.616
+Message: defense, 152.656, 152.656
+Message: goal_shot, 152.656, 152.656
+Message: defense, 152.696, 152.696
+Message: goal_shot, 152.696, 152.696
+Message: defense, 156.137, 156.137
+Message: goal_shot, 152.736, 156.137
+Message: pass, 131.411, 157.377, matNum10matLeft
+Message: intersect, 157.377, 157.377
+Message: pass, 131.411, 157.577, matNum10matLeft
+Message: intersect, 157.577, 157.577
+Message: pass, 131.411, 157.617, matNum10matLeft
+Message: intersect, 157.617, 157.617
+Message: pass, 131.411, 157.657, matNum10matLeft
+Message: intersect, 157.657, 157.657
+Message: pass, 131.411, 157.697, matNum10matLeft
+Message: intersect, 157.697, 157.697
+Message: pass, 131.411, 157.737, matNum10matLeft
+Message: intersect, 157.737, 157.737
+Message: pass, 131.411, 157.777, matNum10matLeft
+Message: intersect, 157.777, 157.777
+Message: pass, 131.411, 157.817, matNum10matLeft
+Message: intersect, 157.817, 157.817
+Message: pass, 131.411, 157.857, matNum10matLeft
+Message: intersect, 157.857, 157.857
+Message: pass, 131.411, 157.897, matNum10matLeft
+Message: intersect, 157.897, 157.897
+Message: pass, 131.411, 157.937, matNum10matLeft
+Message: intersect, 157.937, 157.937
+Message: pass, 131.411, 157.977, matNum10matLeft
+Message: intersect, 157.977, 157.977
+Message: pass, 131.411, 158.017, matNum10matLeft
+Message: intersect, 158.017, 158.017
+Message: pass, 131.411, 158.057, matNum10matLeft
+Message: intersect, 158.057, 158.057
+Message: pass, 131.411, 158.097, matNum10matLeft
+Message: intersect, 158.097, 158.097
+Message: pass, 131.411, 158.137, matNum10matLeft
+Message: intersect, 158.137, 158.137
+Message: pass, 131.411, 158.177, matNum10matLeft
+Message: intersect, 158.177, 158.177
+Message: pass, 131.411, 158.217, matNum10matLeft
+Message: intersect, 158.217, 158.217
+Message: pass, 131.411, 158.257, matNum10matLeft
+Message: intersect, 158.257, 158.257
+Message: pass, 131.411, 158.297, matNum10matLeft
+Message: intersect, 158.297, 158.297
+Message: pass, 131.411, 158.337, matNum10matLeft
+Message: intersect, 158.337, 158.337
+Message: pass, 131.411, 158.377, matNum10matLeft
+Message: intersect, 158.377, 158.377
+Message: pass, 131.411, 158.417, matNum10matLeft
+Message: intersect, 158.417, 158.417
+Message: pass, 131.411, 161.658, matNum10matLeft
+Message: intersect, 161.658, 161.658
+Message: pass, 131.411, 161.698, matNum10matLeft
+Message: intersect, 161.698, 161.698
+Message: pass, 131.411, 161.738, matNum10matLeft
+Message: intersect, 161.738, 161.738
+Message: pass, 131.411, 161.778, matNum10matLeft
+Message: intersect, 161.778, 161.778
+Message: pass, 131.411, 161.818, matNum10matLeft
+Message: intersect, 161.818, 161.818
+Message: pass, 131.411, 161.858, matNum10matLeft
+Message: intersect, 161.858, 161.858
+Message: pass, 131.411, 161.898, matNum10matLeft
+Message: intersect, 161.898, 161.898
+Message: pass, 131.411, 161.938, matNum10matLeft
+Message: intersect, 161.938, 161.938
+Message: pass, 131.411, 161.978, matNum10matLeft
+Message: intersect, 161.978, 161.978
+Message: pass, 131.411, 162.018, matNum10matLeft
+Message: intersect, 162.018, 162.018
+Message: pass, 131.411, 162.058, matNum10matLeft
+Message: intersect, 162.058, 162.058
+Message: pass, 131.411, 162.098, matNum10matLeft
+Message: intersect, 162.098, 162.098
+Message: pass, 131.411, 162.138, matNum10matLeft
+Message: intersect, 162.138, 162.138
+Message: pass, 131.411, 162.178, matNum10matLeft
+Message: intersect, 162.178, 162.178
+Message: pass, 131.411, 162.218, matNum10matLeft
+Message: intersect, 162.218, 162.218
+Message: pass, 131.411, 162.258, matNum10matLeft
+Message: intersect, 162.258, 162.258
+Message: pass, 131.411, 162.298, matNum10matLeft
+Message: intersect, 162.298, 162.298
+Message: pass, 131.411, 162.338, matNum10matLeft
+Message: intersect, 162.338, 162.338
+Message: pass, 131.411, 162.378, matNum10matLeft
+Message: intersect, 162.378, 162.378
+Message: pass, 131.411, 162.418, matNum10matLeft
+Message: intersect, 162.418, 162.418
+Message: pass, 131.411, 162.458, matNum10matLeft
+Message: intersect, 162.458, 162.458
+Message: pass, 131.411, 162.498, matNum10matLeft
+Message: intersect, 162.498, 162.498
+Message: pass, 131.411, 162.538, matNum10matLeft
+Message: intersect, 162.538, 162.538
+Message: pass, 131.411, 162.578, matNum10matLeft
+Message: intersect, 162.578, 162.578
+Message: pass, 131.411, 162.618, matNum10matLeft
+Message: intersect, 162.618, 162.618
+Message: pass, 131.411, 162.658, matNum10matLeft
+Message: intersect, 162.658, 162.658
+Message: pass, 131.411, 162.698, matNum10matLeft
+Message: intersect, 162.698, 162.698
+Message: pass, 131.411, 162.738, matNum10matLeft
+Message: intersect, 162.738, 162.738
+Message: pass, 131.411, 162.778, matNum10matLeft
+Message: intersect, 162.778, 162.778
+Message: pass, 131.411, 162.818, matNum10matLeft
+Message: intersect, 162.818, 162.818
+Message: pass, 131.411, 162.858, matNum10matLeft
+Message: intersect, 162.858, 162.858
+Message: pass, 131.411, 162.898, matNum10matLeft
+Message: intersect, 162.898, 162.898
+Message: pass, 131.411, 162.938, matNum10matLeft
+Message: intersect, 162.938, 162.938
+Message: pass, 131.411, 162.978, matNum10matLeft
+Message: intersect, 162.978, 162.978
+Message: pass, 131.411, 163.018, matNum10matLeft
+Message: intersect, 163.018, 163.018
+Message: pass, 131.411, 163.058, matNum10matLeft
+Message: intersect, 163.058, 163.058
+Message: pass, 131.411, 163.098, matNum10matLeft
+Message: intersect, 163.098, 163.098
+Message: pass, 131.411, 163.138, matNum10matLeft
+Message: intersect, 163.138, 163.138
+Message: pass, 131.411, 163.178, matNum10matLeft
+Message: intersect, 163.178, 163.178
+Message: pass, 131.411, 163.218, matNum10matLeft
+Message: intersect, 163.218, 163.218
+Message: pass, 131.411, 163.258, matNum10matLeft
+Message: intersect, 163.258, 163.258
+Message: pass, 131.411, 166.539, matNum10matLeft
+Message: pass, 167.059, 167.099, matNum11matLeft
+Message: pass, 167.139, 167.179, matNum11matLeft
+Message: pass, 167.259, 167.339, matNum11matLeft
+Message: pass, 167.379, 168.619, matNum11matLeft
+Message: intersect, 168.619, 168.619
+Message: pass, 167.379, 171.62, matNum11matLeft
+Message: intersect, 171.62, 171.62
+Message: pass, 167.379, 171.66, matNum11matLeft
+Message: intersect, 171.66, 171.66
+Message: pass, 167.379, 171.7, matNum11matLeft
+Message: intersect, 171.7, 171.7
+Message: pass, 167.379, 171.74, matNum11matLeft
+Message: intersect, 171.74, 171.74
+Message: pass, 167.379, 171.78, matNum11matLeft
+Message: intersect, 171.78, 171.78
+Message: pass, 167.379, 171.82, matNum11matLeft
+Message: intersect, 171.82, 171.82
+Message: pass, 167.379, 171.86, matNum11matLeft
+Message: intersect, 171.86, 171.86
+Message: pass, 167.379, 171.9, matNum11matLeft
+Message: intersect, 171.9, 171.9
+Message: pass, 167.379, 171.94, matNum11matLeft
+Message: intersect, 171.94, 171.94
+Message: pass, 167.379, 171.98, matNum11matLeft
+Message: intersect, 171.98, 171.98
+Message: pass, 167.379, 172.02, matNum11matLeft
+Message: intersect, 172.02, 172.02
+Message: pass, 167.379, 172.06, matNum11matLeft
+Message: intersect, 172.06, 172.06
+Message: pass, 167.379, 172.1, matNum11matLeft
+Message: intersect, 172.1, 172.1
+Message: pass, 167.379, 172.14, matNum11matLeft
+Message: intersect, 172.14, 172.14
+Message: pass, 167.379, 172.18, matNum11matLeft
+Message: intersect, 172.18, 172.18
+Message: pass, 167.379, 172.22, matNum11matLeft
+Message: intersect, 172.22, 172.22
+Message: pass, 167.379, 172.26, matNum11matLeft
+Message: intersect, 172.26, 172.26
+Message: pass, 167.379, 172.3, matNum11matLeft
+Message: intersect, 172.3, 172.3
+Message: pass, 167.379, 172.34, matNum11matLeft
+Message: intersect, 172.34, 172.34
+Message: pass, 167.379, 172.38, matNum11matLeft
+Message: intersect, 172.38, 172.38
+Message: pass, 167.379, 172.42, matNum11matLeft
+Message: intersect, 172.42, 172.42
+Message: pass, 167.379, 172.46, matNum11matLeft
+Message: intersect, 172.46, 172.46
+Message: aggression (matNum11matLeft - matNum10matRight), 172.26, 172.5
+Message: pass, 167.379, 172.5, matNum11matLeft
+Message: intersect, 172.5, 172.5
+Message: pass, 167.379, 172.54, matNum11matLeft
+Message: intersect, 172.54, 172.54
+Message: pass, 167.379, 172.58, matNum11matLeft
+Message: intersect, 172.58, 172.58
+Message: pass, 167.379, 172.62, matNum11matLeft
+Message: intersect, 172.62, 172.62
+Message: pass, 167.379, 172.66, matNum11matLeft
+Message: intersect, 172.66, 172.66
+Message: pass, 167.379, 172.7, matNum11matLeft
+Message: intersect, 172.7, 172.7
+Message: pass, 167.379, 172.74, matNum11matLeft
+Message: intersect, 172.74, 172.74
+Message: pass, 167.379, 172.78, matNum11matLeft
+Message: intersect, 172.78, 172.78
+Message: pass, 167.379, 172.82, matNum11matLeft
+Message: intersect, 172.82, 172.82
+Message: pass, 167.379, 172.86, matNum11matLeft
+Message: intersect, 172.86, 172.86
+Message: pass, 167.379, 172.9, matNum11matLeft
+Message: intersect, 172.9, 172.9
+Message: pass, 167.379, 172.94, matNum11matLeft
+Message: intersect, 172.94, 172.94
+Message: pass, 167.379, 172.98, matNum11matLeft
+Message: intersect, 172.98, 172.98
+Message: pass, 167.379, 173.02, matNum11matLeft
+Message: intersect, 173.02, 173.02
+Message: pass, 167.379, 173.06, matNum11matLeft
+Message: intersect, 173.06, 173.06
+Message: pass, 167.379, 173.1, matNum11matLeft
+Message: intersect, 173.1, 173.1
+Message: pass, 167.379, 173.14, matNum11matLeft
+Message: intersect, 173.14, 173.14
+Message: pass, 167.379, 173.18, matNum11matLeft
+Message: intersect, 173.18, 173.18
+Message: pass, 167.379, 173.22, matNum11matLeft
+Message: intersect, 173.22, 173.22
+Message: pass, 167.379, 173.26, matNum11matLeft
+Message: intersect, 173.26, 173.26
+Message: pass, 167.379, 173.3, matNum11matLeft
+Message: intersect, 173.3, 173.3
+Message: pass, 167.379, 173.34, matNum11matLeft
+Message: intersect, 173.34, 173.34
+Message: pass, 167.379, 173.38, matNum11matLeft
+Message: intersect, 173.38, 173.38
+Message: pass, 167.379, 173.42, matNum11matLeft
+Message: intersect, 173.42, 173.42
+Message: pass, 167.379, 173.46, matNum11matLeft
+Message: intersect, 173.46, 173.46
+Message: pass, 167.379, 173.5, matNum11matLeft
+Message: intersect, 173.5, 173.5
+Message: pass, 167.379, 173.54, matNum11matLeft
+Message: intersect, 173.54, 173.54
+Message: pass, 167.379, 173.58, matNum11matLeft
+Message: intersect, 173.58, 173.58
+Message: pass, 167.379, 173.62, matNum11matLeft
+Message: intersect, 173.62, 173.62
+Message: pass, 167.379, 173.66, matNum11matLeft
+Message: intersect, 173.66, 173.66
+Message: pass, 167.379, 173.7, matNum11matLeft
+Message: intersect, 173.7, 173.7
+Message: pass, 167.379, 173.74, matNum11matLeft
+Message: intersect, 173.74, 173.74
+Message: pass, 167.379, 173.78, matNum11matLeft
+Message: intersect, 173.78, 173.78
+Message: pass, 167.379, 173.82, matNum11matLeft
+Message: intersect, 173.82, 173.82
+Message: pass, 167.379, 173.86, matNum11matLeft
+Message: intersect, 173.86, 173.86
+Message: pass, 167.379, 173.9, matNum11matLeft
+Message: intersect, 173.9, 173.9
+Message: pass, 167.379, 173.94, matNum11matLeft
+Message: intersect, 173.94, 173.94
+Message: pass, 167.379, 173.98, matNum11matLeft
+Message: intersect, 173.98, 173.98
+Message: pass, 167.379, 174.02, matNum11matLeft
+Message: intersect, 174.02, 174.02
+Message: pass, 167.379, 174.06, matNum11matLeft
+Message: intersect, 174.06, 174.06
+Message: pass, 167.379, 174.1, matNum11matLeft
+Message: intersect, 174.1, 174.1
+Message: pass, 167.379, 174.14, matNum11matLeft
+Message: intersect, 174.14, 174.14
+Message: pass, 167.379, 174.18, matNum11matLeft
+Message: intersect, 174.18, 174.18
+Message: pass, 167.379, 174.22, matNum11matLeft
+Message: intersect, 174.22, 174.22
+Message: pass, 167.379, 174.26, matNum11matLeft
+Message: intersect, 174.26, 174.26
+Message: pass, 167.379, 174.3, matNum11matLeft
+Message: intersect, 174.3, 174.3
+Message: pass, 167.379, 174.34, matNum11matLeft
+Message: intersect, 174.34, 174.34
+Message: pass, 167.379, 174.38, matNum11matLeft
+Message: intersect, 174.38, 174.38
+Message: pass, 167.379, 174.941, matNum11matLeft
+Message: intersect, 174.941, 174.941
+Message: pass, 167.379, 174.981, matNum11matLeft
+Message: intersect, 174.981, 174.981
+Message: pass, 167.379, 175.021, matNum11matLeft
+Message: intersect, 175.021, 175.021
+Message: pass, 167.379, 175.061, matNum11matLeft
+Message: intersect, 175.061, 175.061
+Message: pass, 167.379, 175.101, matNum11matLeft
+Message: intersect, 175.101, 175.101
+Message: pass, 167.379, 175.141, matNum11matLeft
+Message: intersect, 175.141, 175.141
+Message: pass, 167.379, 175.181, matNum11matLeft
+Message: intersect, 175.181, 175.181
+Message: pass, 167.379, 175.221, matNum11matLeft
+Message: intersect, 175.221, 175.221
+Message: pass, 167.379, 175.261, matNum11matLeft
+Message: intersect, 175.261, 175.261
+Message: pass, 167.379, 175.301, matNum11matLeft
+Message: intersect, 175.301, 175.301
+Message: pass, 167.379, 175.341, matNum11matLeft
+Message: intersect, 175.341, 175.341
+Message: pass, 167.379, 175.701, matNum11matLeft
+Message: intersect, 175.701, 175.701
+Message: pass, 167.379, 175.741, matNum11matLeft
+Message: intersect, 175.741, 175.741
+Message: pass, 167.379, 175.781, matNum11matLeft
+Message: intersect, 175.781, 175.781
+Message: pass, 167.379, 175.821, matNum11matLeft
+Message: intersect, 175.821, 175.821
+Message: pass, 167.379, 175.861, matNum11matLeft
+Message: intersect, 175.861, 175.861
+Message: pass, 167.379, 176.061, matNum11matLeft
+Message: intersect, 176.061, 176.061
+Message: pass, 167.379, 176.101, matNum11matLeft
+Message: intersect, 176.101, 176.101
+Message: pass, 167.379, 176.141, matNum11matLeft
+Message: intersect, 176.141, 176.141
+Message: pass, 167.379, 176.181, matNum11matLeft
+Message: intersect, 176.181, 176.181
+Message: pass, 167.379, 176.221, matNum11matLeft
+Message: intersect, 176.221, 176.221
+Message: pass, 167.379, 176.261, matNum11matLeft
+Message: intersect, 176.261, 176.261
+Message: pass, 167.379, 176.301, matNum11matLeft
+Message: intersect, 176.301, 176.301
+Message: pass, 167.379, 176.501, matNum11matLeft
+Message: intersect, 176.501, 176.501
+Message: pass, 167.379, 176.541, matNum11matLeft
+Message: intersect, 176.541, 176.541
+Message: pass, 167.379, 176.581, matNum11matLeft
+Message: intersect, 176.581, 176.581
+Message: pass, 167.379, 176.621, matNum11matLeft
+Message: intersect, 176.621, 176.621
+Message: pass, 167.379, 176.661, matNum11matLeft
+Message: intersect, 176.661, 176.661
+Message: pass, 167.379, 176.701, matNum11matLeft
+Message: intersect, 176.701, 176.701
+Message: pass, 167.379, 176.741, matNum11matLeft
+Message: intersect, 176.741, 176.741
+Message: pass, 167.379, 176.781, matNum11matLeft
+Message: intersect, 176.781, 176.781
+Message: aggression (matNum11matLeft - matNum10matRight), 176.541, 176.821
+Message: short_pass, 167.379, 176.821, from: matNum11matLeft, to: matNum10matLeft
+Message: short_pass, 176.861, 176.901, from: matNum10matLeft, to: matNum11matLeft
+Message: short_pass, 176.941, 176.981, from: matNum10matLeft, to: matNum11matLeft
+Message: short_pass, 177.021, 177.061, from: matNum10matLeft, to: matNum11matLeft
+Message: pass, 177.101, 177.141, matNum11matLeft
+Message: intersect, 177.141, 177.141
+Message: pass, 177.101, 177.181, matNum11matLeft
+Message: intersect, 177.181, 177.181
+Message: pass, 177.101, 177.221, matNum11matLeft
+Message: intersect, 177.221, 177.221
+Message: pass, 177.101, 177.261, matNum11matLeft
+Message: intersect, 177.261, 177.261
+Message: pass, 177.101, 177.301, matNum11matLeft
+Message: intersect, 177.301, 177.301
+Message: pass, 177.101, 177.341, matNum11matLeft
+Message: intersect, 177.341, 177.341
+Message: pass, 177.101, 177.381, matNum11matLeft
+Message: intersect, 177.381, 177.381
+Message: pass, 177.101, 177.421, matNum11matLeft
+Message: intersect, 177.421, 177.421
+Message: pass, 177.101, 177.461, matNum11matLeft
+Message: intersect, 177.461, 177.461
+Message: pass, 177.101, 177.501, matNum11matLeft
+Message: intersect, 177.501, 177.501
+Message: pass, 177.101, 177.541, matNum11matLeft
+Message: intersect, 177.541, 177.541
+Message: pass, 177.101, 179.582, matNum11matLeft
+Message: intersect, 179.582, 179.582
+Message: pass, 177.101, 180.222, matNum11matLeft
+Message: intersect, 180.222, 180.222
+Message: pass, 177.101, 180.262, matNum11matLeft
+Message: intersect, 180.262, 180.262
+Message: pass, 177.101, 180.302, matNum11matLeft
+Message: intersect, 180.302, 180.302
+Message: pass, 177.101, 180.342, matNum11matLeft
+Message: intersect, 180.342, 180.342
+Message: pass, 177.101, 180.382, matNum11matLeft
+Message: intersect, 180.382, 180.382
+Message: pass, 177.101, 180.422, matNum11matLeft
+Message: intersect, 180.422, 180.422
+Message: pass, 177.101, 180.462, matNum11matLeft
+Message: intersect, 180.462, 180.462
+Message: pass, 177.101, 180.502, matNum11matLeft
+Message: intersect, 180.502, 180.502
+Message: pass, 177.101, 180.542, matNum11matLeft
+Message: intersect, 180.542, 180.542
+Message: pass, 177.101, 180.582, matNum11matLeft
+Message: intersect, 180.582, 180.582
+Message: pass, 177.101, 180.622, matNum11matLeft
+Message: intersect, 180.622, 180.622
+Message: pass, 177.101, 180.662, matNum11matLeft
+Message: intersect, 180.662, 180.662
+Message: pass, 177.101, 180.702, matNum11matLeft
+Message: intersect, 180.702, 180.702
+Message: pass, 177.101, 180.742, matNum11matLeft
+Message: intersect, 180.742, 180.742
+Message: pass, 177.101, 180.782, matNum11matLeft
+Message: intersect, 180.782, 180.782
+Message: pass, 177.101, 180.822, matNum11matLeft
+Message: intersect, 180.822, 180.822
+Message: pass, 177.101, 180.862, matNum11matLeft
+Message: intersect, 180.862, 180.862
+Message: pass, 177.101, 180.902, matNum11matLeft
+Message: intersect, 180.902, 180.902
+Message: pass, 177.101, 184.943, matNum11matLeft
+Message: intersect, 184.943, 184.943
+Message: pass, 177.101, 185.463, matNum11matLeft
+Message: pass, 185.583, 185.623, matNum10matRight
+Message: pass, 185.663, 185.703, matNum10matRight
+Message: pass, 185.743, 185.783, matNum10matRight
+Message: pass, 185.823, 185.863, matNum10matRight
+Message: pass, 185.903, 185.983, matNum10matRight
+Message: intersect, 185.983, 185.983
+Message: pass, 185.903, 186.023, matNum10matRight
+Message: intersect, 186.023, 186.023
+Message: pass, 185.903, 186.063, matNum10matRight
+Message: intersect, 186.063, 186.063
+Message: pass, 185.903, 186.103, matNum10matRight
+Message: intersect, 186.103, 186.103
+Message: pass, 185.903, 186.143, matNum10matRight
+Message: intersect, 186.143, 186.143
+Message: pass, 185.903, 186.183, matNum10matRight
+Message: intersect, 186.183, 186.183
+Message: pass, 185.903, 186.223, matNum10matRight
+Message: intersect, 186.223, 186.223
+Message: pass, 185.903, 186.263, matNum10matRight
+Message: intersect, 186.263, 186.263
+Message: pass, 185.903, 186.303, matNum10matRight
+Message: intersect, 186.303, 186.303
+Message: aggression (matNum11matLeft - matNum10matRight), 186.223, 186.343
+Message: pass, 185.903, 186.343, matNum10matRight
+Message: intersect, 186.343, 186.343
+Message: pass, 185.903, 186.383, matNum10matRight
+Message: intersect, 186.383, 186.383
+Message: pass, 185.903, 186.423, matNum10matRight
+Message: intersect, 186.423, 186.423
+Message: pass, 185.903, 186.463, matNum10matRight
+Message: intersect, 186.463, 186.463
+Message: pass, 185.903, 186.503, matNum10matRight
+Message: intersect, 186.503, 186.503
+Message: pass, 185.903, 186.543, matNum10matRight
+Message: intersect, 186.543, 186.543
+Message: pass, 185.903, 186.583, matNum10matRight
+Message: intersect, 186.583, 186.583
+Message: pass, 185.903, 186.623, matNum10matRight
+Message: intersect, 186.623, 186.623
+Message: pass, 185.903, 186.663, matNum10matRight
+Message: intersect, 186.663, 186.663
+Message: pass, 185.903, 186.703, matNum10matRight
+Message: intersect, 186.703, 186.703
+Message: pass, 185.903, 186.743, matNum10matRight
+Message: intersect, 186.743, 186.743
+Message: pass, 185.903, 186.783, matNum10matRight
+Message: intersect, 186.783, 186.783
+Message: pass, 185.903, 186.823, matNum10matRight
+Message: intersect, 186.823, 186.823
+Message: pass, 185.903, 186.863, matNum10matRight
+Message: intersect, 186.863, 186.863
+Message: pass, 185.903, 186.903, matNum10matRight
+Message: intersect, 186.903, 186.903
+Message: pass, 185.903, 186.943, matNum10matRight
+Message: intersect, 186.943, 186.943
+Message: pass, 185.903, 189.864, matNum10matRight
+Message: intersect, 189.864, 189.864
+Message: pass, 185.903, 190.144, matNum10matRight
+Message: intersect, 190.144, 190.144
+Message: pass, 185.903, 190.184, matNum10matRight
+Message: intersect, 190.184, 190.184
+Message: pass, 185.903, 190.224, matNum10matRight
+Message: intersect, 190.224, 190.224
+Message: pass, 185.903, 190.264, matNum10matRight
+Message: intersect, 190.264, 190.264
+Message: pass, 185.903, 192.144, matNum10matRight
+Message: intersect, 192.144, 192.144
+Message: pass, 185.903, 192.184, matNum10matRight
+Message: intersect, 192.184, 192.184
+Message: pass, 185.903, 192.224, matNum10matRight
+Message: intersect, 192.224, 192.224
+Message: pass, 185.903, 192.264, matNum10matRight
+Message: intersect, 192.264, 192.264
+Message: pass, 185.903, 192.304, matNum10matRight
+Message: intersect, 192.304, 192.304
+Message: pass, 185.903, 192.344, matNum10matRight
+Message: intersect, 192.344, 192.344
+Message: pass, 185.903, 192.384, matNum10matRight
+Message: intersect, 192.384, 192.384
+Message: pass, 185.903, 192.424, matNum10matRight
+Message: intersect, 192.424, 192.424
+Message: pass, 185.903, 192.464, matNum10matRight
+Message: intersect, 192.464, 192.464
+Message: pass, 185.903, 192.504, matNum10matRight
+Message: intersect, 192.504, 192.504
+Message: pass, 185.903, 192.544, matNum10matRight
+Message: intersect, 192.544, 192.544
+Message: aggression (matNum4matLeft - matNum10matRight), 192.424, 192.584
+Message: pass, 185.903, 192.584, matNum10matRight
+Message: intersect, 192.584, 192.584
+Message: pass, 185.903, 192.624, matNum10matRight
+Message: intersect, 192.624, 192.624
+Message: pass, 185.903, 192.664, matNum10matRight
+Message: intersect, 192.664, 192.664
+Message: pass, 185.903, 192.704, matNum10matRight
+Message: intersect, 192.704, 192.704
+Message: pass, 185.903, 192.744, matNum10matRight
+Message: intersect, 192.744, 192.744
+Message: pass, 185.903, 192.784, matNum10matRight
+Message: intersect, 192.784, 192.784
+Message: pass, 185.903, 192.824, matNum10matRight
+Message: intersect, 192.824, 192.824
+Message: pass, 185.903, 192.864, matNum10matRight
+Message: intersect, 192.864, 192.864
+Message: pass, 185.903, 192.904, matNum10matRight
+Message: intersect, 192.904, 192.904
+Message: pass, 185.903, 192.944, matNum10matRight
+Message: intersect, 192.944, 192.944
+Message: pass, 185.903, 192.984, matNum10matRight
+Message: intersect, 192.984, 192.984
+Message: pass, 185.903, 193.024, matNum10matRight
+Message: intersect, 193.024, 193.024
+Message: pass, 185.903, 193.064, matNum10matRight
+Message: intersect, 193.064, 193.064
+Message: pass, 185.903, 193.104, matNum10matRight
+Message: intersect, 193.104, 193.104
+Message: pass, 185.903, 193.144, matNum10matRight
+Message: intersect, 193.144, 193.144
+Message: pass, 185.903, 193.184, matNum10matRight
+Message: intersect, 193.184, 193.184
+Message: pass, 185.903, 193.224, matNum10matRight
+Message: intersect, 193.224, 193.224
+Message: pass, 185.903, 193.264, matNum10matRight
+Message: intersect, 193.264, 193.264
+Message: pass, 185.903, 193.304, matNum10matRight
+Message: intersect, 193.304, 193.304
+Message: pass, 185.903, 193.344, matNum10matRight
+Message: intersect, 193.344, 193.344
+Message: pass, 185.903, 193.384, matNum10matRight
+Message: intersect, 193.384, 193.384
+Message: pass, 185.903, 196.065, matNum10matRight
+Message: intersect, 196.065, 196.065
+Message: pass, 185.903, 196.385, matNum10matRight
+Message: intersect, 196.385, 196.385
+Message: long_pass, 185.903, 198.426, from: matNum10matRight, to: matNum6matLeft
+Message: intersect, 198.426, 198.426
