@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 import json
+from backend.log_processing import process_log
 
 
 @csrf_exempt
@@ -39,8 +40,11 @@ def new_register(request):
 @csrf_exempt
 def file_upload(request):
     uploaded_file = request.FILES['file']
-    for line in uploaded_file:
-        print(line.decode())
+    # for line in uploaded_file:
+    #    print(line.decode())
     # print(uploaded_file.content_type)
-    return HttpResponse("file_upload_success")
+
+    result = process_log(uploaded_file)
+
+    return HttpResponse(result)
 

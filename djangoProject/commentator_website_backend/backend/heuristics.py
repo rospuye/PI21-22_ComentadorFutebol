@@ -1,5 +1,5 @@
 import math
-from entities import Position, Entity, Ball
+from djangoProject.commentator_website_backend.backend.entities import Position, Ball
 from message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble
 
 KICK_OFF_CONTACT_DISTANCE = 0.08              # Distance to be considered contact between entities

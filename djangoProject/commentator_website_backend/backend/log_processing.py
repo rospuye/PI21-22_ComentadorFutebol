@@ -3,8 +3,8 @@ import sys
 import re
 import copy
 import time
-from entities import Position, Entity, Ball, Player
-from heuristics import process
+from djangoProject.commentator_website_backend.backend.entities import Position, Ball, Player
+from djangoProject.commentator_website_backend.backend.heuristics import process
 
 def position_to_array(position, flg=False):
     tmp = re.findall("[-]?\d+[.]?\d*[eE]?[-]?\d*", position)
@@ -55,10 +55,11 @@ def write_to_file(timestamp, entities, output):
 def process_log(log, skip=1, skip_flg=False):
     tik = time.time()
     path = "logs/input/"
-    out = "logs/output/" + log.rstrip(".log")
+    # out = "logs/output/" + log.rstrip(".log")
     count = 0
-    inpt = open(path + log, "r")
-    output = open(out, "w")
+    # inpt = open(path + log, "r")
+    inpt = log
+    # output = open(out, "w")
     flg = False
     events = []
     
@@ -70,30 +71,33 @@ def process_log(log, skip=1, skip_flg=False):
     # TODO get fields when all 3 exist on the line
     # ((FieldLength 30)(FieldWidth 20)(FieldHeight 40)(GoalWidth 2.1)(GoalDepth 0.6)(GoalHeight 0.8)
     for line in inpt:
+        line = line.decode()
+
         if not ("FieldLength" in line and "FieldWidth" in line):
             continue
         
         tmp = re.split('\s|\)', line)
-        #print(tmp)
+        # print(tmp)
         fieldParams["length"] = float(tmp[1])
-        print("Length:",fieldParams["length"])
+        print("Length:", fieldParams["length"])
         fieldParams["width"] = float(tmp[3])
-        print("Width:",fieldParams["width"])
+        print("Width:", fieldParams["width"])
         goalParams["width"] = float(tmp[7])
-        print("Goal Width:",goalParams["width"])
+        print("Goal Width:", goalParams["width"])
         goalParams["depth"] = float(tmp[9])
-        print("Goal Depth:",goalParams["depth"])
+        print("Goal Depth:", goalParams["depth"])
         goalParams["height"] = float(tmp[11])
-        print("Goal Height:",goalParams["height"])
+        print("Goal Height:", goalParams["height"])
         break
     c = 0
     for line in inpt:
+        line = line.decode()
         tmp = re.findall("soccerball.obj|models/naobody", line)
         c += 1
         if len(tmp) == 23 and not re.search("matTeam",line):
             timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
-            #print(timestamp)
-            #print(c)
+            # print(timestamp)
+            # print(c)
             tmp = re.split("\(nd", line)
             tmp2 = [(tmp[i-1].strip(),i) for i in range(len(tmp)) if re.search("soccerball.obj", tmp[i])]
             for pos,i in tmp2:
@@ -169,6 +173,7 @@ def process_log(log, skip=1, skip_flg=False):
             break
 
     for line in inpt:
+        line = line.decode()
         new_timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
         if new_timestamp != timestamp:
             break
@@ -176,6 +181,7 @@ def process_log(log, skip=1, skip_flg=False):
     old_timestamp = timestamp
     count = 0
     for line in inpt:
+        line = line.decode()
         #if re.search("soccerball.obj|models/naobody", line):
         timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
         # print(type(timestamp), timestamp)
@@ -244,11 +250,11 @@ def process_log(log, skip=1, skip_flg=False):
         if count == 5000: # 1000 ~= 40 seg
             break
     
-    for event in events:
-        output.write(str(event)+"\n")
-    
+    #for event in events:
+    #    output.write(str(event)+"\n")
+
     # output.write("}")
-    output.close()
+    #output.close()
     tok = time.time()
     elapsed = tok - tik
     print(elapsed)
