@@ -3,7 +3,7 @@ import sys
 import re
 import copy
 import time
-from entities import Position, Entity, Ball, Player
+from entities import Position, Ball, Player
 from heuristics import process
 
 def position_to_array(position, flg=False):

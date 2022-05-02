@@ -17,12 +17,8 @@ def process(entities : list, field : dict, goal : dict, curr_timestamp : float):
     teamB = entities[12:] # Right (True)
     messages = []
     if curr_timestamp == 0.0:
-        print("START")
         events["start"] = None
     
-    # print(f"Start {events = }")
-    # # print(f"{curr_timestamp = }")
-    # TODO, ball sometimes doesn't have an owner, some methods in heuristics depend on ball always having owner
     # Event detection
     messages += detect_kick_off(ball, teamA, teamB, curr_timestamp)
     messages += detect_out_goal(ball, field, goal, curr_timestamp)
@@ -120,9 +116,9 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
                 # Goal Keeper kickoff
                 if "goalkeeper_out" not in events:
                     message = Message(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp)
-                events["goalkeeper_out"] = message
-                # print("Out made it")
-                return [message]
+                    events["goalkeeper_out"] = message
+                    # print("Out made it")
+                    return [message]
             
         # TODO dont think this should be a else
         else: # It's an out
