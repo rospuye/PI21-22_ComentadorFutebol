@@ -40,8 +40,12 @@ def new_register(request):
 @csrf_exempt
 def file_upload(request):
     uploaded_file = request.FILES['file']
-    for line in uploaded_file:
-        print(line.decode())
+    events = process_log(uploaded_file)
+    print(len(uploaded_file))
+    for event in events:
+        print(event)
+    #for line in uploaded_file:
+    #    print(line.decode())
     # print(uploaded_file.content_type)
     return HttpResponse("file_upload_success")
 

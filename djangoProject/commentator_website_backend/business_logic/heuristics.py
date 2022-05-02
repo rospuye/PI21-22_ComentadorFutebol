@@ -34,6 +34,7 @@ def process(entities : list, field : dict, goal : dict, curr_timestamp : float):
     messages += detect_pass_or_dribble(ball, entities[1:], curr_timestamp) 
     messages += detect_defense(ball, teamA, teamB, curr_timestamp)
 
+    print(messages)
     return messages
 
 def detect_kick_off(ball : Ball, teamA, teamB, timestamp):
