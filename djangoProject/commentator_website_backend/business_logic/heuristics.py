@@ -34,7 +34,6 @@ def process(entities : list, field : dict, goal : dict, curr_timestamp : float):
     messages += detect_pass_or_dribble(ball, entities[1:], curr_timestamp) 
     messages += detect_defense(ball, teamA, teamB, curr_timestamp)
 
-    print(messages)
     return messages
 
 def detect_kick_off(ball : Ball, teamA, teamB, timestamp):
@@ -121,9 +120,9 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
                 # Goal Keeper kickoff
                 if "goalkeeper_out" not in events:
                     message = Message(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp)
-                events["goalkeeper_out"] = message
-                # print("Out made it")
-                return [message]
+                    events["goalkeeper_out"] = message
+                    # print("Out made it")
+                    return [message]
             
         # TODO dont think this should be a else
         else: # It's an out

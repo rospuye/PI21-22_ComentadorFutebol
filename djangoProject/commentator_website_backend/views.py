@@ -40,8 +40,14 @@ def new_register(request):
 @csrf_exempt
 def file_upload(request):
     uploaded_file = request.FILES['file']
+    line_count = 0
+    for line in uploaded_file:
+        line_count+= 1
+    print("line count: ")
+    print(line_count)
+
     events = process_log(uploaded_file)
-    print(len(uploaded_file))
+
     for event in events:
         print(event)
     #for line in uploaded_file:

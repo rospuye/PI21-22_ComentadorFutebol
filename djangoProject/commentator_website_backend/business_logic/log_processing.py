@@ -74,6 +74,8 @@ def process_log(log, skip=1, skip_flg=False):
     # ((FieldLength 30)(FieldWidth 20)(FieldHeight 40)(GoalWidth 2.1)(GoalDepth 0.6)(GoalHeight 0.8)
     for line in log:
         line = line.decode()
+        #print(line)
+        #print("--------------------------------------------------")
         if not ("FieldLength" in line and "FieldWidth" in line):
             continue
 
@@ -93,6 +95,8 @@ def process_log(log, skip=1, skip_flg=False):
     c = 0
     for line in log:
         line = line.decode()
+        #print(line)
+        #print("--------------------------------------------------")
         tmp = re.findall("soccerball.obj|models/naobody", line)
         c += 1
         if len(tmp) == 23 and not re.search("matTeam", line):
@@ -102,6 +106,7 @@ def process_log(log, skip=1, skip_flg=False):
             tmp = re.split("\(nd", line)
             tmp2 = [(tmp[i - 1].strip(), i) for i in range(len(tmp)) if re.search("soccerball.obj", tmp[i])]
             for pos, i in tmp2:
+                #print("aaaaaaaaaaaaaaaaa")
                 ball = Ball("ball", i, 1)
                 position_array = position_to_array(pos)
                 position = Position(position=position_array, timestamp=timestamp)
@@ -184,6 +189,11 @@ def process_log(log, skip=1, skip_flg=False):
     count = 0
     for line in log:
         line = line.decode()
+        new_timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
+        if new_timestamp==timestamp:
+            continue
+        #print("LINEEE")
+        #print(line)
         # if re.search("soccerball.obj|models/naobody", line):
         timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
         # print(type(timestamp), timestamp)
@@ -242,6 +252,7 @@ def process_log(log, skip=1, skip_flg=False):
             #     print(entity.id, [pos.timestamp for pos in entity.positions])
 
             # write_to_file(timestamp, entities, output) # Substituir pela heuristic
+            #print("njkdnfjkdsbnf")
             events += process(entities, fieldParams, goalParams, timestamp)
         count += 1
 
@@ -256,6 +267,8 @@ def process_log(log, skip=1, skip_flg=False):
     tok = time.time()
     elapsed = tok - tik
     print(elapsed)
+    #print('events')
+    #print(events)
     return events
 
 
