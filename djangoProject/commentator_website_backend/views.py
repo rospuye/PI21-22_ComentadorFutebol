@@ -48,10 +48,13 @@ def file_upload(request):
 
     events = process_log(uploaded_file)
 
+    count = 0
     for event in events:
+        if count>10:
+            break
         print(event)
-    #for line in uploaded_file:
-    #    print(line.decode())
-    # print(uploaded_file.content_type)
+        count += 1
+    print(f"Total Number of Events: {len(events)}")
+
     return HttpResponse("file_upload_success")
 

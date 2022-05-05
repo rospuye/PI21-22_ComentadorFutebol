@@ -23,7 +23,7 @@ function SelectGamePage() {
             {/* <Link to="/">
                 <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '2%', marginLeft: '2%' }} />
             </Link>
-            <Title title='Commentator' subtitle="Select Your Game" /> */}
+            <Title title='FoCo' subtitle="Select Your Game" /> */}
 
             <Container>
                 <Row>
@@ -33,7 +33,7 @@ function SelectGamePage() {
                         </Link>
                     </Col>
                     <Col>
-                        <Title title="Commentator" subtitle="Select Your Game"></Title>
+                        <Title title="FoCo" subtitle="Select Your Game"></Title>
                     </Col>
                     <Col style={{ display: 'flex', justifyContent: 'right' }}>
                         {login ?

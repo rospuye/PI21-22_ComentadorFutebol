@@ -56,7 +56,7 @@ function UploadLogPage() {
             </Link>
           </Col>
           <Col>
-            <Title title="Commentator" subtitle="Upload Your Log File"></Title>
+            <Title title="FoCo" subtitle="Upload Your Log File"></Title>
           </Col>
           <Col style={{ display: 'flex', justifyContent: 'right' }}>
             {cookies.logged_user !== '' ?

@@ -28,7 +28,7 @@ function YourGamesPage() {
                         </Link>
                     </Col>
                     <Col>
-                        <Title title="Commentator" subtitle="Your Games"></Title>
+                        <Title title="FoCo" subtitle="Your Games"></Title>
                     </Col>
                     <Col style={{ display: 'flex', justifyContent: 'right' }}>
                         {cookies.logged_user !== '' ?

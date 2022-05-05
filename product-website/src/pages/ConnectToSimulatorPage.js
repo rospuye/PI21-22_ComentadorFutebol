@@ -35,7 +35,7 @@ function ConnectToSimulatorPage() {
                         </Link>
                     </Col>
                     <Col>
-                        <Title title="Commentator" subtitle="Connect To Simulator"></Title>
+                        <Title title="FoCo" subtitle="Connect To Simulator"></Title>
                     </Col>
                     <Col style={{ display: 'flex', justifyContent: 'right' }}>
                         {cookies.logged_user !== '' ?
