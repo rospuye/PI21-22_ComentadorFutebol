@@ -4,7 +4,7 @@
 const sceneElements = {
     sceneGraph: null,
     camera: null,
-    control: null,  // NEW
+    control: null,
     renderer: null,
 };
 
@@ -12,15 +12,20 @@ helper.initEmptyScene(sceneElements); // initialize the empty scene
 load3DObjects(sceneElements.sceneGraph); // add elements within the scene
 requestAnimationFrame(computeFrame); // animate
 
+// neutral talking animation
+let neutral_talking_head = gsap.timeline({ repeat: -1, repeatDelay: 0 });
+let neutral_talking_arms = gsap.timeline({ repeat: -1, repeatDelay: 0 });
+
 // HANDLING EVENTS
 
 // Event Listeners
 window.addEventListener('resize', resizeWindow);
 
-//To keep track of the keyboard - WASD
+// To keep track of the keyboard - WASD
 var keyD = false, keyA = false, keyS = false, keyW = false;
 document.addEventListener('keydown', onDocumentKeyDown, false);
 document.addEventListener('keyup', onDocumentKeyUp, false);
+document.addEventListener('keypress', onDocumentKeyPress, false);
 
 // Update render image size and camera aspect when the window is resized
 function resizeWindow(eventParam) {
@@ -66,6 +71,102 @@ function onDocumentKeyUp(event) {
     }
 }
 
+function onDocumentKeyPress(event) {
+
+    // stop talking first (for walking in any direction)
+    if (event.keyCode == 100 || event.keyCode == 115 || event.keyCode == 97 || event.keyCode == 119) {
+        neutral_talking(false);
+        gsap.to(head.rotation, { x: 0, duration: 0.3 });
+        gsap.to(head.rotation, { z: 0, duration: 0.3 });
+    }
+
+    // and then walking body rotations (which depends on direction)
+    switch (event.keyCode) {
+        case 100: //d
+
+            gsap.to(torso2.rotation, { z: -0.45, duration: 0.3 });
+            gsap.to(torso3.rotation, { z: -0.03, duration: 0.3 });
+            gsap.to(head.rotation, { y: Math.PI / 2, duration: 0.3 });
+            gsap.to(arms.rotation, { y: Math.PI / 2, duration: 0.3 });
+
+            break;
+
+        case 115: //s
+
+            gsap.to(torso2.rotation, { x: -0.45, duration: 0.3 });
+            gsap.to(torso3.rotation, { x: -0.03, duration: 0.3 });
+
+            break;
+
+        case 97: //a
+
+            gsap.to(torso2.rotation, { z: 0.45, duration: 0.3 });
+            gsap.to(torso3.rotation, { z: 0.03, duration: 0.3 });
+            gsap.to(head.rotation, { y: -Math.PI / 2, duration: 0.3 });
+            gsap.to(arms.rotation, { y: -Math.PI / 2, duration: 0.3 });
+
+            break;
+
+        case 119: //w
+
+            gsap.to(torso2.rotation, { x: 0.45, duration: 0.3 });
+            gsap.to(torso3.rotation, { x: 0.03, duration: 0.3 });
+            gsap.to(head.rotation, { y: Math.PI, duration: 0.3 });
+            gsap.to(arms.rotation, { y: Math.PI, duration: 0.3 });
+
+            break;
+
+    }
+}
+
+function neutral_position() {
+
+    gsap.to(torso2.rotation, { x: 0, duration: 0.3 });
+    gsap.to(torso3.rotation, { x: 0, duration: 0.3 });
+    gsap.to(torso2.rotation, { z: 0, duration: 0.3 });
+    gsap.to(torso3.rotation, { z: 0, duration: 0.3 });
+    gsap.to(head.rotation, { y: 0, duration: 0.3 });
+    gsap.to(arms.rotation, { y: 0, duration: 0.3 });
+
+    neutral_talking(true);
+
+}
+
+function neutral_talking(play) {
+
+    const arm1 = sceneElements.sceneGraph.getObjectByName("arm1");
+    const arm2 = sceneElements.sceneGraph.getObjectByName("arm2");
+
+    const shoulder1 = sceneElements.sceneGraph.getObjectByName("shoulder1");
+    const shoulder2 = sceneElements.sceneGraph.getObjectByName("shoulder2");
+
+    // each time the function is called, the head swinging is slightly different (due to the random animation durations)
+    // this talking is a timeline (see the definition of the neutral_talking_head variable)
+    // this means these animations below will be played in sequence
+    neutral_talking_head.to(head.rotation, { x: 0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    neutral_talking_head.to(head.rotation, { z: gsap.utils.random(0.05, 0.1, 0.01), duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    neutral_talking_head.to(head.rotation, { x: -0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    neutral_talking_head.to(head.rotation, { x: 0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    neutral_talking_head.to(head.rotation, { x: -0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    neutral_talking_head.to(head.rotation, { z: gsap.utils.random(-0.05, -0.1, 0.01), duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    neutral_talking_head.to(head.rotation, { x: 0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    neutral_talking_head.to(head.rotation, { x: -0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    neutral_talking_head.to(head.rotation, { z: 0, duration: gsap.utils.random(0.25, 0.5, 0.05) });
+
+    // neutral_talking_arms.to(arm1.rotation, { x: 0.1, duration: 1 });
+    // neutral_talking_arms.to(arm1.rotation, { x: -0.1, duration: 1 });
+
+    if (play) {
+        neutral_talking_head.play();
+        neutral_talking_arms.play();
+    }
+    else {
+        neutral_talking_head.pause();
+        neutral_talking_arms.pause();
+    }
+
+}
+
 //////////////////////////////////////////////////////////////////
 
 
@@ -106,12 +207,14 @@ function load3DObjects(sceneGraph) {
     const geometry_head1 = new THREE.BoxGeometry(1.5, 1, 1.2);
     const head1 = new THREE.Mesh(geometry_head1, material_head1);
     head1.position.y = 1;
+    // head1.castShadow = true;
 
     const geometry_head2 = new THREE.CylinderGeometry(0.6, 0.6, 1.2, 32);
     const head2 = new THREE.Mesh(geometry_head2, material_head1);
     head2.position.y = 1.5;
-    head2.rotation.x = Math.PI/2;
+    head2.rotation.x = Math.PI / 2;
     head2.scale.set(1.25, 1, 0.5);
+    // head2.castShadow = true;
 
     const head3 = new THREE.Mesh(geometry_head1, material_head2);
     head3.position.set(0, 1, 0.165);
@@ -119,7 +222,7 @@ function load3DObjects(sceneGraph) {
 
     const head4 = new THREE.Mesh(geometry_head2, material_head2);
     head4.position.set(0, 1.4, 0.165);
-    head4.rotation.x = Math.PI/2;
+    head4.rotation.x = Math.PI / 2;
     head4.scale.set(1, 0.8, 0.4);
 
     // Eyes
@@ -130,12 +233,12 @@ function load3DObjects(sceneGraph) {
     const eye_geometry = new THREE.CylinderGeometry(0.3, 0.3, 0.2, 32);
     const eye1 = new THREE.Mesh(eye_geometry, material_eyes);
     eye1.position.set(-0.25, 1, 0.61);
-    eye1.rotation.x = Math.PI/2;
+    eye1.rotation.x = Math.PI / 2;
     eye1.scale.set(0.5, 1, 0.8);
 
     const eye2 = new THREE.Mesh(eye_geometry, material_eyes);
     eye2.position.set(0.25, 1, 0.61);
-    eye2.rotation.x = Math.PI/2;
+    eye2.rotation.x = Math.PI / 2;
     eye2.scale.set(0.5, 1, 0.8);
 
     const eyebrow_geometry = new THREE.BoxGeometry(0.3, 0.07, 0.2);
@@ -154,9 +257,9 @@ function load3DObjects(sceneGraph) {
 
     const ear_geometry = new THREE.BoxGeometry(0.2, 0.7, 0.35);
     const ear1 = new THREE.Mesh(ear_geometry, material_ears);
-    ear1.position.set(-0.85,1.1,0);
+    ear1.position.set(-0.85, 1.1, 0);
     const ear2 = new THREE.Mesh(ear_geometry, material_ears);
-    ear2.position.set(0.85,1.1,0);
+    ear2.position.set(0.85, 1.1, 0);
 
     antennas.add(ear1, ear2);
 
@@ -219,42 +322,55 @@ function load3DObjects(sceneGraph) {
     const arms = new THREE.Group();
     const arm1_group = new THREE.Group();
     const arm2_group = new THREE.Group();
+    const forearm1_group = new THREE.Group();
+    const forearm2_group = new THREE.Group();
 
     const shoulder_geometry = new THREE.SphereGeometry(0.2, 32, 16);
     const hand_and_elbow_geometry = new THREE.SphereGeometry(0.15, 32, 16);
     const arm_part_geometry = new THREE.CylinderGeometry(0.1, 0.1, 0.7, 8, 1);
 
     const shoulder1 = new THREE.Mesh(shoulder_geometry, material_torso2);
-    shoulder1.position.set(3,2,0);
+    shoulder1.position.set(3, 2, 0);
+    shoulder1.name = "shoulder1";
     const shoulder2 = new THREE.Mesh(shoulder_geometry, material_torso2);
-    shoulder2.position.set(3,2,0);
+    shoulder2.position.set(3, 2, 0);
+    shoulder2.name = "shoulder2";
 
     const arm1 = new THREE.Mesh(arm_part_geometry, material_torso);
-    arm1.position.set(3,1.587,0);
+    arm1.position.set(3, 1.587, 0);
     const arm2 = new THREE.Mesh(arm_part_geometry, material_torso);
-    arm2.position.set(3,1.587,0);
+    arm2.position.set(3, 1.587, 0);
 
     const elbow1 = new THREE.Mesh(hand_and_elbow_geometry, material_torso2);
-    elbow1.position.set(3,1.194,0);
+    elbow1.position.set(3, 1.194, 0);
     const elbow2 = new THREE.Mesh(hand_and_elbow_geometry, material_torso2);
-    elbow2.position.set(3,1.194,0);
+    elbow2.position.set(3, 1.194, 0);
 
     const forearm1 = new THREE.Mesh(arm_part_geometry, material_torso);
-    forearm1.position.set(3,0.872,0);
+    forearm1.position.set(3, 0.872, 0);
     const forearm2 = new THREE.Mesh(arm_part_geometry, material_torso);
-    forearm2.position.set(3,0.872,0);
+    forearm2.position.set(3, 0.872, 0);
 
     const hand1 = new THREE.Mesh(hand_and_elbow_geometry, material_torso2);
-    hand1.position.set(3,0.515,0);
+    hand1.position.set(3, 0.515, 0);
     const hand2 = new THREE.Mesh(hand_and_elbow_geometry, material_torso2);
-    hand2.position.set(3,0.515,0);
+    hand2.position.set(3, 0.515, 0);
 
+    forearm1_group.add(forearm1, hand1);
     arm1_group.add(shoulder1, arm1, elbow1, forearm1, hand1);
-    arm1_group.position.set(-2.3,0.4,0);
-    arm1_group.scale.set(1.2,1.2,1.2);
+    arm1_group.name = "arm1";
+    arm1_group.translate(3, 2, 0);
+    forearm1_group.name = "forearm1";
+    arm1_group.position.set(-2.3, 0.4, 0);
+    arm1_group.scale.set(1.2, 1.2, 1.2);
+
+    forearm2_group.add(forearm2, hand2);
     arm2_group.add(shoulder2, arm2, elbow2, forearm2, hand2);
-    arm2_group.position.set(-4.9,0.4,0);
-    arm2_group.scale.set(1.2,1.2,1.2);
+    arm2_group.name = "arm2";
+    forearm2_group.name = "forearm2";
+    arm2_group.position.set(-4.9, 0.4, 0);
+    arm2_group.scale.set(1.2, 1.2, 1.2);
+
     arms.add(arm1_group, arm2_group);
     arms.name = "arms";
 
@@ -271,52 +387,43 @@ function load3DObjects(sceneGraph) {
 }
 
 // Displacement values
-var delta = 0.1; // if you need it
+var delta = 0.01; // if you need it
 var dispX = 0.08, dispZ = 0.08;
+
+// CONTROLING THE ROBOT WITH THE KEYBOARD
+const robot = sceneElements.sceneGraph.getObjectByName("robot");
+const head = sceneElements.sceneGraph.getObjectByName("head");
+const arms = sceneElements.sceneGraph.getObjectByName("arms");
+
+const torso2 = sceneElements.sceneGraph.getObjectByName("torso2");
+const torso3 = sceneElements.sceneGraph.getObjectByName("torso3");
+
+let neutral_position_called = true;
+neutral_talking(true);
 
 function computeFrame(time) {
 
-    // CONTROLING THE ROBOT WITH THE KEYBOARD
-    const robot = sceneElements.sceneGraph.getObjectByName("robot");
-    const head = sceneElements.sceneGraph.getObjectByName("head");
-    const arms = sceneElements.sceneGraph.getObjectByName("arms");
-
-    const torso2 = sceneElements.sceneGraph.getObjectByName("torso2");
-    const torso3 = sceneElements.sceneGraph.getObjectByName("torso3");
-
     if (keyD && robot.position.x < 5) {
         robot.translateX(dispX);
-        torso2.rotation.z = -0.45;
-        torso3.rotation.z = -0.03;
-        head.rotation.y = Math.PI/2;
-        arms.rotation.y = Math.PI/2;
+        neutral_position_called = false;
     }
     if (keyW && robot.position.z > -5) {
         robot.translateZ(-dispZ);
-        torso2.rotation.x = 0.45;
-        torso3.rotation.x = 0.03;
-        head.rotation.y = Math.PI;
-        arms.rotation.y = Math.PI;
+        neutral_position_called = false;
     }
     if (keyA && robot.position.x > -5) {
         robot.translateX(-dispX);
-        torso2.rotation.z = 0.45;
-        torso3.rotation.z = 0.03;
-        head.rotation.y = -Math.PI/2;
-        arms.rotation.y = -Math.PI/2;
+        neutral_position_called = false;
     }
     if (keyS && robot.position.z < 5) {
         robot.translateZ(dispZ);
-        torso2.rotation.x = -0.45;
-        torso3.rotation.x = -0.03;
+        neutral_position_called = false;
     }
     if (!keyD && !keyW && !keyA && !keyS) {
-        torso2.rotation.x = 0;
-        torso3.rotation.x = 0;
-        torso2.rotation.z = 0;
-        torso3.rotation.z = 0;
-        head.rotation.y = 0;
-        arms.rotation.y = 0;
+        if (!neutral_position_called) {
+            neutral_position();
+            neutral_position_called = true;
+        }
     }
 
     // Rendering
