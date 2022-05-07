@@ -33,7 +33,7 @@ function GameStatistics() {
             </Link>
           </Col>
           <Col>
-            <Title title="Commentator" subtitle="Game Statistics"></Title>
+            <Title title="FoCo" subtitle="Game Statistics"></Title>
           </Col>
           <Col style={{ display: 'flex', justifyContent: 'right' }}>
           </Col>
@@ -45,7 +45,7 @@ function GameStatistics() {
         <Link to="/">
           <FontAwesomeIcon icon={faHouse} style={{ color: 'white', fontSize: '30px', marginTop: '20px', marginLeft: '20px' }} />
         </Link>
-        <Title title="Commentator" subtitle="Game Statistics" />
+        <Title title="FoCo" subtitle="Game Statistics" />
       </div> */}
         <Row>
           <Col style={{ textAlign: "center" }}>

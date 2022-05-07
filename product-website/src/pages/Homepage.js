@@ -21,7 +21,7 @@ import { useCookies } from 'react-cookie'
 
 function Homepage() {
 
-  let intro = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc aliquam consequat nisi quis maximus. Morbi commodo eget justo a lacinia. Fusce euismod aliquet ornare. Aenean laoreet sem a neque lacinia iaculis. Suspendisse potenti. Mauris eu magna augue. Duis ac sapien eu lorem viverra eleifend cursus vitae purus.";
+  let intro = "Automatic system for natural language commentary of robotic football games.";
   const [cookies, setCookie] = useCookies(['logged_user'])
 
   return (<div style={{ padding: '1%' }}>
@@ -44,7 +44,7 @@ function Homepage() {
       </Row>
     </Container>
 
-    <Title title="Commentator" subtitle={intro}></Title>
+    <Title title="FoCo: Football Commentator" subtitle={intro}></Title>
 
     <Container>
       <Row>

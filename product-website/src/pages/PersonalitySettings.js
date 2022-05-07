@@ -53,7 +53,7 @@ function PersonalitySettings() {
               </Link>
             </Col>
             <Col>
-              <Title title="Commentator" subtitle="Personality Settings"></Title>
+              <Title title="FoCo" subtitle="Personality Settings"></Title>
             </Col>
             <Col style={{ display: 'flex', justifyContent: 'right' }}>
               <Button variant="light" style={{ height: '40px', marginTop: '5%' }} onClick={() => {
@@ -118,7 +118,7 @@ function PersonalitySettings() {
               </Link>
             </Col>
             <Col>
-              <Title title="Commentator" subtitle="Personality Settings"></Title>
+              <Title title="FoCo" subtitle="Personality Settings"></Title>
             </Col>
             <Col style={{ display: 'flex', justifyContent: 'right' }}></Col>
           </Row>

@@ -23,6 +23,8 @@ function UploadLogPage() {
   function processFile(file) {
     if (file) {
 
+      console.log(file)
+      
       const url = 'http://127.0.0.1:8000/file_upload/';
       const formData = new FormData();
       formData.append('file', file);
@@ -54,7 +56,7 @@ function UploadLogPage() {
             </Link>
           </Col>
           <Col>
-            <Title title="Commentator" subtitle="Upload Your Log File"></Title>
+            <Title title="FoCo" subtitle="Upload Your Log File"></Title>
           </Col>
           <Col style={{ display: 'flex', justifyContent: 'right' }}>
             {cookies.logged_user !== '' ?

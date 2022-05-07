@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 import json
+from .business_logic.log_processing import process_log
 
 
 @csrf_exempt
@@ -39,8 +40,21 @@ def new_register(request):
 @csrf_exempt
 def file_upload(request):
     uploaded_file = request.FILES['file']
+    line_count = 0
     for line in uploaded_file:
-        print(line.decode())
-    # print(uploaded_file.content_type)
+        line_count+= 1
+    print("line count: ")
+    print(line_count)
+
+    events = process_log(uploaded_file)
+
+    count = 0
+    for event in events:
+        if count>10:
+            break
+        print(event)
+        count += 1
+    print(f"Total Number of Events: {len(events)}")
+
     return HttpResponse("file_upload_success")
 
