@@ -10,9 +10,6 @@ import SmallerTitle from '../components/SmallerTitle'
 
 import { useCookies } from 'react-cookie';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-
 import '../components/components_css/Form.css'
 
 import axios from 'axios'
@@ -101,8 +98,7 @@ function handleLogin(username, password, setCookie) {
             .then(res => {
                 console.log(res);
                 if (res.data === 'login_success') {
-                    setCookie('logged_user', username, {path: '/'})
-                    // select_game
+                    setCookie('logged_user', username, {path: '/', maxAge: '3600'})
                     window.location.href = '../select_game'
                 }
                 else if (res.data === 'login_failure') {
@@ -154,7 +150,7 @@ function handleRegister(username, email, password, conf_password, setCookie) {
             .then(res => {
                 console.log(res.data);
                 if (res.data === 'register_success') {
-                    setCookie('logged_user', username, {path: '/'})
+                    setCookie('logged_user', username, {path: '/', maxAge: '3600'})
                     window.location.href = '../select_game'
                 }
                 else if (res.data === 'username_already_in_use') {

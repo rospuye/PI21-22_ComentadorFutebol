@@ -23,6 +23,7 @@ function Homepage() {
 
   let intro = "Automatic system for natural language commentary of robotic football games.";
   const [cookies, setCookie] = useCookies(['logged_user'])
+  console.log("cookies: " + cookies.logged_user)
 
   return (<div style={{ padding: '1%' }}>
 
@@ -31,7 +32,8 @@ function Homepage() {
         <Col></Col>
         <Col></Col>
         <Col xs lg="2">
-          {cookies.logged_user !== '' ?
+          {/* || cookies.logged_user == undefined */}
+          {(cookies.logged_user !== '') ?
             <Button variant="light" onClick={() => {
               setCookie('logged_user', '', { path: '/' })
             }}>Logout</Button>
