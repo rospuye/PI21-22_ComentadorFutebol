@@ -1,8 +1,9 @@
 import math
+from operator import contains
 from entities import Position, Entity, Ball
 from message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble
 
-KICK_OFF_CONTACT_DISTANCE = 0.08              # Distance to be considered contact between entities
+KICK_OFF_CONTACT_DISTANCE = 0.13              # Distance to be considered contact between entities
 CONTACT_DISTANCE = 0.2
 AGGRESSION_DISTANCE_MARGIN = 0.3            # Distance to be considered collision between players
 AGGRESSION_DISTANCE_TO_BALL = 3             # Just notify aggressions at maximum that distance from ball
@@ -21,20 +22,21 @@ def process(entities : list, field : dict, goal : dict, curr_timestamp : float):
     
     # Event detection
     messages += detect_kick_off(ball, teamA, teamB, curr_timestamp)
-    messages += detect_out_goal(ball, field, goal, curr_timestamp)
-    #messages += detect_outs(field, ball)
     messages += detect_corner_shot(ball, teamA, teamB, curr_timestamp)
-    messages += detect_goal_shot(ball, field, goal, curr_timestamp)
-    #messages += detect_goal(ball, field, goal, curr_timestamp)
-    messages += detect_aggressions(teamA=teamA, teamB=teamB, ball=ball)
-    messages += detect_pass_or_dribble(ball, entities[1:], curr_timestamp) 
-    messages += detect_defense(ball, teamA, teamB, curr_timestamp)
+    # If ball is out, we have to wait for the ball to be back in game
+    if not ("out" in events or "corner" in events or "goalkeeper_out" in events or "out_shot" in events or "corner_shot" in events or "goalkeeper_out_shot" in events or "goal" in events):
+        messages += detect_out_goal(ball, teamA, teamB, field, goal, curr_timestamp)
+        messages += detect_goal_shot(ball, field, goal, curr_timestamp)
+        messages += detect_aggressions(teamA=teamA, teamB=teamB, ball=ball)
+        messages += detect_pass_or_dribble(ball, entities[1:], curr_timestamp) 
+        messages += detect_defense(ball, teamA, teamB, curr_timestamp)
 
     return messages
 
 def detect_kick_off(ball : Ball, teamA, teamB, timestamp):
     if not "start" in events and not "goal" in events and not "out" in events:
         return []
+
     elif "start" in events: # start of game
         if timestamp > 15: # kick_off timeout
             events.pop("start")
@@ -45,6 +47,7 @@ def detect_kick_off(ball : Ball, teamA, teamB, timestamp):
             ball.owner = player
             return [Kick_Off(timestamp, player.id)]
         else: return [] # still waiting on kick_off
+
     elif "goal" in events:
         goal = events["goal"]
         if timestamp - goal.end > 18: # kick_off timeout
@@ -56,6 +59,7 @@ def detect_kick_off(ball : Ball, teamA, teamB, timestamp):
             ball.owner = player
             return [Kick_Off(timestamp, player.id)]
         else: return [] # still waiting on kick_off
+
     elif "out" in events:
         out = events["out"]
         if timestamp - out.end > 18: # kick_off timeout
@@ -70,7 +74,7 @@ def detect_kick_off(ball : Ball, teamA, teamB, timestamp):
 
 # length -> x
 # width -> y
-def detect_out_goal(ball : Ball, field, goal, timestamp):
+def detect_out_goal(ball : Ball, teamA, teamB, field, goal, timestamp):
     # First things first, is it outside the field?
     ball_pos = ball.positions[-1]
         
@@ -99,14 +103,18 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
             return messages
             
     if "goal" not in events:
+        # Who is the ball owner
+        pl_teamA = ball.get_closest_player(teamA)
+        pl_teamB = ball.get_closest_player(teamB)
+        if ball.get_distance_from(pl_teamA) > ball.get_distance_from(pl_teamB): ball.owner = pl_teamB
+        else: ball.owner = pl_teamA
+
         # Is it a corner?
         if abs(ball_pos.x) > field["length"]/2:
             teamRight = False if ball_pos.x < 0 else True
             # If ball exited by the opposite side of a team and hasn't been a goal
-            
             if (teamRight == ball.owner.isTeamRight):
                 # Verify if is the same corner event
-                
                 if "corner" not in events:
                     message = Message(event="corner", start=ball_pos.timestamp, end=ball_pos.timestamp)
                     events["corner"] = message
@@ -114,18 +122,18 @@ def detect_out_goal(ball : Ball, field, goal, timestamp):
                     return [message]
             else:
                 # Goal Keeper kickoff
+                print("Goalkeeper Out")
                 if "goalkeeper_out" not in events:
                     message = Message(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp)
                     events["goalkeeper_out"] = message
                     # print("Out made it")
                     return [message]
             
-        # TODO dont think this should be a else
         else: # It's an out
             if "out" not in events:
                 message = Message(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp)
                 events["out"] = message
-                print(f"{timestamp}: Out made it")
+                #print(f"{timestamp}: Out made it")
                 return [message]
     
     return []
@@ -165,15 +173,15 @@ def detect_corner_shot(ball : Ball, teamA : list, teamB : list, curr_timestamp :
 def start_outside_shot(event : str, ball : Ball, teamA : list, teamB : list, curr_timestamp : float):
     """If a outside shot is kicked, returns True and add to the events. Returns False otherwise"""
     atk_team = teamA if ball.owner.isTeamRight else teamB
-        
-    for player in atk_team:
 
-        # If attacking team has a player that entered in contact with the ball
-        if ball.get_distance_from(player) < CONTACT_DISTANCE:
-            events.pop(event)
-            events[f"{event}_shot"] = {"start": curr_timestamp}
-            # print(f"after {events[event + '_shot'] = }")
-            return True
+    # If attacking team has a player that entered in contact with the ball
+    #for player in atk_team:
+    player = ball.get_closest_player(atk_team)
+    if ball.get_distance_from(player) < KICK_OFF_CONTACT_DISTANCE:
+        events.pop(event)
+        events[f"{event}_shot"] = {"start": curr_timestamp}
+        # print(f"after {events[event + '_shot'] = }")
+        return True
             
     return False
 
