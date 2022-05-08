@@ -123,6 +123,9 @@ class Player(Entity):
     def add_position_lfoot(self, position):
         self.positions_lfoot.append(position)  
 
+    def to_json(self):
+        return {"id": self.id, "team":self.isTeamRight}
+
 
 
 

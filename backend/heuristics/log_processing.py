@@ -3,8 +3,11 @@ import sys
 import re
 import copy
 import time
+
+from matplotlib.font_manager import json_dump
 from entities import Position, Ball, Player
 from heuristics import process
+import json
 
 def position_to_array(position, flg=False):
     tmp = re.findall("[-]?\d+[.]?\d*[eE]?[-]?\d*", position)
@@ -54,8 +57,8 @@ def write_to_file(timestamp, entities, output):
 
 def process_log(log, skip=1, skip_flg=False):
     tik = time.time()
-    path = "logs/input/"
-    out = "logs/output/" + log.rstrip(".log")
+    path = ""#"logs/input/"
+    out = log.rstrip(".log")#"logs/output/" + log.rstrip(".log")
     count = 0
     inpt = open(path + log, "r")
     output = open(out, "w")
@@ -67,7 +70,7 @@ def process_log(log, skip=1, skip_flg=False):
     goalParams = {}
     entities = []
     timestamp = 0
-    # TODO get fields when all 3 exist on the line
+    # get fields when all 3 exist on the line
     # ((FieldLength 30)(FieldWidth 20)(FieldHeight 40)(GoalWidth 2.1)(GoalDepth 0.6)(GoalHeight 0.8)
     for line in inpt:
         if not ("FieldLength" in line and "FieldWidth" in line):
@@ -136,32 +139,8 @@ def process_log(log, skip=1, skip_flg=False):
                                     player.add_position_rfoot(position)
                                     player.rfootIndex = i
                                 
-                                # print(player.id, position.distance_between(player.positions[-1]))
-                                # print(player.positions[-1].timestamp, player.positions[-1].x,player.positions[-1].y,player.positions[-1].z)
-                                # print(position.timestamp, position.x,position.y,position.z)
-                                # print(f"{robotID =}, {player.lfootIndex = }, {player.rfootIndex = }")
                                 break
                         break
-
-            # j = 1
-            # k = 0
-            # print(len(tmp5))
-            # for i in range(0,len(tmp5), 2):
-            #     position_array = position_to_array(tmp5[i][0])
-            #     position = Position(position=position_array, timestamp=timestamp)
-            #     if k == 0:
-            #         entities[j].add_position_rfoot(position)
-            #         k += 1
-            #     else:
-            #         entities[j].add_position_lfoot(position)
-            #         j += 1
-            #         k = 0
-            #     print(entities[j].id, position.distance_between(entities[j].positions[-1]))
-            #     print(entities[j].positions[-1].timestamp, entities[j].positions[-1].x,entities[j].positions[-1].y,entities[j].positions[-1].z)
-            #     print(position.timestamp, position.x,position.y,position.z)
-            # for entity in entities:
-            #     print(entity.id, [pos.timestamp for pos in entity.positions])
-            # print("======")
 
             #write_to_file(timestamp, entities, output) # substituir por heuristics
             events += process(entities, fieldParams, goalParams, timestamp)
@@ -252,7 +231,14 @@ def process_log(log, skip=1, skip_flg=False):
     tok = time.time()
     elapsed = tok - tik
     print(elapsed)
-    return events
+
+    result = []
+    for event in events:
+        #print(event)
+        result.append(event.to_json())
+        #print(result[-1])
+
+    return json.dumps(result)
 
 if __name__ == "__main__":
     log = sys.argv[1]
