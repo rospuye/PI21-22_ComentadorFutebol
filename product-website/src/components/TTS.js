@@ -64,7 +64,7 @@ class TTS {
         this.voices = []
         this.selVoice = undefined
         window.speechSynthesis.onvoiceschanged = () => {
-            console.log("i should had voices")
+            // console.log("i should had voices")
             setHasLoadedVoices(true)
             this.voices = window.speechSynthesis.getVoices()
             this.selVoice = this.voices[0]
@@ -86,10 +86,31 @@ class TTS {
     }
 
     play() {
-        console.log("class", this.speech)
+        // console.log("class", this.speech)
         // window.speechSynthesis.cancel()
+        this.speech.onstart = () => console.log("class", this.speech)
         window.speechSynthesis.speak(this.speech)
     } 
+
+    isPlaying() {
+        return window.speechSynthesis.speaking
+    }
+
+    emmitAudio(text, hasButtonClicked, waitTime=1000) {
+        console.log("emmit", hasButtonClicked, text)
+        if (hasButtonClicked.value && !this.isPlaying()) {
+            this.speak(text, hasButtonClicked)
+            return
+        }
+        setTimeout(() => {this.emmitAudio(text, hasButtonClicked, waitTime)}, waitTime)
+    }
+
+    speak(text, hasButtonClicked) {
+        console.log("handle click", text)
+        this.setText(text)
+        this.play()
+        hasButtonClicked.value = true
+    }
 
 
 }
