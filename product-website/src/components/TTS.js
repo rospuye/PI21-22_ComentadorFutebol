@@ -5,7 +5,7 @@ class TTS {
     // Cancel: samething but for cancel
     // Resume: samething but for resume
 
-    constructor(setHasLoadedVoices, rate=1, volume=50, pitch=1) {
+    constructor(setHasLoadedVoices=()=>{}, rate=1, volume=50, pitch=1) {
         this.speech = new SpeechSynthesisUtterance();
         this.speech.rate = rate
         this.speech.volume = volume
@@ -56,6 +56,18 @@ class TTS {
         this.setText(text)
         this.play()
         hasButtonClicked.value = true
+    }
+
+    hasVoices() {
+        return this.voices.length != 0
+    }
+
+    updateStateWhenVoicesLoaded(setState, waitTime=1000) {
+        if (this.hasVoices()) {
+            setState(true)
+            return true
+        }
+        setTimeout(this.updateStateWhenVoicesAreLoaded(setState), waitTime)
     }
 
 }

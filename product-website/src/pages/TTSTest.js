@@ -1,25 +1,18 @@
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useState } from "react"
 import TTS from "../components/TTS"
 
 const TTSTest = () => {
 
     const [hasLoadedVoices, setHasLoadedVoices] = useState(false)
-    const [tts, setTts] = useState(new TTS(setHasLoadedVoices))
+    const [tts, setTts] = useState(new TTS())
     let hasButtonClicked = {value: false}
-    const speechButton = useRef()
-
-    const areVoicesLoaded = () => {
-        if (hasLoadedVoices) return true
-        setTimeout(areVoicesLoaded, 1000)
-    }
 
     useEffect(() => {
-        areVoicesLoaded()
-    })
+        tts.updateStateWhenVoicesLoaded(setHasLoadedVoices)
+    }, [])
 
     useEffect(() => {
-        if (!hasLoadedVoices) return
-
+        if (!tts.hasVoices()) return
         tts.emmitAudio("Amogus emmit audio", hasButtonClicked)
         tts.emmitAudio("Amogus audio number 2", hasButtonClicked)
         
@@ -27,7 +20,7 @@ const TTSTest = () => {
 
     return (
         <>
-            <button ref={speechButton} onClick={() => {tts.speak("amogus button", hasButtonClicked)}}>Click</button>
+            <button onClick={() => {tts.speak("amogus button", hasButtonClicked)}}>Click</button>
         </>
     )
 }
