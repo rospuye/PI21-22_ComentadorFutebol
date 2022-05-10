@@ -1,5 +1,11 @@
 "use strict";
 
+// window sizes
+const sizes = {
+    width: window.innerWidth,
+    height: window.innerHeight
+}
+
 // To store the scene graph, and elements usefull to rendering the scene
 const sceneElements = {
     sceneGraph: null,
@@ -8,13 +14,24 @@ const sceneElements = {
     renderer: null,
 };
 
+// head spin counter
+let head_spin_counter = 0;
+
 helper.initEmptyScene(sceneElements); // initialize the empty scene
 load3DObjects(sceneElements.sceneGraph); // add elements within the scene
 requestAnimationFrame(computeFrame); // animate
 
-// neutral talking animation
-let neutral_talking_head = gsap.timeline({ repeat: -1, repeatDelay: 0 });
-let neutral_talking_arms = gsap.timeline({ repeat: -1, repeatDelay: 0 });
+// animation timelines
+let talking_head_movements = gsap.timeline({ repeat: -1, repeatDelay: 0 });
+let talking_arm1_movements = gsap.timeline({ repeat: -1, repeatDelay: 0 });
+let talking_forearm1_movements = gsap.timeline({ repeat: -1, repeatDelay: 0 });
+let talking_arm2_movements = gsap.timeline({ repeat: -1, repeatDelay: 0 });
+let talking_forearm2_movements = gsap.timeline({ repeat: -1, repeatDelay: 0 });
+let head_spin_movement = gsap.timeline({ repeat: 0, repeatDelay: 0 });
+
+// raycaster for detecting clicks on robot
+const raycaster = new THREE.Raycaster();
+let currentIntersect = null
 
 // HANDLING EVENTS
 
@@ -26,6 +43,26 @@ var keyD = false, keyA = false, keyS = false, keyW = false;
 document.addEventListener('keydown', onDocumentKeyDown, false);
 document.addEventListener('keyup', onDocumentKeyUp, false);
 document.addEventListener('keypress', onDocumentKeyPress, false);
+
+/**
+ * Mouse
+ */
+const mouse = new THREE.Vector2();
+
+window.addEventListener('mousemove', (event) => {
+    mouse.x = event.clientX / sizes.width * 2 - 1;
+    mouse.y = - (event.clientY / sizes.height) * 2 + 1;
+})
+
+window.addEventListener('click', () => {
+    if (currentIntersect) {
+        head_spin_counter += 1;
+        if (head_spin_counter > 3) {
+            head_spin_counter = 1;
+        }
+        head_spin(head_spin_counter);
+    }
+})
 
 // Update render image size and camera aspect when the window is resized
 function resizeWindow(eventParam) {
@@ -73,11 +110,26 @@ function onDocumentKeyUp(event) {
 
 function onDocumentKeyPress(event) {
 
+    const shoulder1Joint = sceneElements.sceneGraph.getObjectByName("shoulder1Joint");
+    const elbow1Joint = sceneElements.sceneGraph.getObjectByName("elbow1Joint");
+    const shoulder2Joint = sceneElements.sceneGraph.getObjectByName("shoulder2Joint");
+    const elbow2Joint = sceneElements.sceneGraph.getObjectByName("elbow2Joint");
+
     // stop talking first (for walking in any direction)
     if (event.keyCode == 100 || event.keyCode == 115 || event.keyCode == 97 || event.keyCode == 119) {
-        neutral_talking(false);
+        neutral_talking(false, false);
         gsap.to(head.rotation, { x: 0, duration: 0.3 });
         gsap.to(head.rotation, { z: 0, duration: 0.3 });
+
+        gsap.to(shoulder1Joint.rotation, { x: 0, duration: 0.3 });
+        gsap.to(elbow1Joint.rotation, { x: 0, duration: 0.3 });
+        gsap.to(shoulder1Joint.rotation, { z: 0, duration: 0.3 });
+        gsap.to(elbow1Joint.rotation, { z: 0, duration: 0.3 });
+
+        gsap.to(shoulder2Joint.rotation, { x: 0, duration: 0.3 });
+        gsap.to(elbow2Joint.rotation, { x: 0, duration: 0.3 });
+        gsap.to(shoulder2Joint.rotation, { z: 0, duration: 0.3 });
+        gsap.to(elbow2Joint.rotation, { z: 0, duration: 0.3 });
     }
 
     // and then walking body rotations (which depends on direction)
@@ -128,43 +180,126 @@ function neutral_position() {
     gsap.to(head.rotation, { y: 0, duration: 0.3 });
     gsap.to(arms.rotation, { y: 0, duration: 0.3 });
 
-    neutral_talking(true);
+    neutral_talking(true, false);
 
 }
 
-function neutral_talking(play) {
+function neutral_talking(play, headspin) {
 
-    const arm1 = sceneElements.sceneGraph.getObjectByName("arm1");
-    const arm2 = sceneElements.sceneGraph.getObjectByName("arm2");
+    const shoulder1Joint = sceneElements.sceneGraph.getObjectByName("shoulder1Joint");
+    const elbow1Joint = sceneElements.sceneGraph.getObjectByName("elbow1Joint");
 
-    const shoulder1 = sceneElements.sceneGraph.getObjectByName("shoulder1");
-    const shoulder2 = sceneElements.sceneGraph.getObjectByName("shoulder2");
+    const shoulder2Joint = sceneElements.sceneGraph.getObjectByName("shoulder2Joint");
+    const elbow2Joint = sceneElements.sceneGraph.getObjectByName("elbow2Joint");
 
     // each time the function is called, the head swinging is slightly different (due to the random animation durations)
-    // this talking is a timeline (see the definition of the neutral_talking_head variable)
+    // this talking is a timeline (see the definition of the talking_head_movements variable)
     // this means these animations below will be played in sequence
-    neutral_talking_head.to(head.rotation, { x: 0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
-    neutral_talking_head.to(head.rotation, { z: gsap.utils.random(0.05, 0.1, 0.01), duration: gsap.utils.random(0.25, 0.5, 0.05) });
-    neutral_talking_head.to(head.rotation, { x: -0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
-    neutral_talking_head.to(head.rotation, { x: 0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
-    neutral_talking_head.to(head.rotation, { x: -0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
-    neutral_talking_head.to(head.rotation, { z: gsap.utils.random(-0.05, -0.1, 0.01), duration: gsap.utils.random(0.25, 0.5, 0.05) });
-    neutral_talking_head.to(head.rotation, { x: 0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
-    neutral_talking_head.to(head.rotation, { x: -0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
-    neutral_talking_head.to(head.rotation, { z: 0, duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    talking_head_movements.to(head.rotation, { x: 0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    talking_head_movements.to(head.rotation, { z: gsap.utils.random(0.05, 0.1, 0.01), duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    talking_head_movements.to(head.rotation, { x: -0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    talking_head_movements.to(head.rotation, { x: 0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    talking_head_movements.to(head.rotation, { x: -0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    talking_head_movements.to(head.rotation, { z: gsap.utils.random(-0.05, -0.1, 0.01), duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    talking_head_movements.to(head.rotation, { x: 0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    talking_head_movements.to(head.rotation, { x: -0.1, duration: gsap.utils.random(0.25, 0.5, 0.05) });
+    talking_head_movements.to(head.rotation, { z: 0, duration: gsap.utils.random(0.25, 0.5, 0.05) });
 
-    // neutral_talking_arms.to(arm1.rotation, { x: 0.1, duration: 1 });
-    // neutral_talking_arms.to(arm1.rotation, { x: -0.1, duration: 1 });
+    // upper arm: x = -1.5 to 0; z = -0.4 to 1
+    for (let i = 0; i < 3; i++) {
+        talking_arm1_movements.to(shoulder1Joint.rotation, { x: 0, duration: gsap.utils.random(0.3, 1, 0.1) });
+        talking_arm1_movements.to(shoulder1Joint.rotation, { x: gsap.utils.random(-0.5, -1.5, 0.1), duration: gsap.utils.random(0.3, 1, 0.1) });
+        talking_arm1_movements.to(shoulder1Joint.rotation, { z: gsap.utils.random(-0.4, 1, 0.1), duration: gsap.utils.random(1.3, 2, 0.1) });
+        talking_arm1_movements.to(shoulder1Joint.rotation, { z: gsap.utils.random(-0.4, 1, 0.1), duration: gsap.utils.random(0.3, 1, 0.1) });
+        const rand_duration1 = gsap.utils.random(0.3, 1, 0.1);
+        talking_arm1_movements.to(shoulder1Joint.rotation, { z: 0, duration: rand_duration1 });
+        talking_arm1_movements.to(shoulder1Joint.rotation, { x: 0, duration: rand_duration1 });
+
+        talking_arm2_movements.to(shoulder2Joint.rotation, { x: 0, duration: gsap.utils.random(0.3, 1, 0.1) });
+        talking_arm2_movements.to(shoulder2Joint.rotation, { x: gsap.utils.random(-0.5, -1.5, 0.1), duration: gsap.utils.random(0.3, 1, 0.1) });
+        talking_arm2_movements.to(shoulder2Joint.rotation, { z: gsap.utils.random(-1, 0.4, 0.1), duration: gsap.utils.random(1.3, 2, 0.1) });
+        talking_arm2_movements.to(shoulder2Joint.rotation, { z: gsap.utils.random(-1, 0.4, 0.1), duration: gsap.utils.random(0.3, 1, 0.1) });
+        const rand_duration2 = gsap.utils.random(0.3, 1, 0.1);
+        talking_arm2_movements.to(shoulder2Joint.rotation, { z: 0, duration: rand_duration2 });
+        talking_arm2_movements.to(shoulder2Joint.rotation, { x: 0, duration: rand_duration2 });
+    }
+
+    // upper arm: x = -0.5 to 0
+    for (let i = 0; i < 3; i++) {
+        talking_forearm1_movements.to(elbow1Joint.rotation, { x: 0, duration: gsap.utils.random(0.3, 1, 0.1) });
+        talking_forearm1_movements.to(elbow1Joint.rotation, { x: gsap.utils.random(-0.5, 0, 0.1), duration: gsap.utils.random(0.3, 1, 0.1) });
+        talking_forearm1_movements.to(elbow1Joint.rotation, { x: gsap.utils.random(-0.5, 0, 0.1), duration: gsap.utils.random(2, 4, 0.1) });
+        talking_forearm1_movements.to(elbow1Joint.rotation, { x: 0, duration: gsap.utils.random(0.3, 1, 0.1) });
+
+        talking_forearm2_movements.to(elbow2Joint.rotation, { x: 0, duration: gsap.utils.random(0.3, 1, 0.1) });
+        talking_forearm2_movements.to(elbow2Joint.rotation, { x: gsap.utils.random(-0.5, 0, 0.1), duration: gsap.utils.random(0.3, 1, 0.1) });
+        talking_forearm2_movements.to(elbow2Joint.rotation, { x: gsap.utils.random(-0.5, 0, 0.1), duration: gsap.utils.random(2, 4, 0.1) });
+        talking_forearm2_movements.to(elbow2Joint.rotation, { x: 0, duration: gsap.utils.random(0.3, 1, 0.1) });
+    }
 
     if (play) {
-        neutral_talking_head.play();
-        neutral_talking_arms.play();
+        talking_head_movements.play();
+
+        if (!headspin) {
+            talking_arm1_movements.seek(0); // start from beginning of animation timeline instead of paused timestamp
+            talking_forearm1_movements.seek(0);
+            talking_arm2_movements.seek(0);
+            talking_forearm2_movements.seek(0);
+        }
+
+        talking_arm1_movements.play();
+        talking_forearm1_movements.play();
+        talking_arm2_movements.play();
+        talking_forearm2_movements.play();
     }
     else {
-        neutral_talking_head.pause();
-        neutral_talking_arms.pause();
+        talking_head_movements.pause();
+
+        talking_arm1_movements.pause();
+        talking_forearm1_movements.pause();
+
+        talking_arm2_movements.pause();
+        talking_forearm2_movements.pause();
     }
 
+}
+
+function head_spin(counter) {
+
+    const eyebrow1 = sceneElements.sceneGraph.getObjectByName("eyebrow1");
+    const eyebrow2 = sceneElements.sceneGraph.getObjectByName("eyebrow2");
+
+    // stop moving head in talking-like movement
+    neutral_talking(false, false);
+    gsap.to(head.rotation, { x: 0, duration: 0.3 });
+    gsap.to(head.rotation, { z: 0, duration: 0.3 });
+
+    if (counter == 1) {
+        head_spin_movement.to(head.rotation, { y: 2 * Math.PI, duration: 1 });
+        neutral_talking(true, true);
+    }
+    else if (counter == 2) {
+        head_spin_movement.to(head.rotation, { y: -2 * Math.PI, duration: 1 });
+        neutral_talking(true, true);
+    }
+    else { // counter == 3
+
+        head_spin_movement.to(eyebrow1.rotation, { z: -0.2, duration: 0 });
+        head_spin_movement.to(eyebrow2.rotation, { z: 0.2, duration: 0 });
+
+        head_spin_movement.to(head.position, { y: head.position.y + 0.5, duration: 0.1 });
+        head_spin_movement.to(head.rotation, { y: 4 * Math.PI, duration: 1 });
+        head_spin_movement.to(head.position, { y: head.position.y, duration: 0.1 });
+        head_spin_movement.to(head.position, { y: head.position.y, duration: 1 });
+
+        head_spin_movement.to(eyebrow1.rotation, { z: 0, duration: 0 });
+        head_spin_movement.to(eyebrow2.rotation, { z: 0, duration: 0 });
+
+        neutral_talking(true, true);
+        console.log(helper)
+    }
+
+    head_spin_movement.to(head.rotation, { y: 0, duration: 0 });
 }
 
 //////////////////////////////////////////////////////////////////
@@ -197,24 +332,24 @@ function load3DObjects(sceneGraph) {
     // ************************** //
     const head = new THREE.Group();
     head.name = "head";
-    const material_head1 = new THREE.MeshPhongMaterial({ color: 0xffffff });
-    const material_head2 = new THREE.MeshPhongMaterial({ color: 0x000000 });
-    const material_eyes = new THREE.MeshPhongMaterial({ color: 0xc3be32 });
-    const material_ears = new THREE.MeshPhongMaterial({ color: 0x8a8a8a });
+    const material_head1 = new THREE.MeshPhongMaterial({ color: '#c6c8c9', ambient: 'rgb(25,25,25)', diffuse: 'rgb(4,4,4)', specular: 'rgb(77,77,77)', shininess: 76.8 });
+    const material_head2 = new THREE.MeshPhongMaterial({ color: '#000000', ambient: 'rgb(25,25,25)', diffuse: 'rgb(4,4,4)', specular: 'rgb(77,77,77)', shininess: 76.8 });
+    const material_eyes = new THREE.MeshPhongMaterial({ color: '#E1C16E', ambient: 'rgb(33,22,3)', diffuse: 'rgb(78,57,11)', specular: 'rgb(99,94,81)', shininess: 27.9 });
+    const material_ears = new THREE.MeshPhongMaterial({ color: '#8a8a8a', ambient: 'rgb(3,0,0)', diffuse: 'rgb(6,0,0)', specular: 'rgb(8,6,6)', shininess: 32 });
 
     // Main head parts
 
     const geometry_head1 = new THREE.BoxGeometry(1.5, 1, 1.2);
     const head1 = new THREE.Mesh(geometry_head1, material_head1);
     head1.position.y = 1;
-    // head1.castShadow = true;
+    head1.name = "head1";
 
     const geometry_head2 = new THREE.CylinderGeometry(0.6, 0.6, 1.2, 32);
     const head2 = new THREE.Mesh(geometry_head2, material_head1);
     head2.position.y = 1.5;
     head2.rotation.x = Math.PI / 2;
     head2.scale.set(1.25, 1, 0.5);
-    // head2.castShadow = true;
+    head2.name = "head2";
 
     const head3 = new THREE.Mesh(geometry_head1, material_head2);
     head3.position.set(0, 1, 0.165);
@@ -244,9 +379,11 @@ function load3DObjects(sceneGraph) {
     const eyebrow_geometry = new THREE.BoxGeometry(0.3, 0.07, 0.2);
     const eyebrow1 = new THREE.Mesh(eyebrow_geometry, material_head1);
     eyebrow1.position.set(-0.25, 1.35, 0.61);
+    eyebrow1.name = "eyebrow1";
 
     const eyebrow2 = new THREE.Mesh(eyebrow_geometry, material_head1);
     eyebrow2.position.set(0.25, 1.35, 0.61);
+    eyebrow2.name = "eyebrow2";
 
     eyes.add(eye1, eye2);
     eyes.add(eyebrow1, eyebrow2);
@@ -296,8 +433,7 @@ function load3DObjects(sceneGraph) {
     // ************************** //
     const torso = new THREE.Group();
     torso.name = "torso";
-    const material_torso = new THREE.MeshPhongMaterial({ color: 0xffffff });
-    const material_torso2 = new THREE.MeshPhongMaterial({ color: 0x8a8a8a });
+    const material_torso = new THREE.MeshPhongMaterial({ color: '#c6c8c9', ambient: 'rgb(25,25,25)', diffuse: 'rgb(4,4,4)', specular: 'rgb(77,77,77)', shininess: 76.8 });
 
     const geometry_torso1 = new THREE.CylinderGeometry(1.20, 1, 1.3, 32, 1);
     const torso1 = new THREE.Mesh(geometry_torso1, material_torso);
@@ -320,65 +456,70 @@ function load3DObjects(sceneGraph) {
     torso3.castShadow = true;
 
     const arms = new THREE.Group();
-    const arm1_group = new THREE.Group();
-    const arm2_group = new THREE.Group();
-    const forearm1_group = new THREE.Group();
-    const forearm2_group = new THREE.Group();
+    arms.name = "arms";
 
     const shoulder_geometry = new THREE.SphereGeometry(0.2, 32, 16);
     const hand_and_elbow_geometry = new THREE.SphereGeometry(0.15, 32, 16);
     const arm_part_geometry = new THREE.CylinderGeometry(0.1, 0.1, 0.7, 8, 1);
 
-    const shoulder1 = new THREE.Mesh(shoulder_geometry, material_torso2);
-    shoulder1.position.set(3, 2, 0);
+    const shoulder1 = new THREE.Mesh(shoulder_geometry, material_ears);
     shoulder1.name = "shoulder1";
-    const shoulder2 = new THREE.Mesh(shoulder_geometry, material_torso2);
-    shoulder2.position.set(3, 2, 0);
+    shoulder1.position.set(1.35, 2.7, 0);
+    shoulder1.scale.set(1.2, 1.2, 1.2);
+    // sceneGraph.add(shoulder1);
+
+    const shoulder2 = new THREE.Mesh(shoulder_geometry, material_ears);
     shoulder2.name = "shoulder2";
+    shoulder2.position.set(-1.35, 2.7, 0);
+    shoulder2.scale.set(1.2, 1.2, 1.2);
+    // sceneGraph.add(shoulder2);
 
     const arm1 = new THREE.Mesh(arm_part_geometry, material_torso);
-    arm1.position.set(3, 1.587, 0);
+    arm1.position.set(0, -0.5, 0);
+    arm1.name = "arm1";
     const arm2 = new THREE.Mesh(arm_part_geometry, material_torso);
-    arm2.position.set(3, 1.587, 0);
+    arm2.position.set(0, -0.5, 0);
+    arm2.name = "arm2";
 
-    const elbow1 = new THREE.Mesh(hand_and_elbow_geometry, material_torso2);
-    elbow1.position.set(3, 1.194, 0);
-    const elbow2 = new THREE.Mesh(hand_and_elbow_geometry, material_torso2);
-    elbow2.position.set(3, 1.194, 0);
+    const elbow1 = new THREE.Mesh(hand_and_elbow_geometry, material_ears);
+    elbow1.position.set(0, -0.9, 0);
+    elbow1.name = "elbow1";
+    const elbow2 = new THREE.Mesh(hand_and_elbow_geometry, material_ears);
+    elbow2.position.set(0, -0.9, 0);
+    elbow2.name = "elbow2";
 
     const forearm1 = new THREE.Mesh(arm_part_geometry, material_torso);
-    forearm1.position.set(3, 0.872, 0);
+    forearm1.position.set(0, -0.4, 0);
     const forearm2 = new THREE.Mesh(arm_part_geometry, material_torso);
-    forearm2.position.set(3, 0.872, 0);
+    forearm2.position.set(0, -0.4, 0);
 
-    const hand1 = new THREE.Mesh(hand_and_elbow_geometry, material_torso2);
-    hand1.position.set(3, 0.515, 0);
-    const hand2 = new THREE.Mesh(hand_and_elbow_geometry, material_torso2);
-    hand2.position.set(3, 0.515, 0);
+    const hand1 = new THREE.Mesh(hand_and_elbow_geometry, material_ears);
+    hand1.position.set(0, -0.7, 0);
+    const hand2 = new THREE.Mesh(hand_and_elbow_geometry, material_ears);
+    hand2.position.set(0, -0.7, 0);
 
-    forearm1_group.add(forearm1, hand1);
-    arm1_group.add(shoulder1, arm1, elbow1, forearm1, hand1);
-    arm1_group.name = "arm1";
-    arm1_group.translate(3, 2, 0);
-    forearm1_group.name = "forearm1";
-    arm1_group.position.set(-2.3, 0.4, 0);
-    arm1_group.scale.set(1.2, 1.2, 1.2);
+    var shoulder1Joint = new THREE.Object3D();
+    shoulder1Joint.position.set(shoulder1.position.x, shoulder1.position.y, shoulder1.position.z);
+    shoulder1Joint.name = "shoulder1Joint";
+    var elbow1Joint = new THREE.Object3D();
+    elbow1Joint.name = "elbow1Joint";
+    elbow1Joint.add(forearm1, hand1);
+    shoulder1Joint.add(arm1, elbow1, elbow1Joint);
 
-    forearm2_group.add(forearm2, hand2);
-    arm2_group.add(shoulder2, arm2, elbow2, forearm2, hand2);
-    arm2_group.name = "arm2";
-    forearm2_group.name = "forearm2";
-    arm2_group.position.set(-4.9, 0.4, 0);
-    arm2_group.scale.set(1.2, 1.2, 1.2);
+    var shoulder2Joint = new THREE.Object3D();
+    shoulder2Joint.position.set(shoulder2.position.x, shoulder2.position.y, shoulder2.position.z);
+    shoulder2Joint.name = "shoulder2Joint";
+    var elbow2Joint = new THREE.Object3D();
+    elbow2Joint.name = "elbow2Joint";
+    elbow2Joint.add(forearm2, hand2);
+    shoulder2Joint.add(arm2, elbow2, elbow2Joint);
 
-    arms.add(arm1_group, arm2_group);
-    arms.name = "arms";
+    arms.add(shoulder1, shoulder1Joint, shoulder2, shoulder2Joint);
 
     torso.add(torso1);
     torso.add(torso2);
     torso.add(torso3);
     torso.add(arms);
-    // torso.visible = false;
 
     robot.add(head);
     robot.add(torso);
@@ -395,14 +536,39 @@ const robot = sceneElements.sceneGraph.getObjectByName("robot");
 const head = sceneElements.sceneGraph.getObjectByName("head");
 const arms = sceneElements.sceneGraph.getObjectByName("arms");
 
+const torso1 = sceneElements.sceneGraph.getObjectByName("torso1");
 const torso2 = sceneElements.sceneGraph.getObjectByName("torso2");
 const torso3 = sceneElements.sceneGraph.getObjectByName("torso3");
+const head1 = sceneElements.sceneGraph.getObjectByName("head1");
+const head2 = sceneElements.sceneGraph.getObjectByName("head2");
+
+const elbow1Joint = sceneElements.sceneGraph.getObjectByName("elbow1Joint");
+const elbow1 = sceneElements.sceneGraph.getObjectByName("elbow1");
+const elbow2Joint = sceneElements.sceneGraph.getObjectByName("elbow2Joint");
+const elbow2 = sceneElements.sceneGraph.getObjectByName("elbow2");
 
 let neutral_position_called = true;
-neutral_talking(true);
+neutral_talking(true, false);
 
 function computeFrame(time) {
 
+    // detecting clicks on the robot
+    raycaster.setFromCamera(mouse, sceneElements.camera);
+    const objectsToTest = [head1, head2, torso1, torso2, torso3]
+    const intersects = raycaster.intersectObjects(objectsToTest);
+
+    if (intersects.length) {
+        currentIntersect = intersects[0]
+    }
+    else {
+        currentIntersect = null
+    }
+
+    // updating arm joint positions
+    elbow1Joint.position.set(elbow1.position.x, elbow1.position.y, elbow1.position.z);
+    elbow2Joint.position.set(elbow2.position.x, elbow2.position.y, elbow2.position.z);
+
+    // walking around
     if (keyD && robot.position.x < 5) {
         robot.translateX(dispX);
         neutral_position_called = false;

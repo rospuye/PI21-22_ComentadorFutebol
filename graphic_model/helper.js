@@ -8,6 +8,7 @@ const helper = {
         // Create the 3D scene
         // ************************** //
         sceneElements.sceneGraph = new THREE.Scene();
+        sceneElements.sceneGraph.background = new THREE.Color( 0xf0ddaa );
 
 
         // ************************** //
@@ -51,11 +52,11 @@ const helper = {
         // Give a name to the spot light
         spotLight.name = "light";
 
-        // ***************************** //
-        // Add axeshelper
-        // ***************************** //
-        const axesHelper = new THREE.AxesHelper( 5 );
-        sceneElements.sceneGraph.add( axesHelper );
+        // // ***************************** //
+        // // Add axeshelper
+        // // ***************************** //
+        // const axesHelper = new THREE.AxesHelper( 5 );
+        // sceneElements.sceneGraph.add( axesHelper );
 
 
         // *********************************** //
@@ -65,6 +66,7 @@ const helper = {
         sceneElements.renderer = renderer;
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(width, height);
+        
 
         // Setup shadowMap property
         renderer.shadowMap.enabled = true;
