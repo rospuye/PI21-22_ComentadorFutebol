@@ -8,7 +8,9 @@ const TTSTest = () => {
     let hasButtonClicked = {value: false}
 
     useEffect(() => {
-        tts.updateStateWhenVoicesLoaded(setHasLoadedVoices)
+        if (!tts.isSearchingVoices) {
+            tts.updateStateWhenVoicesLoaded(setHasLoadedVoices)
+        }
     }, [])
 
     useEffect(() => {

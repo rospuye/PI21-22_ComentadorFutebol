@@ -13,6 +13,7 @@ class TTS {
         this.speech.lang = "en"
         this.voices = []
         this.selVoice = undefined
+        this.isSearchingVoices = false
         window.speechSynthesis.onvoiceschanged = () => {
             setHasLoadedVoices(true)
             this.voices = window.speechSynthesis.getVoices()
@@ -63,11 +64,15 @@ class TTS {
     }
 
     updateStateWhenVoicesLoaded(setState, waitTime=1000) {
+        this.isSearchingVoices = true
         if (this.hasVoices()) {
             setState(true)
+            this.isSearchingVoices = false
             return true
         }
-        setTimeout(this.updateStateWhenVoicesAreLoaded(setState), waitTime)
+        setTimeout(() => {
+            this.updateStateWhenVoicesLoaded(setState, waitTime)
+        }, waitTime)
     }
 
 }
