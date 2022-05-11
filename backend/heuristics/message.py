@@ -30,6 +30,9 @@ class Kick_Off(Message):
     def __init__(self, instant, playerid) -> None:
         super().__init__("kick_off", instant, instant)
         self.id = playerid # if playerid = -1 kick_off was failed
+
+    def __str__(self):
+        return super().__str__() + f", {self.id}"
         
 class Pass(Message):
     def __init__(self, init_pos : Position, event, fromId, toId, start=0, end=0) -> None:
