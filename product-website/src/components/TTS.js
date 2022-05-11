@@ -22,6 +22,8 @@ class TTS {
         }
     }
 
+    // Setters / Getters / Basic functions
+
     setText(text) {
         this.speech.text = text
     }
@@ -34,9 +36,30 @@ class TTS {
     setPitch(pitch) {
         this.speech.pitch = pitch
     }
+    setVoice(voice) {
+        this.speech.voice = voice
+    }
+
+    hasVoices() {
+        return this.voices.length != 0
+    }
+
+    getVoicesByLanguage(lang, voices = this.voices) {
+        return voices.filter((voice) => {
+            return voice.lang.toLowerCase().includes(lang)
+        })
+    }
+
+    getVoicesByName(name, voices = this.voices) {
+        return voices.filter((voice) => {
+            return voice.voiceURI.toLowerCase().includes(name)
+        })
+    }
+
+    // Voice Functions themselves
 
     play() {
-        this.speech.onstart = () => console.log("class", this.speech)
+        // this.speech.onstart = () => console.log("class", this.speech)
         window.speechSynthesis.speak(this.speech)
     } 
 
@@ -57,10 +80,6 @@ class TTS {
         this.setText(text)
         this.play()
         hasButtonClicked.value = true
-    }
-
-    hasVoices() {
-        return this.voices.length != 0
     }
 
     updateStateWhenVoicesLoaded(setState, waitTime=1000) {

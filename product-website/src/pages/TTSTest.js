@@ -15,6 +15,9 @@ const TTSTest = () => {
 
     useEffect(() => {
         if (!tts.hasVoices()) return
+        const lang_voices = tts.getVoicesByLanguage("en")
+        const voices_names = tts.getVoicesByName("male", lang_voices)
+        tts.setVoice(voices_names[0])
         tts.emmitAudio("Amogus emmit audio", hasButtonClicked)
         tts.emmitAudio("Amogus audio number 2", hasButtonClicked)
         
