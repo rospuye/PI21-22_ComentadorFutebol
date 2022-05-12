@@ -5,6 +5,7 @@ import copy
 import time
 from entities import Position, Ball, Player
 from heuristics import process
+from analytics import get_analytics
 
 def position_to_array(position, flg=False):
     tmp = re.findall("[-]?\d+[.]?\d*[eE]?[-]?\d*", position)
@@ -187,7 +188,23 @@ def process_log(log, skip=1, skip_flg=False):
     output.close()
     tok = time.time()
     elapsed = tok - tik
-    print(elapsed)
+    print("Event detection in:", elapsed)
+    tik = time.time()
+    analytics_log = get_analytics(events, entities) # TODO to be sent to NL generation
+    # Analytics debug prints
+    # for timestamp in analytics_log:
+    #     print(timestamp)
+    #     print("\tTeams:")
+    #     for team in analytics_log[timestamp]["teams"]:
+    #         print("\t\t",team,analytics_log[timestamp]["teams"][team])
+    #     print("\tPlayers:")
+    #     for player in analytics_log[timestamp]["players"]:
+    #         print("\t\t",player.id,analytics_log[timestamp]["players"][player])
+    # print(len(analytics_log))
+    tok = time.time()
+    elapsed2 = tok - tik
+    print("Analytics gathered in:", elapsed2)
+    print("Total processing time:", elapsed+elapsed2)
     return events
 
 if __name__ == "__main__":
@@ -198,7 +215,7 @@ if __name__ == "__main__":
         flg = True
         skip_lines = int(sys.argv[2])
     events = process_log(log, skip=skip_lines, skip_flg=flg)
-    print("Log processed!")
+    #print("Log processed!")
     
 
 
