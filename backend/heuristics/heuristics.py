@@ -1,6 +1,6 @@
 import math
 from entities import Position, Entity, Ball
-from message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble
+from message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble, Defense
 
 KICK_OFF_CONTACT_DISTANCE = 0.08              # Distance to be considered contact between entities
 CONTACT_DISTANCE = 0.2
@@ -227,7 +227,7 @@ def detect_defense(ball : Ball, teamA : list, teamB : list, timestamp : float):
         
     for player in oponent_team:
         if ball.get_distance_from(player) < CONTACT_DISTANCE:
-            m1 = Message("defense", start=timestamp, end=timestamp)
+            m1 = Defense("defense", player, start=timestamp, end=timestamp)
             m2 = events["goal_shot"]
             m2.end = timestamp
             events.pop("goal_shot", None)

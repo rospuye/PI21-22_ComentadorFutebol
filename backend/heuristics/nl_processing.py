@@ -41,16 +41,20 @@ def dribble_lines(event):
 
 def kick_off_lines(event):
 
-    lines = [
-        "{} starts the game",
+    lines_without_player = [
         "and the games goes on"
     ]
 
-    args = event["args"]
-    p1 = args["player"]
+    lines_with_player = [
+        "{} starts the game"
+    ]
 
+    args = event["args"]
+    p1 = args.get("player")
+    lines = lines_without_player if p1 is None else lines_with_player + lines_without_player
     n = random.randint(0,len(lines) -1)
-    return f"({event['start']}, {event['end']}) " + lines[n].format(p1["id"])
+    line_text = lines[n] if p1 is None else lines[n].format(p1["id"])
+    return f"({event['start']}, {event['end']}) " + line_text
 
 def goal_shot_lines(event):
 
@@ -94,7 +98,17 @@ def aggression_lines(event):
     return f"({event['start']}, {event['end']}) " + lines[n].format(p1, p2)
 
 def defense_lines(event):
-    return f"({event['start']}, {event['end']}) " + "defended"
+    args = event["args"]
+    print(f"defense {event = }")
+    team = "Right" if args["player"]["team"] else "Left"
+
+    lines = [
+        "Team {} makes a defense.",
+        "The attack was defended by Team {}"
+    ]
+
+    n = random.randint(0, len(lines) - 1)
+    return f"({event['start']}, {event['end']}) " + lines[n].format(team)
 
 def intersect_lines(event):
     return f"({event['start']}, {event['end']}) " + "intersected the ball"
@@ -124,7 +138,7 @@ def generate_script(events):
 if __name__ == "__main__":
 
     events = process_log("sparkmonitor.log")
-    #print(events)
+    # print(events)
     script = generate_script(events)
     print(script)
     f = open("script.txt", "w")
