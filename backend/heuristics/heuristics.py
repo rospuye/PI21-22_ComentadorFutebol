@@ -1,6 +1,6 @@
 import math
 from entities import Position, Entity, Ball
-from message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble, Defense
+from message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble, Defense, Goal_Shot
 
 KICK_OFF_CONTACT_DISTANCE = 0.08              # Distance to be considered contact between entities
 CONTACT_DISTANCE = 0.2
@@ -216,7 +216,7 @@ def detect_goal_shot(ball: Ball, field : dict, goal : dict, timestamp : float):
         return []
 
     if "goal_shot" not in events:
-        message = Message(event="goal_shot", start=timestamp, end=timestamp)
+        message = Goal_Shot(event="goal_shot", player=ball.owner, start=timestamp, end=timestamp)
         events["goal_shot"] = message
     return []
 

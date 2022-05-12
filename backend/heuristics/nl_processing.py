@@ -21,10 +21,10 @@ def pass_lines(event):
 
     if p1["team"] == p2["team"]:
         n = random.randint(0,len(lines["pass_success"]) -1)
-        return f"({event['start']}, {event['end']}) " +  lines["pass_success"][n].format(p1["id"], p2["id"])
+        return event_to_text(event, lines["pass_success"][n].format(p1["id"], p2["id"]))
     else:
         n = random.randint(0,len(lines["pass_fail"]) -1)
-        return f"({event['start']}, {event['end']}) " + lines["pass_fail"][n].format(p2["id"])
+        return event_to_text(event, lines["pass_fail"][n].format(p2["id"]))
 
 def dribble_lines(event):
 
@@ -37,7 +37,7 @@ def dribble_lines(event):
     p1 = args["player"]
 
     n = random.randint(0,len(lines) -1)
-    return f"({event['start']}, {event['end']}) " + lines[n].format(p1["id"])
+    return event_to_text(event, lines[n].format(p1["id"]))
 
 def kick_off_lines(event):
 
@@ -54,7 +54,7 @@ def kick_off_lines(event):
     lines = lines_without_player if p1 is None else lines_with_player + lines_without_player
     n = random.randint(0,len(lines) -1)
     line_text = lines[n] if p1 is None else lines[n].format(p1["id"])
-    return f"({event['start']}, {event['end']}) " + line_text
+    return event_to_text(event, line_text)
 
 def goal_shot_lines(event):
 
@@ -63,11 +63,12 @@ def goal_shot_lines(event):
         "And he kicks"
     ]
 
+    print(f"{event = }")
     args = event["args"]
-    #p1 = args["player"]
+    player = args["player"]
 
     n = random.randint(0,len(lines) -1)
-    return f"({event['start']}, {event['end']}) " + lines[n]
+    return event_to_text(event, lines[n].format(player["id"]))
 
 def goal_lines(event):
     args = event["args"]
@@ -79,7 +80,7 @@ def goal_lines(event):
     ]
 
     n = random.randint(0,len(lines) -1)
-    return f"({event['start']}, {event['end']}) " + lines[n].format(team)
+    return event_to_text(event, lines[n].format(team))
 
 def aggression_lines(event):
 
@@ -95,23 +96,26 @@ def aggression_lines(event):
 
 
     n = random.randint(0,len(lines) -1)
-    return f"({event['start']}, {event['end']}) " + lines[n].format(p1, p2)
+    return event_to_text(event, lines[n].format(p1, p2))
 
 def defense_lines(event):
     args = event["args"]
-    print(f"defense {event = }")
     team = "Right" if args["player"]["team"] else "Left"
 
     lines = [
         "Team {} makes a defense.",
-        "The attack was defended by Team {}"
+        "The shot was defended by Team {}"
     ]
 
     n = random.randint(0, len(lines) - 1)
-    return f"({event['start']}, {event['end']}) " + lines[n].format(team)
+    return event_to_text(event, lines[n].format(team))
 
 def intersect_lines(event):
-    return f"({event['start']}, {event['end']}) " + "intersected the ball"
+    return event_to_text(event, "intersected the ball")
+
+
+def event_to_text(event, extra=""):
+    return f"({event['start']}, {event['end']}) " + extra
 
 lines = {
     "dribble": dribble_lines,
