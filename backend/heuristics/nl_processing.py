@@ -3,17 +3,15 @@ from log_processing import process_log
 import json
 
 
-
 def pass_lines(event):
-
     args = event["args"]
     p1 = args["from"]
     p2 = args["to"]
 
     lines = {
         "pass_success": [
-        f"{p1['id']} passes the ball to {p2['id']}",
-        f"{p1['id']} sends it to {p2['id']}"
+            f"{p1['id']} passes the ball to {p2['id']}",
+            f"{p1['id']} sends it to {p2['id']}"
         ],
         "pass_fail": [
             f"{p2['id']} stole the ball"
@@ -25,17 +23,19 @@ def pass_lines(event):
     else:
         return event_to_text(event, lines["pass_fail"])
 
-def dribble_lines(event):
 
+def dribble_lines(event):
     args = event["args"]
     p1 = args["player"]
 
     lines = [
         f"{p1['id']} is racing through the field",
-        f"{p1['id']} has the ball!"
+        # f"{p1['id']} has the ball!",
+        f"{p1['id']} is dribbling around!"
     ]
 
     return event_to_text(event, lines)
+
 
 def kick_off_lines(event):
     args = event["args"]
@@ -53,6 +53,7 @@ def kick_off_lines(event):
     lines = lines_without_player if p1 is None else lines_with_player + lines_without_player
     return event_to_text(event, lines)
 
+
 def goal_shot_lines(event):
     args = event["args"]
     player = args["player"]
@@ -64,6 +65,7 @@ def goal_shot_lines(event):
 
     return event_to_text(event, lines)
 
+
 def goal_lines(event):
     args = event["args"]
     team = args["team"]
@@ -74,6 +76,7 @@ def goal_lines(event):
     ]
 
     return event_to_text(event, lines)
+
 
 def aggression_lines(event):
     args = event["args"]
@@ -87,6 +90,7 @@ def aggression_lines(event):
 
     return event_to_text(event, lines)
 
+
 def defense_lines(event):
     args = event["args"]
     team = "Right" if args["player"]["team"] else "Left"
@@ -98,12 +102,13 @@ def defense_lines(event):
 
     return event_to_text(event, lines)
 
+
 def intersect_lines(event):
-
-    print(f"{event = }")
-
+    args = event["args"]
+    player = args["player"]
     lines = [
-        "intersected the ball"
+        f"{player['id']} stole the ball.",
+        f"But {player['id']} intersected."
     ]
 
     return event_to_text(event, lines)
@@ -115,10 +120,11 @@ def event_to_text(event, lines=None):
     n = random.randint(0, len(lines) - 1)
     return f"({event['start']}, {event['end']}) " + lines[n]
 
+
 lines = {
     "dribble": dribble_lines,
-    "pass_success": pass_lines,
-    "pass_fail": pass_lines,
+    "short_pass": pass_lines,
+    "long_pass": pass_lines,
     "kick_off": kick_off_lines,
     "goal_shot": goal_shot_lines,
     "goal": goal_lines,
@@ -128,13 +134,12 @@ lines = {
 }
 
 
-
 def generate_script(events):
-    return [ 
-        lines.get(event["event"], lambda x: f"({event['start']}, {event['end']}) \'{event['event']}\' Not implemented yet :)" )(event)
-        for event in json.loads(events) 
+    return [
+        lines.get(event["event"],
+                  lambda x: f"({event['start']}, {event['end']}) \'{event['event']}\' Not implemented yet :)")(event)
+        for event in json.loads(events)
     ]
-
 
 
 if __name__ == "__main__":
@@ -148,5 +153,3 @@ if __name__ == "__main__":
         f.write(line)
         f.write("\n")
     f.close()
-
-        
