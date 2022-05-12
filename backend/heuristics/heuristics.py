@@ -1,6 +1,6 @@
 import math
 from entities import Position, Entity, Ball
-from message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble, Defense, Goal_Shot
+from message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble, Defense, Goal_Shot, Intersect
 
 KICK_OFF_CONTACT_DISTANCE = 0.08              # Distance to be considered contact between entities
 CONTACT_DISTANCE = 0.2
@@ -380,9 +380,9 @@ def detect_pass_or_dribble(ball : Ball, players : list, timestamp : float):
                     m1.check_type()
 
                 events.pop("dribble/pass")
-
-                m2 = Message("intersect", timestamp, timestamp)
                 ball.owner = player
+
+                m2 = Intersect("intersect", player, start=timestamp, end=timestamp)
 
                 return [m1, m2]
     

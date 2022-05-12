@@ -116,3 +116,17 @@ class Goal_Shot(Message):
         result = super().to_json()
         result["args"] = args
         return result
+
+class Intersect(Message):
+    def __init__(self, event, player, start=0, end=0):
+        super().__init__(event, start, end)
+        self.player = player
+
+    def __str__(self):
+        return super().__str__() + f", {self.player.id}"
+
+    def to_json(self):
+        args = {"player": self.player.to_json()}
+        result = super().to_json()
+        result["args"] = args
+        return result
