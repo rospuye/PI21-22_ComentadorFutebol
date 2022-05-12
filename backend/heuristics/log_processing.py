@@ -190,15 +190,17 @@ def process_log(log, skip=1, skip_flg=False):
     elapsed = tok - tik
     print("Event detection in:", elapsed)
     tik = time.time()
-    analytics_log = get_analytics(events, entities)
-    for timestamp in analytics_log:
-        print(timestamp)
-        print("\tTeams:")
-        for team in analytics_log[timestamp]["teams"]:
-            print("\t\t",team,analytics_log[timestamp]["teams"][team])
-        print("\tPlayers:")
-        for player in analytics_log[timestamp]["players"]:
-            print("\t\t",player.id,analytics_log[timestamp]["players"][player])
+    analytics_log = get_analytics(events, entities) # TODO to be sent to NL generation
+    # Analytics debug prints
+    # for timestamp in analytics_log:
+    #     print(timestamp)
+    #     print("\tTeams:")
+    #     for team in analytics_log[timestamp]["teams"]:
+    #         print("\t\t",team,analytics_log[timestamp]["teams"][team])
+    #     print("\tPlayers:")
+    #     for player in analytics_log[timestamp]["players"]:
+    #         print("\t\t",player.id,analytics_log[timestamp]["players"][player])
+    # print(len(analytics_log))
     tok = time.time()
     elapsed2 = tok - tik
     print("Analytics gathered in:", elapsed2)
