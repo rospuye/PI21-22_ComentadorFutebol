@@ -193,12 +193,13 @@ def process_log(log, skip=1, skip_flg=False):
     tok = time.time()
     elapsed = tok - tik
     print("Event detection in:", elapsed)
-    print("Formation for teamA:", form[0])
-    print("Formation for teamB:", form[1])
-    print("Players and their spot in the formation:")
-    translate = {0: "defender", 1: "midfielder", 2: "forward"}
-    for player in form_players:
-        print(player.id, translate[form_players[player]])
+    # Formation debug prints
+    # print("Formation for teamA:", form[0])
+    # print("Formation for teamB:", form[1])
+    # print("Players and their spot in the formation:")
+    # translate = {0: "defender", 1: "midfielder", 2: "forward"}
+    # for player in form_players:
+    #     print(player.id, translate[form_players[player]])
     tik = time.time()
     analytics_log = get_analytics(events, entities) # TODO to be sent to NL generation
     # Analytics debug prints
