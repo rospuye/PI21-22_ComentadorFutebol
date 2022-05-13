@@ -40,21 +40,27 @@ def new_register(request):
 @csrf_exempt
 def file_upload(request):
     uploaded_file = request.FILES['file']
-    line_count = 0
-    for line in uploaded_file:
-        line_count+= 1
-    print("line count: ")
-    print(line_count)
+    # line_count = 0
+    # for line in uploaded_file:
+    #     line_count+= 1
+    # print("line count: ")
+    # print(line_count)
 
+    print(type(uploaded_file))
     events = process_log(uploaded_file)
-
-    count = 0
+    events_json = {"events": []};
+    # print(str(events))
     for event in events:
-        if count>10:
-            break
-        print(event)
-        count += 1
-    print(f"Total Number of Events: {len(events)}")
+        events_json["events"].append(event.to_json())
+    # print(events_json)
+
+    # count = 0
+    # for event in events:
+    #     if count>10:
+    #         break
+    #     print(event)
+    #     count += 1
+    # print(f"Total Number of Events: {len(events)}")
 
     return HttpResponse("file_upload_success")
 
