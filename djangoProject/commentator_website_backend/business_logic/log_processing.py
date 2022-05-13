@@ -8,61 +8,26 @@ from .heuristics import process
 
 
 def position_to_array(position, flg=False):
+    """ Given a log node with position matrix, return the matrix in form of array """
+    # Extract Numbers
     tmp = re.findall("[-]?\d+[.]?\d*[eE]?[-]?\d*", position)
-    # print(tmp)
-    # print(position)
     pos = []
     for numb in tmp:
         pos.append(float(numb))
-    # print(len(pos))
+
     assert len(pos) == 16
     return pos
-    # tmp = position.split(" ")
-    # pos = []
-    # for i in range(2, len(tmp)):
-    #    pos.append(float(tmp[i].rstrip(")")))
-    # if len(pos) != 16:
-    #    pos = [float(tmp[1])] + pos
-    # assert len(pos) == 16
-    # return pos
 
-
-def order_by_distance_to_ball(entities):
-    "Given the entities, returns their position relative to the Ball entity"
-
-    ball = entities[0]
-    players = entities[1:]
-
-    teamLeft = []
-    teamRight = []
-
-    for player in players:
-        player.x -= ball.x
-        player.y -= ball.y
-        player.z -= ball.z
-        player.distance_to_ball = math.sqrt(player.x ** 2 + player.y ** 2 + player.z ** 2)
-
-        teamLeft.append(player) if "Left" in player.id else teamRight.append(player)
-
-    teamLeft.sort(key=lambda p: p.distance_to_ball)
-    teamRight.sort(key=lambda p: p.distance_to_ball)
-
-    return [ball] + teamLeft + teamRight
 
 
 def write_to_file(timestamp, entities, output):
     output_str = f"{timestamp}," + "".join([entity.to_csv() for entity in entities]).rstrip(",")
-
     output.write(output_str + "\n")
 
 
 def process_log(log, skip=1, skip_flg=False):
     tik = time.time()
-    #path = "logs/input/"
-    #out = "logs/output/" + log.rstrip(".log")
     count = 0
-    #inpt = open(path + log, "r")
-    #output = open(out, "w")
     flg = False
     events = []
 
@@ -70,12 +35,10 @@ def process_log(log, skip=1, skip_flg=False):
     goalParams = {}
     entities = []
     timestamp = 0
-    # TODO get fields when all 3 exist on the line
+    # Find the Field borders
     # ((FieldLength 30)(FieldWidth 20)(FieldHeight 40)(GoalWidth 2.1)(GoalDepth 0.6)(GoalHeight 0.8)
     for line in log:
         line = line.decode()
-        #print(line)
-        #print("--------------------------------------------------")
         if not ("FieldLength" in line and "FieldWidth" in line):
             continue
 
@@ -92,21 +55,18 @@ def process_log(log, skip=1, skip_flg=False):
         goalParams["height"] = float(tmp[11])
         print("Goal Height:", goalParams["height"])
         break
-    c = 0
+    
+    # Find and create each entity of the game
     for line in log:
         line = line.decode()
-        #print(line)
-        #print("--------------------------------------------------")
         tmp = re.findall("soccerball.obj|models/naobody", line)
-        c += 1
+        
         if len(tmp) == 23 and not re.search("matTeam", line):
             timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
-            # print(timestamp)
-            # print(c)
+            
             tmp = re.split("\(nd", line)
             tmp2 = [(tmp[i - 1].strip(), i) for i in range(len(tmp)) if re.search("soccerball.obj", tmp[i])]
             for pos, i in tmp2:
-                #print("aaaaaaaaaaaaaaaaa")
                 ball = Ball("ball", i, 1)
                 position_array = position_to_array(pos)
                 position = Position(position=position_array, timestamp=timestamp)
@@ -117,7 +77,8 @@ def process_log(log, skip=1, skip_flg=False):
             tmp4 = [(tmp[i - 2].strip(), re.findall(pattern, tmp[i])[0], i) for i in range(len(tmp)) if
                     re.search("naobody", tmp[i])]
             tmp5 = [(tmp[i - 1].strip(), i - 1, tmp[i]) for i in range(len(tmp)) if re.search("rfoot|lfoot", tmp[i])]
-            # output.write(str(tmp5))
+            
+            
             for pos, n, i in tmp4:
                 l = n.split(" ")
                 robotID = l[1] + l[2]
@@ -146,45 +107,31 @@ def process_log(log, skip=1, skip_flg=False):
                                 else:
                                     player.add_position_rfoot(position)
                                     player.rfootIndex = i
-
-                                # print(player.id, position.distance_between(player.positions[-1]))
-                                # print(player.positions[-1].timestamp, player.positions[-1].x,player.positions[-1].y,player.positions[-1].z)
-                                # print(position.timestamp, position.x,position.y,position.z)
-                                # print(f"{robotID =}, {player.lfootIndex = }, {player.rfootIndex = }")
                                 break
                         break
-
-            # j = 1
-            # k = 0
-            # print(len(tmp5))
-            # for i in range(0,len(tmp5), 2):
-            #     position_array = position_to_array(tmp5[i][0])
-            #     position = Position(position=position_array, timestamp=timestamp)
-            #     if k == 0:
-            #         entities[j].add_position_rfoot(position)
-            #         k += 1
-            #     else:
-            #         entities[j].add_position_lfoot(position)
-            #         j += 1
-            #         k = 0
-            #     print(entities[j].id, position.distance_between(entities[j].positions[-1]))
-            #     print(entities[j].positions[-1].timestamp, entities[j].positions[-1].x,entities[j].positions[-1].y,entities[j].positions[-1].z)
-            #     print(position.timestamp, position.x,position.y,position.z)
-            # for entity in entities:
-            #     print(entity.id, [pos.timestamp for pos in entity.positions])
-            # print("======")
 
             # write_to_file(timestamp, entities, output) # substituir por heuristics
             events += process(entities, fieldParams, goalParams, timestamp)
 
             break
 
+    teamA = ""
+    teamB = ""
+
     for line in log:
         line = line.decode()
-        new_timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
-        if new_timestamp != timestamp:
-            break
+        
+        if "team_left" in line:
+            teamA = re.findall("\(team_left [^)]*)")[0]
+        if "team_right" in line:
+            teamB = re.findall("\(team_right [^)]*)")[0]
 
+        if teamA and teamB:
+            break
+    
+    print(f"{teamA = }")
+    print(f"{teamB = }")
+    # Process the rest of the file
     old_timestamp = timestamp
     count = 0
     for line in log:
