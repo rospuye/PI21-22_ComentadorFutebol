@@ -1,6 +1,11 @@
 import math
+<<<<<<< HEAD
 from entities import Position, Ball
 from message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble
+=======
+from entities import Position, Entity, Ball
+from message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble, Defense, Goal_Shot, Intersect
+>>>>>>> b2a8628453d31607d4031f9c275386c5ddf67b82
 
 KICK_OFF_CONTACT_DISTANCE = 0.13              # Distance to be considered contact between entities
 CONTACT_DISTANCE = 0.2
@@ -222,7 +227,11 @@ def detect_goal_shot(ball: Ball, field : dict, goal : dict, timestamp : float):
         return []
 
     if "goal_shot" not in events:
+<<<<<<< HEAD
         message = Dribble(event="goal_shot", id=ball.owner.id, start=timestamp, end=timestamp)
+=======
+        message = Goal_Shot(event="goal_shot", player=ball.owner, start=timestamp, end=timestamp)
+>>>>>>> b2a8628453d31607d4031f9c275386c5ddf67b82
         events["goal_shot"] = message
     return []
 
@@ -233,7 +242,11 @@ def detect_defense(ball : Ball, teamA : list, teamB : list, timestamp : float):
         
     for player in oponent_team:
         if ball.get_distance_from(player) < CONTACT_DISTANCE:
+<<<<<<< HEAD
             m1 = Dribble("defense", player.id, start=timestamp, end=timestamp)
+=======
+            m1 = Defense("defense", player, start=timestamp, end=timestamp)
+>>>>>>> b2a8628453d31607d4031f9c275386c5ddf67b82
             m2 = events["goal_shot"]
             m2.end = timestamp
             events.pop("goal_shot", None)
@@ -386,9 +399,9 @@ def detect_pass_or_dribble(ball : Ball, players : list, timestamp : float):
                     m1.check_type()
 
                 events.pop("dribble/pass")
-
-                m2 = Message("intersect", timestamp, timestamp)
                 ball.owner = player
+
+                m2 = Intersect("intersect", player, start=timestamp, end=timestamp)
 
                 return [m1, m2]
     

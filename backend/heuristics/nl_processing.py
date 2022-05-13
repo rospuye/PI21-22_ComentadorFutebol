@@ -3,106 +3,128 @@ from log_processing import process_log
 import json
 
 
-
 def pass_lines(event):
-    lines = {
-        "pass_success": [
-        "{} passes the ball to {}",
-        "{} sends it to {}"
-        ],
-        "pass_fail": [
-            "{} stole the ball"
-        ],
-    }
-
     args = event["args"]
     p1 = args["from"]
     p2 = args["to"]
 
+    lines = {
+        "pass_success": [
+            f"{p1['id']} passes the ball to {p2['id']}",
+            f"{p1['id']} sends it to {p2['id']}"
+        ],
+        "pass_fail": [
+            f"{p2['id']} stole the ball"
+        ],
+    }
+
     if p1["team"] == p2["team"]:
-        n = random.randint(0,len(lines["pass_success"]) -1)
-        return f"({event['start']}, {event['end']}) " +  lines["pass_success"][n].format(p1["id"], p2["id"])
+        return event_to_text(event, lines["pass_success"])
     else:
-        n = random.randint(0,len(lines["pass_fail"]) -1)
-        return f"({event['start']}, {event['end']}) " + lines["pass_fail"][n].format(p2["id"])
+        return event_to_text(event, lines["pass_fail"])
+
 
 def dribble_lines(event):
-
-    lines = [
-        "{} is racing through the field",
-        "{} has the ball!"
-    ]
-
     args = event["args"]
     p1 = args["player"]
 
-    n = random.randint(0,len(lines) -1)
-    return f"({event['start']}, {event['end']}) " + lines[n].format(p1["id"])
+    lines = [
+        f"{p1['id']} is racing through the field",
+        # f"{p1['id']} has the ball!",
+        f"{p1['id']} is dribbling around!"
+    ]
+
+    return event_to_text(event, lines)
+
 
 def kick_off_lines(event):
+    args = event["args"]
+    p1 = args.get("player")
 
-    lines = [
-        "{} starts the game",
+    lines_without_player = [
         "and the games goes on"
     ]
 
-    args = event["args"]
-    p1 = args["player"]
+    if p1 is not None:
+        lines_with_player = [
+            f"{p1['id']} starts the game"
+        ]
 
-    n = random.randint(0,len(lines) -1)
-    return f"({event['start']}, {event['end']}) " + lines[n].format(p1["id"])
+    lines = lines_without_player if p1 is None else lines_with_player + lines_without_player
+    return event_to_text(event, lines)
+
 
 def goal_shot_lines(event):
+    args = event["args"]
+    player = args["player"]
 
     lines = [
-        "{} shoots!",
+        f"{player['id']} shoots!",
         "And he kicks"
     ]
 
-    args = event["args"]
-    #p1 = args["player"]
+    return event_to_text(event, lines)
 
-    n = random.randint(0,len(lines) -1)
-    return f"({event['start']}, {event['end']}) " + lines[n]
 
 def goal_lines(event):
     args = event["args"]
     team = args["team"]
 
     lines = [
-        "{} SCORES!!",
+        f"{team} SCORES!!",
         "Its a GOAL!!!"
     ]
 
-    n = random.randint(0,len(lines) -1)
-    return f"({event['start']}, {event['end']}) " + lines[n].format(team)
+    return event_to_text(event, lines)
+
 
 def aggression_lines(event):
-
-    lines = [
-        "{} and {} fall down",
-        "{} and {} are going at it",
-        "Oh no! They fell."
-    ]
-
     args = event["args"]
     p1 = args["id1"]
     p2 = args["id2"]
+    lines = [
+        f"{p1} and {p2} fall down",
+        f"{p1} and {p2} are going at it",
+        "Oh no! They fell."
+    ]
 
+    return event_to_text(event, lines)
 
-    n = random.randint(0,len(lines) -1)
-    return f"({event['start']}, {event['end']}) " + lines[n].format(p1, p2)
 
 def defense_lines(event):
-    return f"({event['start']}, {event['end']}) " + "defended"
+    args = event["args"]
+    team = "Right" if args["player"]["team"] else "Left"
+
+    lines = [
+        f"Team {team} makes a defense.",
+        f"The shot was defended by Team {team}"
+    ]
+
+    return event_to_text(event, lines)
+
 
 def intersect_lines(event):
-    return f"({event['start']}, {event['end']}) " + "intersected the ball"
+    args = event["args"]
+    player = args["player"]
+    lines = [
+        f"{player['id']} stole the ball.",
+        f"But {player['id']} intersected."
+    ]
+
+    return event_to_text(event, lines)
+
+
+def event_to_text(event, lines=None):
+    if lines is None:
+        lines = []
+    n = random.randint(0, len(lines) - 1)
+    return f"({event['start']}, {event['end']}) " + lines[n]
+
 
 lines = {
     "dribble": dribble_lines,
-    "pass_success": pass_lines,
-    "pass_fail": pass_lines,
+    "short_pass": pass_lines,
+    "long_pass": pass_lines,
     "kick_off": kick_off_lines,
     "goal_shot": goal_shot_lines,
     "goal": goal_lines,
@@ -112,19 +134,18 @@ lines = {
 }
 
 
-
 def generate_script(events):
-    return [ 
-        lines.get(event["event"], lambda x: f"({event['start']}, {event['end']}) Not implemented yet :)" )(event)
-        for event in json.loads(events) 
+    return [
+        lines.get(event["event"],
+                  lambda x: f"({event['start']}, {event['end']}) \'{event['event']}\' Not implemented yet :)")(event)
+        for event in json.loads(events)
     ]
-
 
 
 if __name__ == "__main__":
 
     events = process_log("sparkmonitor.log")
-    #print(events)
+    # print(events)
     script = generate_script(events)
     print(script)
     f = open("script.txt", "w")
@@ -132,5 +153,3 @@ if __name__ == "__main__":
         f.write(line)
         f.write("\n")
     f.close()
-
-        
