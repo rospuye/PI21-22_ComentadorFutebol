@@ -8,25 +8,15 @@ from matplotlib.font_manager import json_dump
 from entities import Position, Ball, Player
 from heuristics import process
 import json
+from analytics import get_analytics
 
 def position_to_array(position, flg=False):
     tmp = re.findall("[-]?\d+[.]?\d*[eE]?[-]?\d*", position)
-    #print(tmp)
-    #print(position)
     pos = []
     for numb in tmp:
         pos.append(float(numb))
-    #print(len(pos))
     assert len(pos) == 16
     return pos
-    #tmp = position.split(" ")
-    #pos = []
-    #for i in range(2, len(tmp)):
-    #    pos.append(float(tmp[i].rstrip(")")))
-    #if len(pos) != 16:
-    #    pos = [float(tmp[1])] + pos
-    #assert len(pos) == 16
-    #return pos
 
 def order_by_distance_to_ball(entities):
     "Given the entities, returns their position relative to the Ball entity"
@@ -77,7 +67,6 @@ def process_log(log, skip=1, skip_flg=False):
             continue
         
         tmp = re.split('\s|\)', line)
-        #print(tmp)
         fieldParams["length"] = float(tmp[1])
         print("Length:",fieldParams["length"])
         fieldParams["width"] = float(tmp[3])
@@ -95,8 +84,6 @@ def process_log(log, skip=1, skip_flg=False):
         c += 1
         if len(tmp) == 23 and not re.search("matTeam",line):
             timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
-            #print(timestamp)
-            #print(c)
             tmp = re.split("\(nd", line)
             tmp2 = [(tmp[i-1].strip(),i) for i in range(len(tmp)) if re.search("soccerball.obj", tmp[i])]
             for pos,i in tmp2:
@@ -109,7 +96,6 @@ def process_log(log, skip=1, skip_flg=False):
             pattern = "\(resetMaterials .*?\)"
             tmp4 = [(tmp[i-2].strip(), re.findall(pattern, tmp[i])[0], i)  for i in range(len(tmp)) if re.search("naobody", tmp[i])]
             tmp5 = [ (tmp[i-1].strip(), i-1, tmp[i])  for i in range(len(tmp)) if re.search("rfoot|lfoot", tmp[i]) ]
-            # output.write(str(tmp5))
             for pos, n, i in tmp4:
                 l = n.split(" ")
                 robotID = l[1] + l[2]
@@ -130,7 +116,6 @@ def process_log(log, skip=1, skip_flg=False):
                         l = id_node.split(" ")
                         robotID = l[1] + l[2]
                         for player in entities[1:]:
-                            #print(robotID)
                             if player.id == robotID:
                                 if re.search("lfoot", foot_dir):
                                     player.add_position_lfoot(position)
@@ -144,7 +129,6 @@ def process_log(log, skip=1, skip_flg=False):
 
             #write_to_file(timestamp, entities, output) # substituir por heuristics
             events += process(entities, fieldParams, goalParams, timestamp)
-            
             break
 
     for line in inpt:
@@ -155,39 +139,27 @@ def process_log(log, skip=1, skip_flg=False):
     old_timestamp = timestamp
     count = 0
     for line in inpt:
-        #if re.search("soccerball.obj|models/naobody", line):
         timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
-        # print(type(timestamp), timestamp)
         if old_timestamp == timestamp:
             break
         old_timestamp = timestamp
         if not skip_flg or not count % skip == 0:
-            # print(f"======== Count: {count} ===========")
-            
-            
             tmp = re.split("\(nd", line)
             had_changes = [False] * len(entities)
             for idx in range(len(entities)):
                 entity = entities[idx]
                 i = entity.index
                 o = entity.offset
-
-                
-
                 if tmp[i-o]:
                     had_changes[idx] = True
                     new_pos = Position(position=position_to_array(tmp[i-o].strip()), timestamp=timestamp)
                     entity.add_position(new_pos)
-                
                 if not isinstance(entity, Ball):
                     rIndex = entity.rfootIndex
                     lIndex = entity.lfootIndex
-
                     if tmp[rIndex]:
-                        # print(f"{rIndex = }")
                         had_changes[idx] = True
                         new_pos = Position(position=position_to_array(tmp[rIndex].strip()), timestamp=timestamp)
-                        # print(count)
                         entity.add_position_rfoot(new_pos)
                     if tmp[lIndex]:
                         had_changes[idx] = True
@@ -208,25 +180,18 @@ def process_log(log, skip=1, skip_flg=False):
                             new_pos = copy.deepcopy(entity.positions_rfoot[-1])
                             new_pos.timestamp = timestamp
                             entity.add_position_rfoot(new_pos)
-
                             new_pos = copy.deepcopy(entity.positions_lfoot[-1])
                             new_pos.timestamp = timestamp
                             entity.add_position_lfoot(new_pos)
-
-            # for entity in entities:
-            #     print(entity.id, [pos.timestamp for pos in entity.positions])
-
-            # write_to_file(timestamp, entities, output) # Substituir pela heuristic
             events += process(entities, fieldParams, goalParams, timestamp)
         count += 1  
         
-        if count == 5000: # 1000 ~= 40 seg
-            break
+        # if count == 5000: 
+        #     break
     
     for event in events:
         output.write(str(event)+"\n")
-    
-    # output.write("}")
+        
     output.close()
     tok = time.time()
     elapsed = tok - tik
@@ -248,7 +213,7 @@ if __name__ == "__main__":
         flg = True
         skip_lines = int(sys.argv[2])
     events = process_log(log, skip=skip_lines, skip_flg=flg)
-    print("Log processed!")
+    #print("Log processed!")
     
 
 

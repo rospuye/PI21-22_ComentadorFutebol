@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'
 import Title from '../components/Title'
+import DragDrop from '../components/DragDrop'
 import { Container } from 'react-bootstrap'
 import { Row } from 'react-bootstrap'
 import { Col } from 'react-bootstrap'
@@ -9,6 +10,9 @@ import '../components/components_css/Form.css';
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import Form from 'react-bootstrap/Form'
+import FloatingLabel from 'react-bootstrap/FloatingLabel'
+import Spinner from 'react-bootstrap/Spinner'
 
 import { useCookies } from 'react-cookie'
 import axios from 'axios'
@@ -16,34 +20,62 @@ import axios from 'axios'
 function UploadLogPage() {
 
   const [cookies, setCookie] = useCookies(['logged_user'])
-  const inputFile = useRef(null)
+  // const inputFile = useRef(null)
 
   const [file, setFile] = useState(null)
 
-  function processFile(file) {
+  const [title, setTitle] = useState("")
+  const [description, setDescription] = useState("")
+  const [privacy, setPrivacy] = useState("Private")
+
+  const [loading, setLoading] = useState(false)
+
+  console.log("title: " + title)
+  console.log("description: " + description)
+  console.log("privacy: " + privacy)
+
+  function processFile() {
     if (file) {
 
-      console.log(file)
-      
+      console.log("yup")
+
       const url = 'http://127.0.0.1:8000/file_upload/';
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('fileName', file.name);
+      formData.append('fileName', title);
+      formData.append('fileDescription', description);
+      formData.append('filePrivacy', privacy);
       const config = {
         headers: {
           'content-type': 'multipart/form-data',
         },
       };
+      document.getElementById('confirmBtn').disabled = true;
+      const spinner = "<Spinner animation=\"border\" role=\"status\"><span className=\"visually-hidden\">Loading...</span></Spinner>";
+      {/* <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner> */ }
+      // document.getElementById('confirmBtn').innerHTML = spinner;
+      setLoading(true)
       axios.post(url, formData, config).then((response) => {
         console.log(response.data);
+        document.getElementById('confirmBtn').disabled = false;
+        setLoading(false)
+        // document.getElementById('confirmBtn').innerHTML = "Confirm";
       });
-      
+
+    }
+    else {
+      console.log("NO FILE!!!")
     }
   }
 
-  const onButtonClick = () => {
-    inputFile.current.click()
+  function handleCallback(file, filename) {
+    setFile(file);
+    setTitle(filename);
   }
+
+  // const onButtonClick = () => {
+  //   inputFile.current.click()
+  // }
 
   return (
     <>
@@ -73,26 +105,71 @@ function UploadLogPage() {
 
       <Container>
         <Col style={{ marginLeft: '10%', marginRight: '10%' }}>
+
           <Row style={{ marginTop: '5%', marginBottom: '5%', display: 'flex', justifyContent: 'center' }}>
-            <img
-              alt='Field'
-              src={Img}
-              className='img-thumbnail'
-              style={{ height: '400px', width: '700px' }}
-            />
+            <DragDrop parentCallback={handleCallback} />
           </Row>
-          <Row style={{ marginBottom: '10%', textAlign: 'center' }}>
+
+          {/* <Row style={{ textAlign: 'center' }}>
             <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(event) => {
               setFile(event.target.files[0])
+              setTitle(event.target.files[0].name)
               document.getElementById('confirmBtn').disabled = false
             }} />
+          </Row> */}
+
+          {file ?
+            <Row style={{ marginBottom: '5%' }}>
+              <Form>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Title</Form.Label>
+                  <Form.Control type="text" placeholder="Enter title" defaultValue={file.name} onChange={(e) => { setTitle(e.target.value) }} />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Description</Form.Label>
+                  <FloatingLabel label="Comments">
+                    <Form.Control
+                      as="textarea"
+                      placeholder="Enter Description"
+                      style={{ height: '100px' }}
+                      onChange={(e) => { setDescription(e.target.value) }}
+                    />
+                  </FloatingLabel>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Video Privacy</Form.Label>
+                  <FloatingLabel>
+                    <Form.Select style={{ paddingTop: '0px', paddingBottom: '0px', height: '40px' }} onChange={(e) => { setPrivacy(e.target.value) }}>
+                      <option value="Private">Private</option>
+                      <option value="Public">Public</option>
+                    </Form.Select>
+                  </FloatingLabel>
+                </Form.Group>
+
+                <Form.Group style={{ textAlign: 'center', marginTop: '5%' }}>
+                  <Button id='confirmBtn' type="button" variant="primary" size="lg" style={{ width: '18%', margin: 'auto' }} className="formBtn" onClick={processFile}>
+                    {loading ?
+                      <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>
+                      :
+                      "Confirm"
+                    }
+                  </Button>
+                </Form.Group>
+
+              </Form>
+            </Row>
+            :
+            <></>}
+
+          {/* <Row>
             <Button variant="primary" type="submit" size="lg" style={{ width: '18%', margin: 'auto' }} className="formBtn" onClick={onButtonClick}>
               Load
             </Button>
-            <Button id='confirmBtn' variant="primary" type="submit" size="lg" style={{ width: '18%', margin: 'auto' }} className="formBtn" onClick={processFile(file)} disabled>
-              Confirm
-            </Button>
-          </Row>
+          </Row> */}
+
         </Col>
       </Container>
     </>
