@@ -1,6 +1,4 @@
-from dataclasses import field
 import math
-from tracemalloc import start
 from entities import Position, Ball
 from message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble
 
@@ -8,8 +6,8 @@ KICK_OFF_CONTACT_DISTANCE = 0.13              # Distance to be considered contac
 CONTACT_DISTANCE = 0.2
 AGGRESSION_DISTANCE_MARGIN = 0.3              # Distance to be considered collision between players
 AGGRESSION_DISTANCE_TO_BALL = 1.2             # Just notify aggressions at maximum that distance from ball
-FORWARD_SIZE = 0.1
-MIDFIELD_SIZE = 0.3
+MID_SIZE = 0.3
+FORWARD_OFFSET = 0.1
 
 events = {}
 formation_count = {}                   
@@ -512,23 +510,15 @@ def update_formation(ball : Ball, teamA : list, teamB : list, field : dict):
         teamB_form[places] += 1
         form_players[player] = places
 
-    return [f"{teamA_form[0]},{teamA_form[1]},{teamA_form[2]}", f"{teamB_form[0]},{teamB_form[1]},{teamB_form[2]}"], form_players
+    return [f"{teamA_form[0]}:{teamA_form[1]}:{teamA_form[2]}", f"{teamB_form[0]}:{teamB_form[1]}:{teamB_form[2]}"], form_players
 
 def get_areas(ball : Ball, isRight : bool, field : dict):
     """Returns, as a list, the X's that delimit forward, mifield and defender areas, respectively"""
     goal_line = field["length"]/2 if isRight else -field["length"]/2
-    start_forward = ball.positions[-1].x
-    range = abs(goal_line-start_forward)
-    end_forward = start_forward + FORWARD_SIZE*range if isRight else start_forward - FORWARD_SIZE*range
-    end_mid = end_forward + MIDFIELD_SIZE*range if isRight else end_forward - MIDFIELD_SIZE*range
-    # ret = []
-    # if isRight:
-    #     ret.append([end_mid, goal_line])
-    #     ret.append([end_forward, end_mid])
-    #     ret.append([-goal_line, end_forward])
-    # else:
-    #     ret.append()
-    #     ret.append()
-    #     ret.append()
-    return [[end_mid, goal_line], [end_forward, end_mid], [-goal_line, end_forward]] if isRight \
-        else [[goal_line, end_mid],  [end_mid, end_forward], [end_forward, -goal_line]]
+    ball_line = ball.positions[-1].x
+    rangeEnemy = abs(-goal_line-ball_line)
+    rangeFriendly = abs(goal_line-ball_line)
+    start_forward = ball_line - FORWARD_OFFSET*rangeEnemy if isRight else ball_line + FORWARD_OFFSET*rangeEnemy
+    end_mid = start_forward + MID_SIZE*rangeFriendly if isRight else start_forward - MID_SIZE*rangeFriendly
+    return [[end_mid, goal_line], [start_forward, end_mid], [-goal_line, start_forward]] if isRight \
+        else [[goal_line, end_mid],  [end_mid, start_forward], [start_forward, -goal_line]]
