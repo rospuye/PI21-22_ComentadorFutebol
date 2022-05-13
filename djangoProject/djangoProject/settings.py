@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -82,11 +83,11 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'foco',
-        'USER': 'demo',
-        'PASSWORD': 'secret2',
-        'HOST': 'localhost',
-        'PORT': '33061',
+        'NAME': os.environ.get('MYSQL_DATABASE', 'mysql-db'),
+        'USER': os.environ.get('MYSQL_USER', 'mysql-user'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD', 'mysql-password'),
+        'HOST': os.environ.get('MYSQL_DATABASE_HOST', 'db'),
+        'PORT': os.environ.get('MYSQL_DATABASE_PORT', 3306),
     }
 }
 
