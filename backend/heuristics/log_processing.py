@@ -56,6 +56,8 @@ def process_log(log, skip=1, skip_flg=False):
     fieldParams = {}
     goalParams = {}
     entities = []
+    form = ""
+    form_players = dict()
     timestamp = 0
     # ((FieldLength 30)(FieldWidth 20)(FieldHeight 40)(GoalWidth 2.1)(GoalDepth 0.6)(GoalHeight 0.8)
     for line in inpt:
@@ -121,7 +123,8 @@ def process_log(log, skip=1, skip_flg=False):
                                     player.rfootIndex = i
                                 break
                         break
-            events += process(entities, fieldParams, goalParams, timestamp)
+            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp)
+            events += messages
             break
 
     for line in inpt:
@@ -176,7 +179,8 @@ def process_log(log, skip=1, skip_flg=False):
                             new_pos = copy.deepcopy(entity.positions_lfoot[-1])
                             new_pos.timestamp = timestamp
                             entity.add_position_lfoot(new_pos)
-            events += process(entities, fieldParams, goalParams, timestamp)
+            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp)
+            events += messages
         count += 1  
         
         # if count == 5000: 
@@ -189,6 +193,12 @@ def process_log(log, skip=1, skip_flg=False):
     tok = time.time()
     elapsed = tok - tik
     print("Event detection in:", elapsed)
+    print("Formation for teamA:", form[0])
+    print("Formation for teamB:", form[1])
+    print("Players and their spot in the formation:")
+    translate = {0: "defender", 1: "midfielder", 2: "forward"}
+    for player in form_players:
+        print(player.id, translate[form_players[player]])
     tik = time.time()
     analytics_log = get_analytics(events, entities) # TODO to be sent to NL generation
     # Analytics debug prints
@@ -217,6 +227,7 @@ if __name__ == "__main__":
     events = process_log(log, skip=skip_lines, skip_flg=flg)
     #print("Log processed!")
     
+
 
 
 
