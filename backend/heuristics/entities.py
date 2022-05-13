@@ -116,6 +116,7 @@ class Player(Entity):
         self.rfootIndex = 0
         self.positions_rfoot = []
         self.positions_lfoot = []
+        teamName = None
     
     def add_position_rfoot(self, position):
         self.positions_rfoot.append(position)
@@ -124,7 +125,7 @@ class Player(Entity):
         self.positions_lfoot.append(position)  
 
     def to_json(self):
-        return {"id": self.id, "team":self.isTeamRight}
+        return {"id": self.id, "team":self.teamName}
 
 
 
