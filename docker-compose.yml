@@ -1,0 +1,20 @@
+
+version: "3.9"
+services:
+
+  frontend:
+    build: ./product-website
+    container_name: frontend
+    ports:
+      - 3001:3000
+    stdin_open: true
+    restart: unless-stopped
+    image: foco-frontend
+
+  django-api:
+    build: ./djangoProject
+    container_name: django-api
+    ports:
+      - 8000:8000
+    restart: unless-stopped
+    image: foco-api
