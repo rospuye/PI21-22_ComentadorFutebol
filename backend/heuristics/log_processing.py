@@ -3,8 +3,11 @@ import sys
 import re
 import copy
 import time
+
+from matplotlib.font_manager import json_dump
 from entities import Position, Ball, Player
 from heuristics import process
+import json
 from analytics import get_analytics
 
 def position_to_array(position, flg=False):
@@ -44,8 +47,8 @@ def write_to_file(timestamp, entities, output):
 
 def process_log(log, skip=1, skip_flg=False):
     tik = time.time()
-    path = "logs/input/"
-    out = "logs/output/" + log.rstrip(".log")
+    path = ""#"logs/input/"
+    out = log.rstrip(".log")#"logs/output/" + log.rstrip(".log")
     count = 0
     inpt = open(path + log, "r")
     output = open(out, "w")
@@ -57,6 +60,7 @@ def process_log(log, skip=1, skip_flg=False):
     goalParams = {}
     entities = []
     timestamp = 0
+    # get fields when all 3 exist on the line
     # ((FieldLength 30)(FieldWidth 20)(FieldHeight 40)(GoalWidth 2.1)(GoalDepth 0.6)(GoalHeight 0.8)
     for line in inpt:
         if not ("FieldLength" in line and "FieldWidth" in line):
@@ -119,8 +123,11 @@ def process_log(log, skip=1, skip_flg=False):
                                 else:
                                     player.add_position_rfoot(position)
                                     player.rfootIndex = i
+                                
                                 break
                         break
+
+            #write_to_file(timestamp, entities, output) # substituir por heuristics
             events += process(entities, fieldParams, goalParams, timestamp)
             break
 
@@ -188,24 +195,15 @@ def process_log(log, skip=1, skip_flg=False):
     output.close()
     tok = time.time()
     elapsed = tok - tik
-    print("Event detection in:", elapsed)
-    tik = time.time()
-    analytics_log = get_analytics(events, entities) # TODO to be sent to NL generation
-    # Analytics debug prints
-    # for timestamp in analytics_log:
-    #     print(timestamp)
-    #     print("\tTeams:")
-    #     for team in analytics_log[timestamp]["teams"]:
-    #         print("\t\t",team,analytics_log[timestamp]["teams"][team])
-    #     print("\tPlayers:")
-    #     for player in analytics_log[timestamp]["players"]:
-    #         print("\t\t",player.id,analytics_log[timestamp]["players"][player])
-    # print(len(analytics_log))
-    tok = time.time()
-    elapsed2 = tok - tik
-    print("Analytics gathered in:", elapsed2)
-    print("Total processing time:", elapsed+elapsed2)
-    return events
+    print(elapsed)
+
+    result = []
+    for event in events:
+        #print(event)
+        result.append(event.to_json())
+        #print(result[-1])
+
+    return json.dumps(result)
 
 if __name__ == "__main__":
     log = sys.argv[1]
