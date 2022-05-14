@@ -6,8 +6,11 @@ KICK_OFF_CONTACT_DISTANCE = 0.13              # Distance to be considered contac
 CONTACT_DISTANCE = 0.2
 AGGRESSION_DISTANCE_MARGIN = 0.3              # Distance to be considered collision between players
 AGGRESSION_DISTANCE_TO_BALL = 1.2             # Just notify aggressions at maximum that distance from ball
+MID_SIZE = 0.3
+FORWARD_OFFSET = 0.1
 
-events = {}                         
+events = {}
+formation_count = {}                   
 
 def process(entities : list, field : dict, goal : dict, curr_timestamp : float):
     """If event is detected, the positions related to the event's timestamp are deleted from all entities.
@@ -18,6 +21,13 @@ def process(entities : list, field : dict, goal : dict, curr_timestamp : float):
     messages = []
     if curr_timestamp == 0.0:
         events["start"] = None
+
+    # print(len(formation_count))
+    if len(formation_count) == 0:
+        for player in entities[1:]:
+            formation_count[player] = dict()
+            for i in range(3):
+                formation_count[player][i] = 0
     
     # Event detection
     messages += detect_kick_off(ball, teamA, teamB, curr_timestamp)
@@ -30,7 +40,15 @@ def process(entities : list, field : dict, goal : dict, curr_timestamp : float):
         messages += detect_pass_or_dribble(ball, entities[1:], curr_timestamp) 
         messages += detect_defense(ball, teamA, teamB, curr_timestamp)
 
-    return messages
+    
+    formation, formation_players = update_formation(ball, teamA, teamB, field)
+
+    # for player in formation_count:
+    #     print(player.id)
+    #     for idx in [0,1,2]:
+    #         print(idx, formation_count[player][idx])
+
+    return messages, formation, formation_players
 
 def detect_kick_off(ball : Ball, teamA, teamB, timestamp):
     if not "start" in events and not "goal" in events and not "out" in events:
@@ -391,5 +409,54 @@ def detect_pass_or_dribble(ball : Ball, players : list, timestamp : float):
                 m2 = Intersect("intersect", player, start=timestamp, end=timestamp)
 
                 return [m1, m2]
+
+def update_formation(ball : Ball, teamA : list, teamB : list, field : dict):
+    # 0 - defender
+    # 1 - midfielder
+    # 2 - forwards
+    if not abs(ball.positions[-1].x) > field["length"]/2 - field["length"]*0.15:
+        left = get_areas(ball, False, field)
+        right = get_areas(ball, True, field)
+
+        # Team A (left)
+        for player in teamA:
+            for i in range(len(left)):
+                if left[i][0] < player.positions[-1].x < left[i][1]:
+                    formation_count[player][i] += 1
+                    break
+
+        for player in teamB:
+            for i in range(len(right)):
+                if left[i][0] < player.positions[-1].x < left[i][1]:
+                    formation_count[player][i] += 1
+                    break
     
-    return []
+    # def, mid, forward
+    teamA_form = [0, 0, 0]
+    teamB_form = [0, 0, 0]
+
+    form_players = dict()
+
+    for player in teamA:
+        places = max([0,1,2], key= lambda x: formation_count[player][x])
+        teamA_form[places] += 1
+        form_players[player] = places
+
+    for player in teamB:
+        places = max([0,1,2], key= lambda x: formation_count[player][x])
+        teamB_form[places] += 1
+        form_players[player] = places
+
+    return [f"{teamA_form[0]}:{teamA_form[1]}:{teamA_form[2]}", f"{teamB_form[0]}:{teamB_form[1]}:{teamB_form[2]}"], form_players
+
+def get_areas(ball : Ball, isRight : bool, field : dict):
+    """Returns, as a list, the X's that delimit forward, mifield and defender areas, respectively"""
+    goal_line = field["length"]/2 if isRight else -field["length"]/2
+    ball_line = ball.positions[-1].x
+    rangeEnemy = abs(-goal_line-ball_line)
+    rangeFriendly = abs(goal_line-ball_line)
+    start_forward = ball_line - FORWARD_OFFSET*rangeEnemy if isRight else ball_line + FORWARD_OFFSET*rangeEnemy
+    end_mid = start_forward + MID_SIZE*rangeFriendly if isRight else start_forward - MID_SIZE*rangeFriendly
+    return [[end_mid, goal_line], [start_forward, end_mid], [-goal_line, start_forward]] if isRight \
+        else [[goal_line, end_mid],  [end_mid, start_forward], [start_forward, -goal_line]]
+
