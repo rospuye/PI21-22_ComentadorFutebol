@@ -48,6 +48,7 @@ function UploadLogPage() {
       const config = {
         headers: {
           'content-type': 'multipart/form-data',
+          // 'Access-Control-Allow-Origin': 'http://localhost:3001'
         },
       };
       document.getElementById('confirmBtn').disabled = true;
