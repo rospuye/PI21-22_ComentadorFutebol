@@ -3,8 +3,11 @@ import sys
 import re
 import copy
 import time
+
+from matplotlib.font_manager import json_dump
 from entities import Position, Ball, Player
 from heuristics import process
+import json
 from analytics import get_analytics
 
 def position_to_array(position, flg=False):
@@ -44,8 +47,8 @@ def write_to_file(timestamp, entities, output):
 
 def process_log(log, skip=1, skip_flg=False):
     tik = time.time()
-    path = "logs/input/"
-    out = "logs/output/" + log.rstrip(".log")
+    path = ""#"logs/input/"
+    out = log.rstrip(".log")#"logs/output/" + log.rstrip(".log")
     count = 0
     inpt = open(path + log, "r")
     output = open(out, "w")
@@ -59,6 +62,7 @@ def process_log(log, skip=1, skip_flg=False):
     form = ""
     form_players = dict()
     timestamp = 0
+    # get fields when all 3 exist on the line
     # ((FieldLength 30)(FieldWidth 20)(FieldHeight 40)(GoalWidth 2.1)(GoalDepth 0.6)(GoalHeight 0.8)
     for line in inpt:
         if not ("FieldLength" in line and "FieldWidth" in line):
@@ -121,6 +125,7 @@ def process_log(log, skip=1, skip_flg=False):
                                 else:
                                     player.add_position_rfoot(position)
                                     player.rfootIndex = i
+                                
                                 break
                         break
             messages, form, form_players = process(entities, fieldParams, goalParams, timestamp)
@@ -190,6 +195,9 @@ def process_log(log, skip=1, skip_flg=False):
         output.write(str(event)+"\n")
         
     output.close()
+    result = []
+    for event in events:
+        result.append(event.to_json())
     tok = time.time()
     elapsed = tok - tik
     print("Event detection in:", elapsed)
@@ -216,7 +224,7 @@ def process_log(log, skip=1, skip_flg=False):
     elapsed2 = tok - tik
     print("Analytics gathered in:", elapsed2)
     print("Total processing time:", elapsed+elapsed2)
-    return events
+    return json.dumps(result)
 
 if __name__ == "__main__":
     log = sys.argv[1]
