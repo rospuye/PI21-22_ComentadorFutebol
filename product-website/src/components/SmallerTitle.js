@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function SmallerTitle(props) {
     return <div>
-        <h3>{props.title}</h3>
+        <h3 className='titleH3'>{props.title}</h3>
     </div>;
 }
 

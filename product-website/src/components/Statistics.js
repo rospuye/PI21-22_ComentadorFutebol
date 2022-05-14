@@ -10,13 +10,13 @@ function Statistics({nameOfTeamA,nameOfTeamB,conditions,resultsA,resultsB}) {
     <Container>
         <Row>
             <Col>
-                <h4>{nameOfTeamA}</h4>
+                <h4 className='titleH4'>{nameOfTeamA}</h4>
             </Col>
             <Col>
             
             </Col>
             <Col>
-                <h4>{nameOfTeamB}</h4>
+                <h4 className='titleH4'>{nameOfTeamB}</h4>
             </Col>
         </Row>
         <hr
