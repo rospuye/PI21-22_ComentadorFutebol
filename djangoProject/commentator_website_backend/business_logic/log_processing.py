@@ -175,7 +175,8 @@ def process_log(log, skip=1, skip_flg=False):
             # print("======")
 
             # write_to_file(timestamp, entities, output) # substituir por heuristics
-            events += process(entities, fieldParams, goalParams, timestamp)
+            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp)
+            events += messages
 
             break
 
@@ -253,7 +254,8 @@ def process_log(log, skip=1, skip_flg=False):
 
             # write_to_file(timestamp, entities, output) # Substituir pela heuristic
             #print("njkdnfjkdsbnf")
-            events += process(entities, fieldParams, goalParams, timestamp)
+            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp)
+            events += messages
         count += 1
 
         if count == 5000:  # 1000 ~= 40 seg

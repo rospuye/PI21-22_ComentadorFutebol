@@ -138,7 +138,7 @@ def generate_script(events):
     return [
         lines.get(event["event"],
                   lambda x: f"({event['start']}, {event['end']}) \'{event['event']}\' Not implemented yet :)")(event)
-        for event in json.loads(events)
+        for event in events
     ]
 
 
