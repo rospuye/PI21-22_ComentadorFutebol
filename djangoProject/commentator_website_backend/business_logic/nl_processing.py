@@ -80,8 +80,8 @@ def goal_lines(event):
 
 def aggression_lines(event):
     args = event["args"]
-    p1 = args["id1"]
-    p2 = args["id2"]
+    p1 = args["player_1"]
+    p2 = args["player_2"]
     lines = [
         f"{p1['id']} and {p2['id']} fall down",
         f"{p1['id']} and {p2['id']} are going at it",

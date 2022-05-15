@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Title from '../components/Title'
 import DragDrop from '../components/DragDrop'
 import { Container } from 'react-bootstrap'
@@ -16,6 +16,7 @@ import Spinner from 'react-bootstrap/Spinner'
 
 import { useCookies } from 'react-cookie'
 import axios from 'axios'
+import TTS from '../components/TTS'
 
 function UploadLogPage() {
 
@@ -30,15 +31,33 @@ function UploadLogPage() {
 
   const [loading, setLoading] = useState(false)
 
+  // tts states
+  const [tts, setTts] = useState(new TTS())
+  const [hasLoadedVoices, setHasLoadedVoices] = useState(false)
+  let hasButtonClicked = {value: false}
+
   console.log("title: " + title)
   console.log("description: " + description)
   console.log("privacy: " + privacy)
+
+  useEffect(() => {
+    if (!tts.isSearchingVoices) {
+      tts.updateStateWhenVoicesLoaded(setHasLoadedVoices)
+    }
+  }, [])
+
+  useEffect(() => {
+    console.log("loaded voices", tts.voices)
+    const lang_voices = tts.getVoicesByLanguage("en")
+    const voices_names = tts.getVoicesByName("male", lang_voices)
+    tts.setVoice(voices_names[0])
+  }, [hasLoadedVoices])
 
   function processFile() {
     if (file) {
 
       console.log("yup")
-
+      tts.speak("We are starting the convertion, please wait.", hasButtonClicked) // its necessary to create the initial speak
       const url = 'http://127.0.0.1:8000/file_upload/';
       const formData = new FormData();
       formData.append('file', file);
@@ -57,9 +76,17 @@ function UploadLogPage() {
       // document.getElementById('confirmBtn').innerHTML = spinner;
       setLoading(true)
       axios.post(url, formData, config).then((response) => {
-        console.log(response.data);
+        let data = response.data
+        console.log(data);
+        
+        for (let i = 0; i < 5; i++) {
+          tts.emmitAudio(data[i].text, hasButtonClicked)
+        }
+        
         document.getElementById('confirmBtn').disabled = false;
         setLoading(false)
+
+
         // document.getElementById('confirmBtn').innerHTML = "Confirm";
       });
 
