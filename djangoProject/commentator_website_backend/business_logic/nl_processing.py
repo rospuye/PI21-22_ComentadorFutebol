@@ -83,8 +83,8 @@ def aggression_lines(event):
     p1 = args["id1"]
     p2 = args["id2"]
     lines = [
-        f"{p1} and {p2} fall down",
-        f"{p1} and {p2} are going at it",
+        f"{p1['id']} and {p2['id']} fall down",
+        f"{p1['id']} and {p2['id']} are going at it",
         "Oh no! They fell."
     ]
 
@@ -118,7 +118,12 @@ def event_to_text(event, lines=None):
     if lines is None:
         lines = []
     n = random.randint(0, len(lines) - 1)
-    return f"({event['start']}, {event['end']}) " + lines[n]
+    # return f"({event['start']}, {event['end']}) " + lines[n]
+    return {
+        "start": event['start'],
+        "end": event['end'],
+        "text": lines[n]
+    }
 
 
 lines = {
@@ -137,7 +142,8 @@ lines = {
 def generate_script(events):
     return [
         lines.get(event["event"],
-                  lambda x: f"({event['start']}, {event['end']}) \'{event['event']}\' Not implemented yet :)")(event)
+                  lambda x: event_to_text(event, ["Not implemented yet :)"]))(event)
+                  # lambda x: f"({event['start']}, {event['end']}) \'{event['event']}\' Not implemented yet :)")(event)
         for event in events
     ]
 
