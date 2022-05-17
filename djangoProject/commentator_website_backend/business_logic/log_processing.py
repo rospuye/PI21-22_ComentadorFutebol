@@ -69,6 +69,8 @@ def process_log(log, skip=1, skip_flg=False):
     fieldParams = {}
     goalParams = {}
     entities = []
+    events_dict = {}
+    formation_counts = {}
     timestamp = 0
     # TODO get fields when all 3 exist on the line
     # ((FieldLength 30)(FieldWidth 20)(FieldHeight 40)(GoalWidth 2.1)(GoalDepth 0.6)(GoalHeight 0.8)
@@ -175,7 +177,7 @@ def process_log(log, skip=1, skip_flg=False):
             # print("======")
 
             # write_to_file(timestamp, entities, output) # substituir por heuristics
-            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp)
+            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp, events_dict, formation_counts)
             events += messages
 
             break
@@ -254,7 +256,7 @@ def process_log(log, skip=1, skip_flg=False):
 
             # write_to_file(timestamp, entities, output) # Substituir pela heuristic
             #print("njkdnfjkdsbnf")
-            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp)
+            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp, events_dict, formation_counts)
             events += messages
         count += 1
 

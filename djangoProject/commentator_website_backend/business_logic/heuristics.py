@@ -11,13 +11,15 @@ AGGRESSION_DISTANCE_TO_BALL = 1.2  # Just notify aggressions at maximum that dis
 MID_SIZE = 0.3
 FORWARD_OFFSET = 0.1
 
-events = {}
-formation_count = {}
-
-
-def process(entities: list, field: dict, goal: dict, curr_timestamp: float):
+def process(entities: list, field: dict, goal: dict, curr_timestamp: float, events=None, formation_count=None):
     """If event is detected, the positions related to the event's timestamp are deleted from all entities.
     It returns a string event"""
+    if formation_count is None:
+        formation_count = {}
+
+    if events is None:
+        events = {}
+
     ball = entities[0]
     teamA = entities[1:12]  # Left (False)
     teamB = entities[12:]  # Right (True)
@@ -33,23 +35,23 @@ def process(entities: list, field: dict, goal: dict, curr_timestamp: float):
                 formation_count[player][i] = 0
 
     # Event detection
-    messages += detect_kick_off(ball, teamA, teamB, curr_timestamp)
-    messages += detect_corner_shot(ball, teamA, teamB, curr_timestamp)
+    messages += detect_kick_off(ball, teamA, teamB, curr_timestamp, events)
+    messages += detect_corner_shot(ball, teamA, teamB, curr_timestamp, events)
     # If ball is out, we have to wait for the ball to be back in game
     if not (
             "out" in events or "corner" in events or "goalkeeper_out" in events or "out_shot" in events or "corner_shot" in events or "goalkeeper_out_shot" in events or "goal" in events):
-        messages += detect_out_goal(ball, teamA, teamB, field, goal, curr_timestamp)
-        messages += detect_goal_shot(ball, field, goal, curr_timestamp)
-        messages += detect_aggressions(teamA=teamA, teamB=teamB, ball=ball)
-        messages += detect_pass_or_dribble(ball, entities[1:], curr_timestamp)
-        messages += detect_defense(ball, teamA, teamB, curr_timestamp)
+        messages += detect_out_goal(ball, teamA, teamB, field, goal, curr_timestamp, events)
+        messages += detect_goal_shot(ball, field, goal, curr_timestamp, events)
+        messages += detect_aggressions(teamA, teamB, ball, events)
+        messages += detect_pass_or_dribble(ball, entities[1:], curr_timestamp, events)
+        messages += detect_defense(ball, teamA, teamB, curr_timestamp, events)
 
-    formation, formation_players = update_formation(ball, teamA, teamB, field)
+    formation, formation_players = update_formation(ball, teamA, teamB, field, formation_count)
 
     return messages, formation, formation_players
 
 
-def detect_kick_off(ball: Ball, teamA, teamB, timestamp):
+def detect_kick_off(ball: Ball, teamA, teamB, timestamp, events):
     if not "start" in events and not "goal" in events and not "out" in events:
         return []
 
@@ -94,7 +96,7 @@ def detect_kick_off(ball: Ball, teamA, teamB, timestamp):
 
 # length -> x
 # width -> y
-def detect_out_goal(ball: Ball, teamA, teamB, field, goal, timestamp):
+def detect_out_goal(ball: Ball, teamA, teamB, field, goal, timestamp, events):
     # First things first, is it outside the field?
     ball_pos = ball.positions[-1]
 
@@ -160,39 +162,39 @@ def detect_out_goal(ball: Ball, teamA, teamB, field, goal, timestamp):
     return []
 
 
-def detect_corner_shot(ball: Ball, teamA: list, teamB: list, curr_timestamp: float):
+def detect_corner_shot(ball: Ball, teamA: list, teamB: list, curr_timestamp: float, events):
     if "corner" in events:
-        if start_outside_shot("corner", ball, teamA, teamB, curr_timestamp):
+        if start_outside_shot("corner", ball, teamA, teamB, curr_timestamp, events):
             return []
 
     elif "out" in events:
-        if start_outside_shot("out", ball, teamA, teamB, curr_timestamp):
+        if start_outside_shot("out", ball, teamA, teamB, curr_timestamp, events):
             print(f"{curr_timestamp}: Out Start")
             return []
 
     elif "goalkeeper_out" in events:
-        if start_outside_shot("goalkeeper_out", ball, teamA, teamB, curr_timestamp):
+        if start_outside_shot("goalkeeper_out", ball, teamA, teamB, curr_timestamp, events):
             return []
 
     elif "corner_shot" in events:
-        message = outside_shot("corner", ball, teamA, teamB, curr_timestamp)
+        message = outside_shot("corner", ball, teamA, teamB, curr_timestamp, events)
         if message is not None:
             return [message]
 
     elif "out_shot" in events:
-        message = outside_shot("out", ball, teamA, teamB, curr_timestamp)
+        message = outside_shot("out", ball, teamA, teamB, curr_timestamp, events)
         if message is not None:
             print(f"{curr_timestamp}: Out Shot")
             return [message]
 
     elif "goalkeeper_out_shot" in events:
-        message = outside_shot("goalkeeper_out", ball, teamA, teamB, curr_timestamp)
+        message = outside_shot("goalkeeper_out", ball, teamA, teamB, curr_timestamp, events)
         if message is not None:
             return [message]
     return []
 
 
-def start_outside_shot(event: str, ball: Ball, teamA: list, teamB: list, curr_timestamp: float):
+def start_outside_shot(event: str, ball: Ball, teamA: list, teamB: list, curr_timestamp: float, events):
     """If a outside shot is kicked, returns True and add to the events. Returns False otherwise"""
     atk_team = teamA if ball.owner.isTeamRight else teamB
 
@@ -208,7 +210,7 @@ def start_outside_shot(event: str, ball: Ball, teamA: list, teamB: list, curr_ti
     return False
 
 
-def outside_shot(event: str, ball: Ball, teamA: list, teamB: list, curr_timestamp: float):
+def outside_shot(event: str, ball: Ball, teamA: list, teamB: list, curr_timestamp: float, events):
     # The shot ends when the ball stops moving
     if has_ball_stopped(ball, teamA, teamB):
         message = Message(event=f"{event}_shot", start=events[f"{event}_shot"]["start"], end=curr_timestamp)
@@ -228,7 +230,7 @@ def has_ball_stopped(ball: Ball, teamA: list, teamB: list):
     return False
 
 
-def detect_goal_shot(ball: Ball, field: dict, goal: dict, timestamp: float):
+def detect_goal_shot(ball: Ball, field: dict, goal: dict, timestamp: float, events):
     """Detects if a goal shot is currently happening"""
     # if ball doesn't have owner, skip detection, TODO confirm with Dinis if ok
 
@@ -254,7 +256,7 @@ def detect_goal_shot(ball: Ball, field: dict, goal: dict, timestamp: float):
     return []
 
 
-def detect_defense(ball: Ball, teamA: list, teamB: list, timestamp: float):
+def detect_defense(ball: Ball, teamA: list, teamB: list, timestamp: float, events):
     if not "goal_shot" in events:
         return []
     oponent_team = teamA if ball.owner.isTeamRight else teamB
@@ -270,7 +272,7 @@ def detect_defense(ball: Ball, teamA: list, teamB: list, timestamp: float):
     return []
 
 
-def detect_aggressions(teamA: list, teamB: list, ball: Ball, distance_margin=AGGRESSION_DISTANCE_MARGIN):
+def detect_aggressions(teamA: list, teamB: list, ball: Ball, events, distance_margin=AGGRESSION_DISTANCE_MARGIN):
     """Given teams, returns a list of Aggressions."""
 
     # {
@@ -362,7 +364,7 @@ def detect_aggressions(teamA: list, teamB: list, ball: Ball, distance_margin=AGG
     return aggressions_list
 
 
-def detect_pass_or_dribble(ball: Ball, players: list, timestamp: float):
+def detect_pass_or_dribble(ball: Ball, players: list, timestamp: float, events):
     """Given the entities checks if a pass or dribble is hapening"""
 
     if "goal" in events:
@@ -441,7 +443,7 @@ def detect_pass_or_dribble(ball: Ball, players: list, timestamp: float):
     return []
 
 
-def update_formation(ball: Ball, teamA: list, teamB: list, field: dict):
+def update_formation(ball: Ball, teamA: list, teamB: list, field: dict, formation_count):
     # 0 - defender
     # 1 - midfielder
     # 2 - forwards
