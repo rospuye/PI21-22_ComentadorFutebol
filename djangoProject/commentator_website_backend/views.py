@@ -72,3 +72,12 @@ def file_upload(request):
 
     return Response(response)
 
+
+@csrf_exempt
+@api_view(['POST'])
+def chunk_upload(request):
+    print(f"{request = }")
+    print(f"{request.POST = }")
+    print(f"{request.data = }")
+
+    return Response("amogus in real life")

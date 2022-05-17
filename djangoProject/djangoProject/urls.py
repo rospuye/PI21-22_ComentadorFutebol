@@ -23,4 +23,5 @@ urlpatterns = [
     path('users/login/', views.new_login),
     path('users/register/', views.new_register),
     path('file_upload/', views.file_upload),
+    path('chunk_upload/', views.chunk_upload)
 ]
