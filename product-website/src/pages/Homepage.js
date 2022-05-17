@@ -10,6 +10,8 @@ import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import {Navbar,Nav,NavDropdown} from 'react-bootstrap'
+// import Nav from 'react-bootstrap/Navbar'
 
 // Fontawesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -18,6 +20,11 @@ import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import Img from '../images/graphic_model.PNG'
 
 import { useCookies } from 'react-cookie'
+import ParticlesBg from 'particles-bg'
+import ThreeJSCanvas from '../components/ThreeJSCanvas';
+
+import '../components/scss/button.css'
+import FocoNavbar from '../components/FocoNavbar';
 
 function Homepage() {
 
@@ -25,25 +32,15 @@ function Homepage() {
   const [cookies, setCookie] = useCookies(['logged_user'])
   console.log("cookies: " + cookies.logged_user)
 
-  return (<div style={{ padding: '1%' }}>
-
+  return (
+    <>
+    {/* //cobweb is cool */}
+    <div className='particlesBG'>
+      <ParticlesBg className="particles-bg-canvas-self" type="cobweb" bg={true} color="#DADADA" height={'100%'}/>
+    </div>
+    <div style={{ padding: '1%' }}>
     <Container>
-      <Row>
-        <Col></Col>
-        <Col></Col>
-        <Col xs lg="2">
-          {/* || cookies.logged_user == undefined */}
-          {(cookies.logged_user !== '') ?
-            <Button variant="light" onClick={() => {
-              setCookie('logged_user', '', { path: '/' })
-            }}>Logout</Button>
-            :
-            <Link to="/login">
-              <Button variant="light">Login/Register</Button>
-            </Link>
-          }
-        </Col>
-      </Row>
+      <FocoNavbar goesBack={false} hasLoginBtn={true} cookies={cookies} setCookie={setCookie}/>
     </Container>
 
     <Title title="FoCo: Football Commentator" subtitle={intro}></Title>
@@ -51,26 +48,25 @@ function Homepage() {
     <Container>
       <Row>
         <Col>
-          <div style={{ width: '100%', 'paddingLeft': '10%', paddingTop: '5%' }}>
-            <img
-              alt='Robot Model'
-              src={Img}
-              className='img-thumbnail'
-              style={{ maxWidth: '24rem', marginLeft: '10%', marginTop: '2%' }}
-            />
-          </div>
+          <ThreeJSCanvas/>
         </Col>
         <Col>
-          <div style={{ width: '100%', paddingLeft: '25%', paddingTop: '20%' }}>
+          <div style={{ width: '100%',  paddingTop: '20%', textAlign:"center" }}>
+            <p className='homepageP'><b>Enjoy the Experience!</b></p>
             <Link to="/select_game">
-              <Button variant="success" size="lg">Start <FontAwesomeIcon icon={faPlay} /></Button>
+              <button class="learn-more">
+                <span class="circle" aria-hidden="true">
+                  <span class="icon arrow"></span>
+                </span>
+                <span class="button-text">Start</span>
+              </button>
             </Link>
           </div>
         </Col>
       </Row>
     </Container>
-
-  </div>);
+  </div>
+  </>);
 }
 
 export default Homepage;

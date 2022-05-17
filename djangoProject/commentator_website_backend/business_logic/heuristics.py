@@ -473,12 +473,12 @@ def update_formation(ball: Ball, teamA: list, teamB: list, field: dict, formatio
     for player in teamA:
         places = max([0, 1, 2], key=lambda x: formation_count[player][x])
         teamA_form[places] += 1
-        form_players[player] = places
+        form_players[player.id] = places
 
     for player in teamB:
         places = max([0, 1, 2], key=lambda x: formation_count[player][x])
         teamB_form[places] += 1
-        form_players[player] = places
+        form_players[player.id] = places
 
     return [f"{teamA_form[0]}:{teamA_form[1]}:{teamA_form[2]}",
             f"{teamB_form[0]}:{teamB_form[1]}:{teamB_form[2]}"], form_players

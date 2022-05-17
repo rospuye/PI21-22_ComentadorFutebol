@@ -44,22 +44,23 @@ def new_register(request):
 @api_view(['POST'])
 def file_upload(request):
     uploaded_file = request.FILES['file']
-    # line_count = 0
-    # for line in uploaded_file:
-    #     line_count+= 1
-    # print("line count: ")
-    # print(line_count)
-
     print(type(uploaded_file))
-    events = process_log(uploaded_file)
-    events_json = {"events": []};
+    events, analytics, form, form_players = process_log(uploaded_file)
+    json_response = {"events": [], "form": form, "form_players": form_players}
     # print(str(events))
     for event in events:
-        events_json["events"].append(event.to_json())
+        json_response["events"].append(event.to_json())
+        
+    for timestamp in analytics:
+        for team in analytics[timestamp]["teams"]:
+            analytics[timestamp]["teams"][team] = analytics[timestamp]["teams"][team].to_json()
+        for player in analytics[timestamp]["players"]:
+            analytics[timestamp]["players"][player] = analytics[timestamp]["players"][player].to_json()
+    json_response["stats"] = analytics
     # print(events_json)
     # events_nl = {"texts": generate_script(events)}
     # print(f"{events = }")
-    response = generate_script(events_json['events'])
+    response = generate_script(json_response['events'], json_response["stats"])
     print(f"{response = }")
     # response = json.dumps(events_nl)
     # count = 0
@@ -69,7 +70,6 @@ def file_upload(request):
     #     print(event)
     #     count += 1
     # print(f"Total Number of Events: {len(events)}")
-
     return Response(response)
 
 

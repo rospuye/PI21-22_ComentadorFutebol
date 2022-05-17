@@ -4,6 +4,8 @@ import re
 import copy
 import time
 
+from numpy import equal
+
 # from matplotlib.font_manager import json_dump
 from entities import Position, Ball, Player
 from heuristics import process
@@ -211,15 +213,16 @@ def process_log(log, skip=1, skip_flg=False):
     tik = time.time()
     analytics_log = get_analytics(events, entities) # TODO to be sent to NL generation
     # Analytics debug prints
-    # for timestamp in analytics_log:
-    #     print(timestamp)
-    #     print("\tTeams:")
-    #     for team in analytics_log[timestamp]["teams"]:
-    #         print("\t\t",team,analytics_log[timestamp]["teams"][team])
-    #     print("\tPlayers:")
-    #     for player in analytics_log[timestamp]["players"]:
-    #         print("\t\t",player.id,analytics_log[timestamp]["players"][player])
-    # print(len(analytics_log))
+    for timestamp in analytics_log:
+        print(timestamp)
+        print("\tTeams:")
+        for team in analytics_log[timestamp]["teams"]:
+            print("\t\t",team,analytics_log[timestamp]["teams"][team])
+        print("\tPlayers:")
+        for player in analytics_log[timestamp]["players"]:
+            print("\t\t",player,analytics_log[timestamp]["players"][player])
+    print(len(analytics_log))
+    print()
     tok = time.time()
     elapsed2 = tok - tik
     print("Analytics gathered in:", elapsed2)

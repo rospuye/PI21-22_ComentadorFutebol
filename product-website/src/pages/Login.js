@@ -7,6 +7,8 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import SmallerTitle from '../components/SmallerTitle'
+import ParticlesBg from 'particles-bg'
+import FocoNavbar from '../components/FocoNavbar';
 
 import { useCookies } from 'react-cookie';
 
@@ -178,6 +180,14 @@ function Login() {
     console.log("cookies: " + cookies.logged_user)
 
     return (
+        <>
+        <div className='particlesBG'>
+            <ParticlesBg className="particles-bg-canvas-self" type="cobweb" bg={true} color="#DADADA" height={'100%'}/>
+        </div>
+        <div style={{ padding: '1%' }}>
+        <Container>
+            <FocoNavbar goesBack={true} backPage="/" hasLoginBtn={false} cookies={cookies} setCookie={setCookie}/>
+        </Container>
         <Container>
             <Row>
                 <Col xs={5} style={{ padding: "50px" }}>
@@ -201,7 +211,7 @@ function Login() {
                         </Form.Group>
                         <div style={{ textAlign: "center" }}>
                             {/* type="submit" */}
-                            <Button variant="primary" onClick={() => {
+                            <Button className='btnUpload' variant="primary" onClick={() => {
                                 handleLogin(loginUsername, loginPassword, setCookie)
                                 // console.log("logged in: " + cookies.logged_user)
                             }}>
@@ -253,7 +263,7 @@ function Login() {
                             <Form.Check type="checkbox" label="Remember me" />
                         </Form.Group>
                         <div style={{ textAlign: "center" }}>
-                            <Button variant="primary" onClick={() => {
+                            <Button className='btnUpload' variant="primary" onClick={() => {
                                 handleRegister(registerUsername, registerEmail, registerPassword, registerConfirmPassword, setCookie)
                                 // console.log("registered: " + cookies.logged_user)
                             }}>
@@ -264,6 +274,8 @@ function Login() {
                 </Col>
             </Row>
         </Container>
+        </div>
+        </>
     )
 }
 
