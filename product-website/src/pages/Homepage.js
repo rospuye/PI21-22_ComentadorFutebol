@@ -40,7 +40,7 @@ function Homepage() {
     </div>
     <div style={{ padding: '1%' }}>
     <Container>
-      <FocoNavbar goesBack={false} cookies={cookies} setCookie={setCookie}/>
+      <FocoNavbar goesBack={false} hasLoginBtn={true} cookies={cookies} setCookie={setCookie}/>
     </Container>
 
     <Title title="FoCo: Football Commentator" subtitle={intro}></Title>

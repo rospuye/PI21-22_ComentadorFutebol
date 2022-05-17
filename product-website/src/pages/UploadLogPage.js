@@ -85,7 +85,7 @@ function UploadLogPage() {
       </div>
       <div style={{ padding: '1%' }}>
       <Container>
-        <FocoNavbar goesBack={true} backPage="/select_game" cookies={cookies} setCookie={setCookie}/>
+        <FocoNavbar goesBack={true} backPage="/select_game" hasLoginBtn={true} cookies={cookies} setCookie={setCookie}/>
       </Container>
 
       <Container>

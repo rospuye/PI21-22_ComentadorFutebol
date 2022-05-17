@@ -12,7 +12,7 @@
 }
 
 .titleH3 {
-    color: #e0d8c1;
+    color: whitesmoke;
     font-family: 'Helvetica Neue', sans-serif;
     font-size: 35px;
     font-weight: bold;
@@ -20,6 +20,7 @@
     line-height: 1;
     text-align: center;
     margin-top: 5%;
+    text-shadow: 2px 2px #424242;
 }
 
 .titleH4 {
