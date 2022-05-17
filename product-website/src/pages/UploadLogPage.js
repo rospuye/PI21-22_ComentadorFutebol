@@ -13,6 +13,8 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import Form from 'react-bootstrap/Form'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Spinner from 'react-bootstrap/Spinner'
+import ParticlesBg from 'particles-bg'
+import FocoNavbar from '../components/FocoNavbar';
 
 import { useCookies } from 'react-cookie'
 import axios from 'axios'
@@ -77,28 +79,19 @@ function UploadLogPage() {
   //   inputFile.current.click()
   // }
 
-  return (
-    <>
+  return (<>
+      <div className='particlesBG'>
+      <ParticlesBg className="particles-bg-canvas-self" type="cobweb" bg={true} color="#DADADA"/>
+      </div>
+      <div style={{ padding: '1%' }}>
+      <Container>
+        <FocoNavbar goesBack={true} backPage="/select_game" cookies={cookies} setCookie={setCookie}/>
+      </Container>
 
       <Container>
         <Row>
           <Col>
-            <Link to="/select_game">
-              <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '10%', marginLeft: '2%' }} />
-            </Link>
-          </Col>
-          <Col>
             <Title title="FoCo" subtitle="Upload Your Log File"></Title>
-          </Col>
-          <Col style={{ display: 'flex', justifyContent: 'right' }}>
-            {cookies.logged_user !== '' ?
-              <Button variant="light" style={{ height: '40px', marginTop: '5%' }} onClick={() => {
-                setCookie('logged_user', '', { path: '/' })
-                window.location.href = '../select_game'
-              }}>Logout</Button>
-              :
-              <></>
-            }
           </Col>
         </Row>
       </Container>
@@ -106,7 +99,7 @@ function UploadLogPage() {
       <Container>
         <Col style={{ marginLeft: '10%', marginRight: '10%' }}>
 
-          <Row style={{ marginTop: '5%', marginBottom: '5%', display: 'flex', justifyContent: 'center' }}>
+          <Row style={{ marginTop: '5%', marginBottom: '5%', display: 'flex', justifyContent: 'center'}}>
             <DragDrop parentCallback={handleCallback} />
           </Row>
 
@@ -120,6 +113,8 @@ function UploadLogPage() {
 
           {file ?
             <Row style={{ marginBottom: '5%' }}>
+              <Col style={{paddingLeft:'20%',paddingRight:'20%'}}>
+              <Container className='logUpload'>
               <Form>
 
                 <Form.Group className="mb-3">
@@ -150,7 +145,7 @@ function UploadLogPage() {
                 </Form.Group>
 
                 <Form.Group style={{ textAlign: 'center', marginTop: '5%' }}>
-                  <Button id='confirmBtn' type="button" variant="primary" size="lg" style={{ width: '18%', margin: 'auto' }} className="formBtn" onClick={processFile}>
+                  <Button className='btnUpload' type="button" variant="primary" size="lg" style={{ width: '18%', margin: 'auto' }}  onClick={processFile}>
                     {loading ?
                       <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>
                       :
@@ -160,6 +155,8 @@ function UploadLogPage() {
                 </Form.Group>
 
               </Form>
+              </Container>
+              </Col>
             </Row>
             :
             <></>}
@@ -172,6 +169,7 @@ function UploadLogPage() {
 
         </Col>
       </Container>
+    </div>
     </>
   )
 }
