@@ -139,7 +139,7 @@ lines = {
 }
 
 
-def generate_script(events):
+def generate_script(events, stats):
     return [
         lines.get(event["event"],
                   lambda x: event_to_text(event, ["Not implemented yet :)"]))(event)
