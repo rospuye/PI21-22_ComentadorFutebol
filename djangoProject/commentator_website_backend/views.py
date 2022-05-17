@@ -5,6 +5,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 import json
 from .business_logic.log_processing import process_log
+from .business_logic.nl_processing import generate_script
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 
 @csrf_exempt
@@ -38,23 +41,34 @@ def new_register(request):
 
 
 @csrf_exempt
+@api_view(['POST'])
 def file_upload(request):
     uploaded_file = request.FILES['file']
-    line_count = 0
-    for line in uploaded_file:
-        line_count+= 1
-    print("line count: ")
-    print(line_count)
-
-    events = process_log(uploaded_file)
-
-    count = 0
+    print(type(uploaded_file))
+    events, analytics, form, form_players = process_log(uploaded_file)
+    json_response = {"events": [], "form": form, "form_players": form_players}
+    # print(str(events))
     for event in events:
-        if count>10:
-            break
-        print(event)
-        count += 1
-    print(f"Total Number of Events: {len(events)}")
-
-    return HttpResponse("file_upload_success")
+        json_response["events"].append(event.to_json())
+        
+    for timestamp in analytics:
+        for team in analytics[timestamp]["teams"]:
+            analytics[timestamp]["teams"][team] = analytics[timestamp]["teams"][team].to_json()
+        for player in analytics[timestamp]["players"]:
+            analytics[timestamp]["players"][player] = analytics[timestamp]["players"][player].to_json()
+    json_response["stats"] = analytics
+    # print(events_json)
+    # events_nl = {"texts": generate_script(events)}
+    # print(f"{events = }")
+    response = generate_script(json_response['events'], json_response["stats"])
+    print(f"{response = }")
+    # response = json.dumps(events_nl)
+    # count = 0
+    # for event in events:
+    #     if count>10:
+    #         break
+    #     print(event)
+    #     count += 1
+    # print(f"Total Number of Events: {len(events)}")
+    return Response(response)
 

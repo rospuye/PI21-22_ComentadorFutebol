@@ -13,16 +13,16 @@ class Message():
         return {"event": self.event, "start": self.start, "end": self.end, "args": {} }
 
 class Aggresion(Message):
-    def __init__(self, id1, id2, start=0, end=0) -> None:
+    def __init__(self, p1, p2, start=0, end=0) -> None:
         super().__init__("aggression", start, end)
-        self.id1 = id1
-        self.id2 = id2
+        self.p1 = p1
+        self.p2 = p2
 
     def __str__(self):
-        return f"Message: {self.event}, {self.start}, {self.end}, ({self.id1} - {self.id2})"
+        return f"Message: {self.event}, {self.start}, {self.end}, ({self.p1.id} - {self.p2.id})"
 
     def to_json(self):
-        args = { "id1": self.id1, "id2": self.id2 }
+        args = {"player_1": self.p1.to_json(), "player_2": self.p2.to_json()}
         result = super().to_json()
         result["args"] = args
         return result
