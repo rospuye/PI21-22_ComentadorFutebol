@@ -10,6 +10,8 @@ import Button from 'react-bootstrap/Button'
 import { Container } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import ParticlesBg from 'particles-bg'
+import FocoNavbar from '../components/FocoNavbar';
 
 // CSS
 import '../components/components_css/Form.css';
@@ -24,29 +26,18 @@ function ConnectToSimulatorPage() {
 
     const [cookies, setCookie] = useCookies(['logged_user'])
 
-    return (
+    return (<>
+        <div className='particlesBG'>
+        <ParticlesBg className="particles-bg-canvas-self" type="cobweb" bg={true} color="#DADADA"/>
+        </div>
         <div style={{ padding: '1%' }}>
+        <Container>
+            <FocoNavbar goesBack={true} backPage="/select_game" hasLoginBtn={true} cookies={cookies} setCookie={setCookie}/>
+        </Container>
 
             <Container>
                 <Row>
-                    <Col>
-                        <Link to="/select_game">
-                            <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '10%', marginLeft: '2%' }} />
-                        </Link>
-                    </Col>
-                    <Col>
-                        <Title title="FoCo" subtitle="Connect To Simulator"></Title>
-                    </Col>
-                    <Col style={{ display: 'flex', justifyContent: 'right' }}>
-                        {cookies.logged_user !== '' ?
-                            <Button variant="light" style={{ height: '40px', marginTop: '5%' }} onClick={() => {
-                                setCookie('logged_user', '', { path: '/' })
-                                window.location.href = '../select_game'
-                            }}>Logout</Button>
-                            :
-                            <></>
-                        }
-                    </Col>
+                   <Title title="FoCo" subtitle="Connect To Simulator"></Title>
                 </Row>
             </Container>
 
@@ -67,7 +58,7 @@ function ConnectToSimulatorPage() {
                             <Form.Group className="mb-3" controlId="formBasicCheckbox"></Form.Group>
                             <div style={{ textAlign: "center", marginTop: '5%' }}>
                             <Link to="/game_viewing">
-                                <Button variant="primary" type="submit" size="lg" className="formBtn">
+                                <Button className='btnUpload' variant="primary" type="submit" size="lg">
                                     Connect
                                 </Button>
                             </Link>
@@ -79,6 +70,7 @@ function ConnectToSimulatorPage() {
             </Container>
 
         </div>
+        </>
     )
 }
 
