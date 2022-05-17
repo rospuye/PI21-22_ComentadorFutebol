@@ -1,5 +1,6 @@
 h4 {
-    color: #e0d8c1;
+    /* color: #e0d8c1; */
+    color: whitesmoke;
     font-family: 'Open Sans', sans-serif;
     font-size: 25px;
     font-weight: 300;
@@ -7,6 +8,7 @@ h4 {
     margin-top: 2%;
     margin-inline: 10%;
     text-align: center;
+    text-shadow: 1px 1px #424242;
 }
 
 #statisticLineP {

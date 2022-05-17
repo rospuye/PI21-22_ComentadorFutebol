@@ -65,9 +65,9 @@ function PersonalitySettings() {
 
         <Container>
           <Row>
-            <Col><h4>Ready-made presets</h4></Col>
+            <Col><h4 className='titleH4'>Ready-made presets</h4></Col>
             <Col xs={6}></Col>
-            <Col><h4>Your presets</h4></Col>
+            <Col><h4 className='titleH4'>Your presets</h4></Col>
           </Row>
           <Row>
             <Col>

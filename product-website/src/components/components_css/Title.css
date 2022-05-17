@@ -1,16 +1,18 @@
-h1 {
-    color: #e0d8c1;
+.titleH1 {
+    /* color: #e0d8c1; */
+    color:whitesmoke;
     font-family: 'Helvetica Neue', sans-serif;
-    font-size: 70px;
+    font-size: 60px;
     font-weight: bold;
     letter-spacing: -1px;
     line-height: 1;
     text-align: center;
     margin-top: 5%;
+    text-shadow: 2px 2px #424242;
 }
 
-h3 {
-    color: #e0d8c1;
+.titleH3 {
+    color: whitesmoke;
     font-family: 'Helvetica Neue', sans-serif;
     font-size: 35px;
     font-weight: bold;
@@ -18,10 +20,12 @@ h3 {
     line-height: 1;
     text-align: center;
     margin-top: 5%;
+    text-shadow: 2px 2px #424242;
 }
 
-h4 {
-    color: #e0d8c1;
+.titleH4 {
+    /* color: #e0d8c1; */
+    color: whitesmoke;
     font-family: 'Open Sans', sans-serif;
     font-size: 25px;
     font-weight: 300;
@@ -31,7 +35,7 @@ h4 {
     text-align: center;
 }
 
-h5 {
+.titleh5 {
     color: white;
     font-family: 'Open Sans', sans-serif;
     font-size: 18px;
@@ -39,7 +43,7 @@ h5 {
     line-height: 32px;
 }
 
-p {
+/* p {
     color: #685206;
     font-family: 'Helvetica Neue', sans-serif;
     font-size: 14px;
@@ -47,4 +51,48 @@ p {
     margin: 0 0 24px;
     text-align: justify;
     text-justify: inter-word;
+} */
+
+.homepageP {
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 32px;
 }
+
+.particlesBG {
+    height: 100%;
+  width: 100%;
+  position: fixed;
+  z-index: -100;
+}
+
+.logUpload {
+    padding-top: 4%;
+    padding-bottom: 4%;
+    background-color: #212428;
+    border-radius: 15px;
+}
+
+.btnUpload {
+    border: 0 solid;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0);
+    outline: 1px solid;
+    outline-color: rgba(255, 255, 255, 0.5);
+    outline-offset: 0px;
+    text-shadow: none;
+    transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
+    background-color: whitesmoke;
+    color: #212428;
+  }
+  
+  .btnUpload:hover {
+    border: 1px solid;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.2);
+    outline-color: rgba(255, 255, 255, 0);
+    outline-offset: 15px;
+    text-shadow: 1px 1px 2px #427388;
+    background-color: whitesmoke;
+    color: #212428;
+  }

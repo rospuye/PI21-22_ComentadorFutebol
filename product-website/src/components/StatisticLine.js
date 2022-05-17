@@ -6,13 +6,13 @@ function StatisticLine({paramA,condition,paramB}) {
   return (
     <Row>
         <Col>
-            <h3>{paramA}</h3>
+            <h3 className='titleH3'>{paramA}</h3>
         </Col>
         <Col>
             <p id='statisticLineP'>{condition}</p>
         </Col>
         <Col>
-            <h3>{paramB}</h3>
+            <h3 className='titleH3'>{paramB}</h3>
         </Col>
     </Row>
   )
