@@ -49,7 +49,7 @@ function GameStatistics() {
       </div> */}
         <Row>
           <Col style={{ textAlign: "center" }}>
-            <h4>Team Formation</h4>
+            <h4 className="titleH4">Team Formation</h4>
             <img
               alt='Field'
               src={Img}
