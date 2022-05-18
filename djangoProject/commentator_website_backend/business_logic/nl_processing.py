@@ -3,36 +3,54 @@ import random
 from numpy import double
 from .log_processing import process_log
 
-# Energetic / Calm: en_calm
-# -50: 50% chance for calm line, 50% for neutral line
-# 0: 100% chance for neutral line
-# 50: 50% chance for energetic line, 50% for neutral line
-en_calm_mod = 0
+# Bias: bias
+# -1: favors Left team, base 25% chance to trigger a biased line
+# 0: no bias
+# 1: favors Right team, base 25% chance to trigger a biased line
 
 # Aggressive / Friendly: agr_frnd
-# -50: 50% chance for aggressive line, 50% for neutral line
-# 0: 100% chance for neutral line
-# 50: 50% chance for friendly line, 50% for neutral line
-agr_frnd_mod = 0
+# -50: 50% chance for aggressive line
+# ...
+# 0: 0% chance for emotional line
+# ...
+# 50: 50% chance for friendly line
 
-def dice_roll(mod, type : bool):
-    """
-    Returns the type of the next line based on the given modifier.
-    type: False for agr_frnd decision, True for en_calm 
-    """
+# Neutral line probability never goes below 25%
 
-    if mod == 0: return "neutral"
-    return_vals = [["aggressive","friendly"],["calm","energetic"]]
-    if random.randint(0,100) < abs(mod): # if true, return a special line, otherwise, neutral
-        return return_vals[type][mod > 0]
+class Comentary:
+    def __init__(self, text, mood, diction, timestamp) -> None:
+        self.text = text # commentary text
+        self.mood = mood # commentary emotion (aggressive/neutral/friendly)
+                         # affects robot color and expression
+        self.diction = diction # commentary diction (calm/neutral/energetic)
+                               # affects robot voice speed and pitch
+                               # calm -> lower pitched, slower diction
+                               # energetic -> higher pitched, faster diction
+        self.timestamp = timestamp # time at which the commentary must be innitiated
+
+def dice_roll(mod, bias : bool):
+    """Returns the type of the next line based on the given modifier and bias."""
+    
+    bias_prob = 30 if bias else 0
+    emotion_prob = abs(mod)
+
+    roll = random.randint(0,100) # roll for line type
+    if roll < emotion_prob:
+        emotions = ["aggressive","friendly"]
+        return emotions[mod > 0]
+    elif roll < emotion_prob+bias_prob:
+        return "biased"
     else:
         return "neutral"
 
-
-def pass_lines(event):
+def pass_lines(event, agr_frnd_mod, bias, player_name_map):
     args = event["args"]
     p1 = args["from"]
     p2 = args["to"]
+    supporting = True if p1["team"] == (bias > 0) else False
+
+    if p1 in player_name_map: p1 = player_name_map[p1]
+    if p2 in player_name_map: p2 = player_name_map[p2]
 
     lines = { 
         "neutral": {
@@ -76,20 +94,38 @@ def pass_lines(event):
                 f"pass missed! they can still bounce back though",
                 f"{p1['id']} failed their pass, I'm sure they'll get it next time"
             ]
+        },
+        "biased_supporting": {
+            "pass_success": [
+                
+            ],
+            "pass_fail": [
+                
+            ]
+        },
+        "biased_opposing": {
+            "pass_success": [
+                
+            ],
+            "pass_fail": [
+                
+            ]
         }
     }
 
     line_type = dice_roll(agr_frnd_mod, False)
-    lines_typed = lines[line_type]
-
+    if line_type == "biased":
+        line_type = line_type + ("_supporting" if supporting else "_opposing")
     if p1["team"] == p2["team"]:
-        return event_to_text(event, lines_typed["pass_success"])
+        return event_to_text(event, lines[line_type]["pass_success"])
     else:
-        return event_to_text(event, lines_typed["pass_fail"])
+        return event_to_text(event, lines[line_type]["pass_fail"])
 
-def dribble_lines(event):
+def dribble_lines(event, agr_frnd_mod, bias, player_name_map):
     args = event["args"]
     p1 = args["player"]
+
+    if p1 in player_name_map: p1 = player_name_map[p1]
 
     lines = [
         f"{p1['id']} is racing through the field",
@@ -100,9 +136,11 @@ def dribble_lines(event):
     return event_to_text(event, lines)
 
 
-def kick_off_lines(event):
+def kick_off_lines(event, agr_frnd_mod, bias, player_name_map):
     args = event["args"]
     p1 = args.get("player")
+
+    if p1 in player_name_map: p1 = player_name_map[p1]
 
     lines_without_player = [
         "and the games goes on"
@@ -117,19 +155,21 @@ def kick_off_lines(event):
     return event_to_text(event, lines)
 
 
-def goal_shot_lines(event):
+def goal_shot_lines(event, agr_frnd_mod, bias, player_name_map):
     args = event["args"]
-    player = args["player"]
+    p1= args["player"]
+
+    if p1 in player_name_map: p1 = player_name_map[p1]
 
     lines = [
-        f"{player['id']} shoots!",
+        f"{p1['id']} shoots!",
         "And he kicks"
     ]
 
     return event_to_text(event, lines)
 
 
-def goal_lines(event):
+def goal_lines(event, agr_frnd_mod, bias, player_name_map):
     args = event["args"]
     team = args["team"]
 
@@ -141,10 +181,14 @@ def goal_lines(event):
     return event_to_text(event, lines)
 
 
-def aggression_lines(event):
+def aggression_lines(event, agr_frnd_mod, bias, player_name_map):
     args = event["args"]
     p1 = args["player_1"]
     p2 = args["player_2"]
+
+    if p1 in player_name_map: p1 = player_name_map[p1]
+    if p2 in player_name_map: p2 = player_name_map[p2]
+
     lines = [
         f"{p1['id']} and {p2['id']} fall down",
         f"{p1['id']} and {p2['id']} are going at it",
@@ -154,7 +198,7 @@ def aggression_lines(event):
     return event_to_text(event, lines)
 
 
-def defense_lines(event):
+def defense_lines(event, agr_frnd_mod, bias, player_name_map):
     args = event["args"]
     team = "Right" if args["player"]["team"] else "Left"
 
@@ -166,12 +210,15 @@ def defense_lines(event):
     return event_to_text(event, lines)
 
 
-def intersect_lines(event):
+def intersect_lines(event, agr_frnd_mod, bias, player_name_map):
     args = event["args"]
-    player = args["player"]
+    p1 = args["player"]
+
+    if p1 in player_name_map: p1 = player_name_map[p1]
+
     lines = [
-        f"{player['id']} stole the ball.",
-        f"But {player['id']} intersected."
+        f"{p1['id']} stole the ball.",
+        f"But {p1['id']} intersected."
     ]
 
     return event_to_text(event, lines)
@@ -202,10 +249,12 @@ lines = {
 }
 
 
-def generate_script(events, stats):
+def generate_script(events, stats, agr_frnd_mod, en_calm_mod, bias):
+    player_name_map = generate_player_names() # ran at the start and fixed for the rest of the duration
+
     return [
         lines.get(event["event"],
-                  lambda x: event_to_text(event, ["Not implemented yet :)"]))(event)
+                  lambda x: event_to_text(event, ["Not implemented yet :)"]))(event, agr_frnd_mod, bias, player_name_map)
                   # lambda x: f"({event['start']}, {event['end']}) \'{event['event']}\' Not implemented yet :)")(event)
         for event in events
     ]
@@ -224,6 +273,22 @@ def get_stats(timestamp : double, stats : dict):
         else:
             return stats[last]
     return stats[timestamps[-1]]
+
+def generate_player_names():
+    ret = {}
+    
+    names = ["Dinis", "Isabel", "Afonso", "Miguel", "Lucius", "Joanne", "Louis", "Camila", \
+        "Dianne", "Amber", "Carl", "Martha", "Bob", "Helen", "Joseph", "Josephine", "Gared", \
+        "Ursula", "Bernard", "Kimberly", "Troy", "Ginny"]
+
+    random.shuffle(names)
+    for i in range(11):
+        idLeft = "matNum"+i+"matLeft"
+        idRight = "matNum"+i+"matRight"
+        ret[idLeft] = names[i]
+        ret[idRight] = names[i+11]
+
+    return ret
 
 if __name__ == "__main__":
 

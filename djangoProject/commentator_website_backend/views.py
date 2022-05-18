@@ -57,10 +57,16 @@ def file_upload(request):
         for player in analytics[timestamp]["players"]:
             analytics[timestamp]["players"][player] = analytics[timestamp]["players"][player].to_json()
     json_response["stats"] = analytics
+
     # print(events_json)
     # events_nl = {"texts": generate_script(events)}
     # print(f"{events = }")
-    response = generate_script(json_response['events'], json_response["stats"])
+
+    # At this stage, fetch modifiers
+    agr_frnd_mod = 0 # aggressive/friendly modifier (-50 to 50)
+    en_calm_mod = 0 # energetic/calm modifier (-50 to 50)
+    bias = 0 # -1 Left, 1 Right, 0 None
+    response = generate_script(json_response['events'], json_response["stats"], agr_frnd_mod, bias)
     print(f"{response = }")
     # response = json.dumps(events_nl)
     # count = 0
