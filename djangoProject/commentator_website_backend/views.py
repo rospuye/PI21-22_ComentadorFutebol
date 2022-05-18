@@ -8,6 +8,7 @@ from .business_logic.log_processing import process_log
 from .business_logic.nl_processing import generate_script
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from .models import Game
 
 
 @csrf_exempt
@@ -43,11 +44,17 @@ def new_register(request):
 @csrf_exempt
 @api_view(['POST'])
 def file_upload(request):
+    # game_str = request.body.decode()
+    # game_json = json.loads(game_str)
+    # filename = game_json["fileName"]
+    # print(filename)
+
     uploaded_file = request.FILES['file']
-    print(type(uploaded_file))
     events, analytics, form, form_players = process_log(uploaded_file)
     json_response = {"events": [], "form": form, "form_players": form_players}
-    # print(str(events))
+
+    # new_game = Game.objects.create(uploaded_file, )
+
     for event in events:
         json_response["events"].append(event.to_json())
         
@@ -57,18 +64,9 @@ def file_upload(request):
         for player in analytics[timestamp]["players"]:
             analytics[timestamp]["players"][player] = analytics[timestamp]["players"][player].to_json()
     json_response["stats"] = analytics
-    # print(events_json)
-    # events_nl = {"texts": generate_script(events)}
-    # print(f"{events = }")
+
     response = generate_script(json_response['events'], json_response["stats"])
     print(f"{response = }")
-    # response = json.dumps(events_nl)
-    # count = 0
-    # for event in events:
-    #     if count>10:
-    #         break
-    #     print(event)
-    #     count += 1
-    # print(f"Total Number of Events: {len(events)}")
+
     return Response(response)
 

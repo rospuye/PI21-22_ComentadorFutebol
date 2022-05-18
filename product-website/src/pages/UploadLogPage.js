@@ -173,7 +173,7 @@ function UploadLogPage() {
                 </Form.Group>
 
                 <Form.Group style={{ textAlign: 'center', marginTop: '5%' }}>
-                  <Button className='btnUpload' type="button" variant="primary" size="lg" style={{ width: '18%', margin: 'auto' }}  onClick={processFile}>
+                  <Button id='confirmBtn' className='btnUpload' type="button" variant="primary" size="lg" style={{ width: '18%', margin: 'auto' }}  onClick={processFile}>
                     {loading ?
                       <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>
                       :
