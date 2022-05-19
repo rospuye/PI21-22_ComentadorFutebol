@@ -27,7 +27,7 @@ function Robot(props) {
 
 function Scene() {
     return (
-        <Canvas style={{ width: '80%', height: '300px', marginTop: '13%' }} >
+        <Canvas className='generalCanvas'>
             <color attach="background" args={["white"]} />
             <ambientLight />
             <pointLight position={[10, 10, 10]} />

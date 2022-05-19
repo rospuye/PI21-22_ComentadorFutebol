@@ -23,6 +23,7 @@ function FocoNavbar({goesBack,backPage,hasLoginBtn,cookies,setCookie}) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
+            <Nav.Link href="/meet_foco">Meet FoCo</Nav.Link>
             <Nav.Link href="https://isabelrosario8.wixsite.com/foco">About</Nav.Link>
             {/* <Nav.Link href="#pricing">Pricing</Nav.Link>
             <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
