@@ -4,13 +4,15 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 import json
+
+from djangoProject.permissions import IsOwnerOrIsAdmin
 from .business_logic.log_processing import process_log
 from .business_logic.nl_processing import generate_script
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import generics
+from rest_framework import generics, permissions
 from .models import Game
-from .serializers import GameSerializer
+from .serializers import GameSerializer, UserSerializer
 
 NUMBER_OF_GAMES_BY_USER = 2
 
@@ -52,29 +54,45 @@ class GameList(generics.ListAPIView):
         queryset = Game.objects.all()
         query_params = self.request.query_params
         username = query_params.get('username')
-        title = query_params.get('title')
-        league = query_params.get('league')
-        group = query_params.get('matchGroup')
+        title = query_params.get('title', '')
+        league = query_params.get('league', '')
+        group = query_params.get('matchGroup', '')
         year = query_params.get('year')
-        roud = query_params.get('round')
+        roud = query_params.get('round', '')
         sort_field = query_params.get('sort')
 
         if username is not None:
             queryset = queryset.filter(user__username=username)
-        if title is not None:
-            queryset = queryset.filter(title__in=title)
-        if league is not None:
-            queryset = queryset.filter(league__in=league)
-        if group is not None:
-            queryset = queryset.filter(matchGroup__in=group)
+
+        queryset = queryset.filter(round__in=roud)
+        queryset = queryset.filter(title__in=title)
+        queryset = queryset.filter(league__in=league)
+        queryset = queryset.filter(matchGroup__in=group)
+
         if year is not None:
             queryset = queryset.filter(year=year)
-        if roud is not None:
-            queryset = queryset.filter(round=roud)
         if sort_field is not None:
             queryset = queryset.order_by(sort_field)
 
         return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class UserList(generics.ListAPIView):
+    # Access only to the admin
+    permission_classes = [permissions.IsAdminUser]
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    # Access only to the admin and to the requested user
+    permission_classes = [IsOwnerOrIsAdmin]
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
 
 @csrf_exempt
 @api_view(['POST'])
@@ -83,7 +101,7 @@ def file_upload(request):
     # game_json = json.loads(game_str)
     # filename = game_json["fileName"]
     # print(filename)
-
+    print("file uploaded")
     uploaded_file = request.FILES['file']
     data = request.data
     user_form = data["user"]

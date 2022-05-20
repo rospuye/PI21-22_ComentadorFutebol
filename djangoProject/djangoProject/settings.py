@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'commentator_website_backend.apps.CommentatorWebsiteBackendConfig',
     'corsheaders',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
