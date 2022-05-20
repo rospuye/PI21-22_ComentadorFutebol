@@ -45,7 +45,7 @@ def new_register(request):
 def file_upload(request):
     uploaded_file = request.FILES['file']
     print(type(uploaded_file))
-    events, analytics, form, form_players = process_log(uploaded_file)
+    events, analytics, form, form_players, teams = process_log(uploaded_file)
     json_response = {"events": [], "form": form, "form_players": form_players}
     # print(str(events))
     for event in events:
@@ -66,7 +66,7 @@ def file_upload(request):
     agr_frnd_mod = 0 # aggressive/friendly modifier (-50 to 50)
     en_calm_mod = 0 # energetic/calm modifier (-5 to 5)
     bias = 0 # -1 Left, 1 Right, 0 None
-    response = generate_script(json_response['events'], json_response["stats"], agr_frnd_mod, en_calm_mod, bias)
+    response = generate_script(json_response['events'], json_response["stats"], agr_frnd_mod, en_calm_mod, bias, teams)
     print(f"{response = }")
     # response = json.dumps(events_nl)
     # count = 0

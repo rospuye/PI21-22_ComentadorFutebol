@@ -68,7 +68,7 @@ def dice_roll(mod, bias : bool, supporting):
     else:
         return "neutral"
 
-def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map):
+def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams):
     timestamp = event["start"]
     statistic = get_stats(timestamp, stats)
     p1 = None
@@ -107,7 +107,7 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
 
 STATS_TIMES = []
 
-def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map):
+def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams):
 
     for t in STATS_TIMES:
         if event["start"] < t < event["end"]:
@@ -116,6 +116,7 @@ def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map):
     args = event["args"]
     p1 = args["from"]
     p2 = args["to"]
+    team = teams[1] if p1["team"] else teams[1]
     supporting = True if p1["team"] == (bias > 0) else False
 
     if p1 in player_name_map: p1['id'] = player_name_map[p1['id']]
@@ -125,11 +126,15 @@ def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map):
         "neutral": {
             "pass_success": [
                 f"{p1['id']} passes the ball to {p2['id']}",
-                f"{p1['id']} sends it to {p2['id']}"
+                f"{p1['id']} sends it to {p2['id']}",
+                f"Successful pass from the {team} team",
+                f"{team} team maintains the ball in their posession",
+                f"{team} advances with the ball"
             ],
             "pass_fail": [
                 f"{p2['id']} stole the ball",
-                f"{p1['id']} lost the ball for his team"
+                f"{p1['id']} lost the ball for his team",
+                f"Team {team} loses the ball"
             ]
         },
         "aggressive": {
@@ -188,7 +193,7 @@ def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map):
     else:
         return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type]["pass_fail"])
 
-def dribble_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map):
+def dribble_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams):
 
     for t in STATS_TIMES:
         if event["start"] < t < event["end"]:
@@ -204,7 +209,7 @@ def dribble_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map
         "neutral": {
             [
                 f"{p1['id']} is racing through the field",
-                # f"{p1['id']} has the ball!",
+                f"{p1['id']} has the ball!",
                 f"{p1['id']} is dribbling around!"
             ]
         },
@@ -231,7 +236,7 @@ def dribble_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
     return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
 
-def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map):
+def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams):
 
     for t in STATS_TIMES:
         if event["start"] < t < event["end"]:
@@ -289,7 +294,7 @@ def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_ma
     lines = lines_without_player if p1 is None else lines_with_player + lines_without_player
     return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
 
-def goal_shot_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map):
+def goal_shot_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams):
     args = event["args"]
     p1 = args["player"]
     supporting = True if p1["team"] == (bias > 0) else False
@@ -323,7 +328,7 @@ def goal_shot_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
     return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
 
 
-def goal_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map):
+def goal_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams):
     args = event["args"]
     team = args["team"]
     supporting = True if team == (bias > 0) else False
@@ -360,7 +365,7 @@ def goal_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map):
     return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
 
 
-def aggression_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map):
+def aggression_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, team):
 
     for t in STATS_TIMES:
         if event["start"] < t < event["end"]:
@@ -398,14 +403,14 @@ def aggression_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_
     return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
 
 
-def defense_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map):
+def defense_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, team):
 
     for t in STATS_TIMES:
         if event["start"] < t < event["end"]:
             return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
 
     args = event["args"]
-    team = "Right" if args["player"]["team"] else "Left"
+    team = team[1] if args["player"]["team"] else team[0]
     supporting = True if (team == "Right") == (bias > 0) else False
 
     lines = { 
@@ -441,7 +446,7 @@ def defense_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map
     return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
 
 
-def intersect_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map):
+def intersect_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, team):
     for t in STATS_TIMES:
         if event["start"] < t < event["end"]:
             return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
@@ -539,12 +544,12 @@ lines = {
 }
 
 
-def generate_script(events, stats, agr_frnd_mod, en_calm_mod, bias):
+def generate_script(events, stats, agr_frnd_mod, en_calm_mod, bias, teams):
     player_name_map = generate_player_names() # ran at the start and fixed for the rest of the duration
 
     commentary = [
         lines.get(event["event"],
-                  lambda x: event_to_text(event, ["Not implemented yet :)"]))(event, get_stats(event["start"], stats), agr_frnd_mod, en_calm_mod, bias, player_name_map)
+                  lambda x: event_to_text(event, ["Not implemented yet :)"]))(event, get_stats(event["start"], stats), agr_frnd_mod, en_calm_mod, bias, player_name_map, teams)
                   # lambda x: f"({event['start']}, {event['end']}) \'{event['event']}\' Not implemented yet :)")(event)
         for event in events
     ]
