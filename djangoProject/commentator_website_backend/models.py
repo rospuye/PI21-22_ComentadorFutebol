@@ -17,11 +17,13 @@ class Preset(models.Model):
 class Game(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     logfile = models.FileField(upload_to="logs")
+    title = models.CharField(max_length=50)
+    description = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     isPublic = models.BooleanField()
-    jasminLink = models.CharField(max_length=255)
-    league = models.CharField(max_length=255)
+    # jasminLink = models.CharField(max_length=255)
+    league = models.CharField(max_length=50)
     year = models.IntegerField()
-    round = models.CharField(max_length=255)
-    matchGroup = models.CharField(max_length=255)
+    round = models.CharField(max_length=50)
+    matchGroup = models.CharField(max_length=50)
 
