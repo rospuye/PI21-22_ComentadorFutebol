@@ -8,6 +8,7 @@ from .business_logic.log_processing import process_log
 from .business_logic.nl_processing import generate_script
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
 
 
 @csrf_exempt
@@ -44,7 +45,8 @@ def new_register(request):
 @api_view(['POST'])
 def file_upload(request):
     uploaded_file = request.FILES['file']
-    print(type(uploaded_file))
+    # print(type(uploaded_file))
+    print(f"{uploaded_file.decode() = }")
     events, analytics, form, form_players = process_log(uploaded_file)
     json_response = {"events": [], "form": form, "form_players": form_players}
     # print(str(events))
@@ -61,7 +63,7 @@ def file_upload(request):
     # events_nl = {"texts": generate_script(events)}
     # print(f"{events = }")
     response = generate_script(json_response['events'], json_response["stats"])
-    print(f"{response = }")
+    # print(f"{response = }")
     # response = json.dumps(events_nl)
     # count = 0
     # for event in events:
@@ -79,5 +81,9 @@ def chunk_upload(request):
     print(f"{request = }")
     print(f"{request.POST = }")
     print(f"{request.data = }")
+    if "simulator" not in request.data:
+        return Response("Bad Request")
+    file_lines = json.loads(request.data['simulator'])
+
 
     return Response("amogus in real life")

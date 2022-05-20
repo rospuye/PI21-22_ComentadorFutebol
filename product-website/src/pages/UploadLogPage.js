@@ -60,43 +60,43 @@ function UploadLogPage() {
 
       console.log("yup")
       tts.speak("We are starting the convertion, please wait.", hasButtonClicked) // its necessary to create the initial speak
-      // const url = 'http://127.0.0.1:8000/file_upload/';
-      const url = 'http://127.0.0.1:8000/chunk_upload/';
+      const url = 'http://127.0.0.1:8000/file_upload/';
+      // const url = 'http://127.0.0.1:8000/chunk_upload/';
       const formData = new FormData();
       formData.append('file', file);
       formData.append('fileName', title);
       formData.append('fileDescription', description);
       formData.append('filePrivacy', privacy);
 
-      let fr = new FileReader()
-      fr.onload = () => {
-        // console.log("file text", fr.result)
-        // Post used only for simulation test
-        // formData.append("simulator", fr.result)
-        const testssss = ["sus", "amogus", "rel"]
-        formData.append("simulator", JSON.stringify(testssss))
-        // for (let i = 0; i < testssss.length; i++) {
-        //   formData.append("simulator[]", testssss[i])
-        // }
+      // let fr = new FileReader()
+      // fr.onload = () => {
+      //   // console.log("file text", fr.result)
+      //   // Post used only for simulation test
+      //   // formData.append("simulator", fr.result)
+      //   const testssss = ["sus", "amogus", "rel"]
+      //   formData.append("simulator", JSON.stringify(testssss))
+      //   // for (let i = 0; i < testssss.length; i++) {
+      //   //   formData.append("simulator[]", testssss[i])
+      //   // }
 
-        axios.post(url, formData, config).then((response) => {
-          console.log("response", response)
-          // let data = response.data
-          // console.log(data);
+      //   axios.post(url, formData, config).then((response) => {
+      //     console.log("response", response)
+      //     // let data = response.data
+      //     // console.log(data);
           
-          // for (let i = 0; i < 5; i++) {
-          //   tts.emmitAudio(data[i].text, hasButtonClicked)
-          // }
+      //     // for (let i = 0; i < 5; i++) {
+      //     //   tts.emmitAudio(data[i].text, hasButtonClicked)
+      //     // }
           
-          // document.getElementById('confirmBtn').disabled = false;
-          // setLoading(false)
+      //     // document.getElementById('confirmBtn').disabled = false;
+      //     // setLoading(false)
 
 
-          // document.getElementById('confirmBtn').innerHTML = "Confirm";
-        });
-      }
+      //     // document.getElementById('confirmBtn').innerHTML = "Confirm";
+      //   });
+      // }
 
-      fr.readAsText(file)
+      // fr.readAsText(file)
 
       const config = {
         headers: {
@@ -110,7 +110,7 @@ function UploadLogPage() {
       // document.getElementById('confirmBtn').innerHTML = spinner;
       setLoading(true)
 
-      /* True post
+      // True post
       axios.post(url, formData, config).then((response) => {
         let data = response.data
         console.log(data);
@@ -123,9 +123,9 @@ function UploadLogPage() {
         setLoading(false)
 
 
-        // document.getElementById('confirmBtn').innerHTML = "Confirm";
+        document.getElementById('confirmBtn').innerHTML = "Confirm";
       });
-      */
+      
 
     }
     else {
