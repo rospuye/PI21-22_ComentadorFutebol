@@ -58,7 +58,6 @@ function UploadLogPage() {
   function processFile() {
     if (file) {
 
-      console.log("yup")
       tts.speak("We are starting the convertion, please wait.", hasButtonClicked) // its necessary to create the initial speak
       const url = 'http://127.0.0.1:8000/file_upload/';
       const formData = new FormData();
