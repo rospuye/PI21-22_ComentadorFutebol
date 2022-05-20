@@ -202,9 +202,11 @@ def dribble_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map
 
     lines = { 
         "neutral": {
-            [f"{p1['id']} is racing through the field",
-            # f"{p1['id']} has the ball!",
-            f"{p1['id']} is dribbling around!"]
+            [
+                f"{p1['id']} is racing through the field",
+                # f"{p1['id']} has the ball!",
+                f"{p1['id']} is dribbling around!"
+            ]
         },
         "aggressive": {
             []
@@ -213,10 +215,16 @@ def dribble_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map
             [] 
         },
         "biased_supporting": {
-            []
+            [
+                f"Amazing, {p1['id']} is racing through the field",
+                f"Amazing, {p1['id']} is dribbling around!"
+            ]
         },
         "biased_opposing": {
-            []
+            [
+               f"Oh no, {p1['id']} is racing through the field",
+               f"Oh no, {p1['id']} is dribbling around!"
+            ]
         }
     }
 
@@ -299,7 +307,9 @@ def goal_shot_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
             []
         }, 
         "friendly": {
-            [] 
+            [
+                f"Great kick by {p1['id']}"
+            ] 
         },
         "biased_supporting": {
             []
@@ -322,20 +332,27 @@ def goal_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map):
         "neutral": {
             [
                 f"{team} SCORES!!",
-                "Its a GOAL!!!"
             ]
         },
         "aggressive": {
-            []
+            [
+                "Its a GOAL!!!"
+            ]
         }, 
         "friendly": {
-            [] 
+            [
+                "What a great goal"
+            ] 
         },
         "biased_supporting": {
-            []
+            [
+                "GOOOOOOOOOOOOOOOOOOOOOOAAAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLl"
+            ]
         },
         "biased_opposing": {
-            []
+            [
+                f"Oh no {team} scores"
+            ]
         }
     }
 
@@ -399,16 +416,24 @@ def defense_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map
             ]
         },
         "aggressive": {
-            []
+            [
+                f"What a defense by team {team}"
+            ]
         }, 
         "friendly": {
-            [] 
+            [
+                f"Great defence"
+            ] 
         },
         "biased_supporting": {
-            []
+            [
+                f"A beutiful defense by team {team}"
+            ]
         },
         "biased_opposing": {
-            []
+            [
+                f"Dammit team {team} defends the goal"
+            ]
         }
     }
 
@@ -436,19 +461,24 @@ def intersect_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
             ]
         },
         "aggressive": {
-            []
+            [
+                f"What a steal!"
+            ]
         }, 
         "friendly": {
-            [] 
+            [
+                f"Nice intersect {p1['id']}"
+            ] 
         },
         "biased_supporting": {
             [
                 f"Amazing steal by {p1['id']}"
-                f"Terrific"
             ]
         },
         "biased_opposing": {
-            []
+            [
+                f"God dammit {p1} steals the ball"
+            ]
         }
     }
 
