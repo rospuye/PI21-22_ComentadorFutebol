@@ -5,11 +5,15 @@ import SortInput from '../components/SortInput'
 import Title from '../components/Title'
 
 import '../components/components_css/Form.css';
+
 import VideoGrid from '../components/VideoGrid'
 
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+
+import FocoNavbar from '../components/FocoNavbar';
+import ParticlesBg from 'particles-bg';
 
 import { useCookies } from 'react-cookie';
 
@@ -24,37 +28,25 @@ function SelectGamePage() {
                 <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '2%', marginLeft: '2%' }} />
             </Link>
             <Title title='FoCo' subtitle="Select Your Game" /> */}
+        <div className='particlesBG'>
+            <ParticlesBg className="particles-bg-canvas-self" type="cobweb" bg={true} color="#DADADA" height={'100%'}/>
+        </div>
+        <div style={{ padding: '1%' }}>
+            <Container>
+                <FocoNavbar goesBack={true} backPage={"/"} hasLoginBtn={true} cookies={cookies} setCookie={setCookie}/>
+            </Container>
 
             <Container>
                 <Row>
                     <Col>
-                        <Link to="/">
-                            <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '5%', marginLeft: '2%' }} />
-                        </Link>
-                    </Col>
-                    <Col>
-                        <Title title="FoCo" subtitle="Select Your Game"></Title>
-                    </Col>
-                    <Col style={{ display: 'flex', justifyContent: 'right' }}>
-                        {login ?
-                            <Button variant="light" style={{ height: '40px', marginTop: '5%' }} onClick={() => {
-                                setCookie('logged_user', '', { path: '/' })
-                                setLogin(cookies.logged_user !== '')
-                                window.location.reload()
-                            }}>Logout</Button>
-                            :
-                            <></>
-                        }
+                        <Title title="FoCo" subtitle="Select Your Game" ></Title>
                     </Col>
                 </Row>
             </Container>
 
             <Container>
                 <Row>
-                    <SortInput />
-                </Row>
-                <Row style={{ marginTop: '20px' }}>
-                    <Col xs={3}>
+                <Col xs={3}>
                         {/* Filters and Buttons */}
                         <SearchBox login={login} />
                         {login ?
@@ -72,11 +64,18 @@ function SelectGamePage() {
                             : <></>}
                     </Col>
                     <Col xs={9}>
+                        <Row style={{display:'flex',alignItems:'center',justifyContent:'right',marginTop:'2%',marginBottom:'3%'}}>
+                            <Container style={{width:'60%',marginLeft:'30%'}}>
+                                <SortInput />
+                            </Container>
+                        </Row>
+                        <Row style={{ marginTop: '20px' }}>
                         <VideoGrid login={false} yourGames={false}/>
-                        {/* Grid with videos and pages */}
+                        </Row>
                     </Col>
                 </Row>
             </Container>
+            </div>
         </>
     )
 }
