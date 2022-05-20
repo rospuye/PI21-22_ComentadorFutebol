@@ -1,5 +1,8 @@
 "use strict";
 
+let ambientLight;
+let spotLight;
+
 const helper = {
 
     initEmptyScene: function (sceneElements) {
@@ -34,13 +37,13 @@ const helper = {
         // ************************** //
         // Add ambient light
         // ************************** //
-        const ambientLight = new THREE.AmbientLight('rgb(255, 255, 255)', 0.6);
+        ambientLight = new THREE.AmbientLight('rgb(255, 255, 255)', 0.6);
         sceneElements.sceneGraph.add(ambientLight);
 
         // ***************************** //
         // Add spotlight (with shadows)
         // ***************************** //
-        const spotLight = new THREE.SpotLight('rgb(255, 255, 255)', 0.5);
+        spotLight = new THREE.SpotLight('rgb(255, 255, 255)', 0.5);
         spotLight.position.set(-5, 8, 0);
         sceneElements.sceneGraph.add(spotLight);
 

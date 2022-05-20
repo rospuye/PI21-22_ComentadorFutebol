@@ -17,6 +17,52 @@ const sceneElements = {
 // head spin counter
 let head_spin_counter = 0;
 
+/**
+ * DEBUG PANEL
+ */
+
+const gui = new dat.GUI();
+
+const parameters = {
+    neutral: () =>
+    {
+
+        head_spin_movement.to(eyebrow1.rotation, { z: 0, duration: 0 });
+        head_spin_movement.to(eyebrow2.rotation, { z: 0, duration: 0 });
+
+        gsap.to(ambientLight, { intensity: 0.6, duration: 2 });
+
+        spotLight.color = new THREE.Color(0xffffff);
+        gsap.to(spotLight.position, { x: -5, duration: 2 });
+        gsap.to(spotLight.position, { y: 8, duration: 2 });
+        gsap.to(spotLight.position, { z: 0, duration: 2 });
+        gsap.to(spotLight, { intensity: 0.5, duration: 2 });
+
+        sceneElements.sceneGraph.background = new THREE.Color( 0xf0ddaa );
+    },
+    upset: () =>
+    {
+
+        head_spin_movement.to(eyebrow1.rotation, { z: -0.2, duration: 0 });
+        head_spin_movement.to(eyebrow2.rotation, { z: 0.2, duration: 0 });
+
+        gsap.to(ambientLight, { intensity: 0.8, duration: 2 });
+        // ambientLight.intensity = 0.8;
+
+        spotLight.color = new THREE.Color(0xff0000);
+        gsap.to(spotLight.position, { x: 0, duration: 2 });
+        gsap.to(spotLight.position, { y: 10, duration: 2 });
+        gsap.to(spotLight.position, { z: 20, duration: 2 });
+        gsap.to(spotLight, { intensity: 0.3, duration: 2 });
+        // spotLight.intensity = 0.3;
+
+        sceneElements.sceneGraph.background = new THREE.Color( 0x000000 );
+    }
+}
+
+gui.add(parameters, 'neutral')
+gui.add(parameters, 'upset')
+
 helper.initEmptyScene(sceneElements); // initialize the empty scene
 load3DObjects(sceneElements.sceneGraph); // add elements within the scene
 requestAnimationFrame(computeFrame); // animate
@@ -266,9 +312,6 @@ function neutral_talking(play, headspin) {
 
 function head_spin(counter) {
 
-    const eyebrow1 = sceneElements.sceneGraph.getObjectByName("eyebrow1");
-    const eyebrow2 = sceneElements.sceneGraph.getObjectByName("eyebrow2");
-
     // stop moving head in talking-like movement
     neutral_talking(false, false);
     gsap.to(head.rotation, { x: 0, duration: 0.3 });
@@ -284,16 +327,25 @@ function head_spin(counter) {
     }
     else { // counter == 3
 
-        head_spin_movement.to(eyebrow1.rotation, { z: -0.2, duration: 0 });
-        head_spin_movement.to(eyebrow2.rotation, { z: 0.2, duration: 0 });
+        let alreadyInUpsetState = false;
+
+        if (eyebrow1.rotation.z != -0.2) {
+            head_spin_movement.to(eyebrow1.rotation, { z: -0.2, duration: 0 });
+            head_spin_movement.to(eyebrow2.rotation, { z: 0.2, duration: 0 });
+        }
+        else {
+            alreadyInUpsetState = true;
+        }
 
         head_spin_movement.to(head.position, { y: head.position.y + 0.5, duration: 0.1 });
         head_spin_movement.to(head.rotation, { y: 4 * Math.PI, duration: 1 });
         head_spin_movement.to(head.position, { y: head.position.y, duration: 0.1 });
         head_spin_movement.to(head.position, { y: head.position.y, duration: 1 });
 
-        head_spin_movement.to(eyebrow1.rotation, { z: 0, duration: 0 });
-        head_spin_movement.to(eyebrow2.rotation, { z: 0, duration: 0 });
+        if (!alreadyInUpsetState) {
+            head_spin_movement.to(eyebrow1.rotation, { z: 0, duration: 0 });
+            head_spin_movement.to(eyebrow2.rotation, { z: 0, duration: 0 });
+        }
 
         neutral_talking(true, true);
         console.log(helper)
@@ -546,6 +598,11 @@ const elbow1Joint = sceneElements.sceneGraph.getObjectByName("elbow1Joint");
 const elbow1 = sceneElements.sceneGraph.getObjectByName("elbow1");
 const elbow2Joint = sceneElements.sceneGraph.getObjectByName("elbow2Joint");
 const elbow2 = sceneElements.sceneGraph.getObjectByName("elbow2");
+
+const eyebrow1 = sceneElements.sceneGraph.getObjectByName("eyebrow1");
+const eyebrow2 = sceneElements.sceneGraph.getObjectByName("eyebrow2");
+
+// const spotLight = sceneElements.sceneGraph.getObjectByName("spotLight");
 
 let neutral_position_called = true;
 neutral_talking(true, false);
