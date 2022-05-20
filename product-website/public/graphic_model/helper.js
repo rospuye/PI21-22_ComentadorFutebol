@@ -27,8 +27,8 @@ const helper = {
         // ************************** //
         // Control for the camera
         // ************************** //
-        sceneElements.control = new THREE.OrbitControls(camera);
-        sceneElements.control.screenSpacePanning = true;
+        // sceneElements.control = new THREE.OrbitControls(camera);
+        // sceneElements.control.screenSpacePanning = true;
 
         // ************************** //
         // Illumination
