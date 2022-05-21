@@ -58,6 +58,8 @@ def process_log(log, skip=1, skip_flg=False):
     events_dict = {}
     formation_counts = {}
     timestamp = 0
+    left = ""
+    right = ""
     # ((FieldLength 30)(FieldWidth 20)(FieldHeight 40)(GoalWidth 2.1)(GoalDepth 0.6)(GoalHeight 0.8)
     for line in log:
         line = line.decode()
@@ -75,6 +77,15 @@ def process_log(log, skip=1, skip_flg=False):
         goalParams["height"] = float(tmp[11])
         print("Goal Height:", goalParams["height"])
         break
+    for line in log:
+        tmp = re.findall("\(team_left .*?\)", line)
+        tmp2 = re.findall("\(team_right .*?\)", line)
+        if tmp:
+            left = tmp[0].split(" ")[1].rstrip(")")
+        if tmp2:
+            right = tmp2[0].split(" ")[1].rstrip(")")
+        if left and right:
+            break
     c = 0
     for line in log:
         line = line.decode()
@@ -226,7 +237,7 @@ def process_log(log, skip=1, skip_flg=False):
     elapsed2 = tok - tik
     print("Analytics gathered in:", elapsed2)
     print("Total processing time:", elapsed+elapsed2)
-    return events, analytics_log, form, form_players
+    return events, analytics_log, form, form_players, [left, right]
 
 
 if __name__ == "__main__":
