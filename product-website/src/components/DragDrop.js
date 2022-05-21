@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 
-const fileTypes = ["LOG"];
+const fileTypes = ["LOG", "RPL3D"];
 
 function DragDrop(props) {
 
@@ -14,7 +14,6 @@ function DragDrop(props) {
     const handleChange = (file) => {
         setFile(file);
         if (file) {
-            // document.getElementById('confirmBtn').disabled = false;
             onTrigger(file, file.name);
         }
     };

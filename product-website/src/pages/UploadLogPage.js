@@ -23,9 +23,9 @@ import TTS from '../components/TTS'
 function UploadLogPage() {
 
   const [cookies, setCookie] = useCookies(['logged_user', 'token'])
-  // const inputFile = useRef(null)
 
-  const [file, setFile] = useState(null)
+  const [logFile, setLogFile] = useState(null)
+  const [replayFile, setReplayFile] = useState(null)
 
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
@@ -63,14 +63,14 @@ function UploadLogPage() {
   }
 
   function processFile() {
-    if (file) {
+    if (logFile) {
 
       if (validateFormField(title) && validateFormField(league) && validateFormField(round) && validateFormField(matchGroup)) {
 
         tts.speak("We are starting the convertion, please wait.", hasButtonClicked) // its necessary to create the initial speak
         const url = process.env.REACT_APP_API_URL + 'file_upload/';
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('logFile', logFile);
         formData.append('user', cookies.logged_user);
         formData.append('title', title);
         formData.append('description', description);
@@ -141,13 +141,14 @@ function UploadLogPage() {
   }
 
   function handleCallback(file, filename) {
-    setFile(file);
-    setTitle(filename);
+    if (file.name.endsWith(".log")) {
+      setLogFile(file);
+      setTitle(filename);
+    }
+    else if (file.name.endsWith(".rpl3d")) {
+      setReplayFile(file);
+    }
   }
-
-  // const onButtonClick = () => {
-  //   inputFile.current.click()
-  // }
 
   return (<>
     <div className='particlesBG'>
@@ -169,19 +170,12 @@ function UploadLogPage() {
       <Container>
         <Col style={{ marginLeft: '10%', marginRight: '10%' }}>
 
-          <Row style={{ marginTop: '5%', marginBottom: '5%', display: 'flex', justifyContent: 'center' }}>
+          <Row className='text-center' style={{ marginTop: '5%', marginBottom: '5%', display: 'flex', justifyContent: 'center' }}>
+            <h6 style={{ color: 'white' }}>Upload both a log file and a replay file of your game!</h6>
             <DragDrop parentCallback={handleCallback} />
           </Row>
 
-          {/* <Row style={{ textAlign: 'center' }}>
-            <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(event) => {
-              setFile(event.target.files[0])
-              setTitle(event.target.files[0].name)
-              document.getElementById('confirmBtn').disabled = false
-            }} />
-          </Row> */}
-
-          {file ?
+          {(logFile && replayFile) ?
             <Row style={{ marginBottom: '5%' }}>
               <Col style={{ paddingLeft: '20%', paddingRight: '20%' }}>
                 <Container className='logUpload'>
@@ -189,7 +183,7 @@ function UploadLogPage() {
 
                     <Form.Group className="mb-3">
                       <Form.Label>Title</Form.Label>
-                      <Form.Control type="text" placeholder="Enter title" defaultValue={file.name} onChange={(e) => { setTitle(e.target.value) }} />
+                      <Form.Control type="text" placeholder="Enter title" defaultValue={logFile.name} onChange={(e) => { setTitle(e.target.value) }} />
                       {/* style={{ display: 'none' }} */}
                       <Form.Text className="text-muted errorMessage" id="titleWarning" style={{ display: 'none' }}>
                         This title is not long enough.
@@ -271,12 +265,6 @@ function UploadLogPage() {
             </Row>
             :
             <></>}
-
-          {/* <Row>
-            <Button variant="primary" type="submit" size="lg" style={{ width: '18%', margin: 'auto' }} className="formBtn" onClick={onButtonClick}>
-              Load
-            </Button>
-          </Row> */}
 
         </Col>
       </Container>
