@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'commentator_website_backend.apps.CommentatorWebsiteBackendConfig',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [

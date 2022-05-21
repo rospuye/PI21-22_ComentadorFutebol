@@ -1,6 +1,6 @@
 import django.db.utils
 from django.contrib.auth import authenticate
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 import json
@@ -11,6 +11,7 @@ from .business_logic.nl_processing import generate_script
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import generics, permissions
+from rest_framework.authtoken.models import Token
 from .models import Game
 from .serializers import GameSerializer, UserSerializer
 
@@ -27,8 +28,9 @@ def new_login(request):
     user = authenticate(username=username, password=password)
 
     if user is not None:
-        return HttpResponse("login_success")
-    return HttpResponse("login_failure")
+        token = Token.objects.get(user=user)
+        return JsonResponse({"message": "login_success", "token": token.key})
+    return JsonResponse({"message": "login_failure"})
 
 
 @csrf_exempt
@@ -42,9 +44,11 @@ def new_register(request):
     try:
         user = User.objects.create_user(username, email, password)
         user.save()
-        return HttpResponse("register_success")
+        token = Token.objects.create(user=user)
+        print(f"register {token.key = }")
+        return JsonResponse({"message": "register_success", "token": token.key})
     except django.db.utils.IntegrityError:
-        return HttpResponse("username_already_in_use")
+        return JsonResponse({"message": "username_already_in_use"})
 
 
 class GameList(generics.ListAPIView):
@@ -102,6 +106,7 @@ def file_upload(request):
     # filename = game_json["fileName"]
     # print(filename)
     print("file uploaded")
+    print(f"{request.COOKIES = }")
     uploaded_file = request.FILES['file']
     data = request.data
     user_form = data["user"]
@@ -112,6 +117,12 @@ def file_upload(request):
     year = data["year"]
     roud = data["round"]
     matchGroup = data["matchGroup"]
+
+    user = User.objects.get(username=user_form)
+    print(f"{user = }")
+    if len(user) != 0:
+        token = Token.objects.get(user=user[0])
+        print(f"upload {token.key = }")
 
     user_games = Game.objects.get(user__username=user_form)
 

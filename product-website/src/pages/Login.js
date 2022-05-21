@@ -98,12 +98,13 @@ function handleLogin(username, password, setCookie) {
 
         axios.post(`http://127.0.0.1:8000/users/login/`, user)
             .then(res => {
-                console.log(res);
-                if (res.data === 'login_success') {
+                console.log(res)
+                console.log(res.data);
+                if (res.data.message === 'login_success') {
                     setCookie('logged_user', username, {path: '/', maxAge: '3600'})
                     window.location.href = '../select_game'
                 }
-                else if (res.data === 'login_failure') {
+                else if (res.data.message === 'login_failure') {
                     document.getElementById("loginWarning").style.display = 'block'
                     setCookie('logged_user', '', {path: '/'})
                 }
@@ -151,11 +152,11 @@ function handleRegister(username, email, password, conf_password, setCookie) {
         axios.post(`http://127.0.0.1:8000/users/register/`, user)
             .then(res => {
                 console.log(res.data);
-                if (res.data === 'register_success') {
+                if (res.data.message === 'register_success') {
                     setCookie('logged_user', username, {path: '/', maxAge: '3600'})
                     window.location.href = '../select_game'
                 }
-                else if (res.data === 'username_already_in_use') {
+                else if (res.data.message === 'username_already_in_use') {
                     document.getElementById("registerUniqueUsernameWarning").style.display = 'block'
                     setCookie('logged_user', '', {path: '/'})
                 }
