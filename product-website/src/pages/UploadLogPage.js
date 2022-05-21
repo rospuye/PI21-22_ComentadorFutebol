@@ -22,7 +22,7 @@ import TTS from '../components/TTS'
 
 function UploadLogPage() {
 
-  const [cookies, setCookie] = useCookies(['logged_user'])
+  const [cookies, setCookie] = useCookies(['logged_user', 'token'])
   // const inputFile = useRef(null)
 
   const [file, setFile] = useState(null)
@@ -79,9 +79,11 @@ function UploadLogPage() {
         formData.append('year', year);
         formData.append('round', round);
         formData.append('matchGroup', matchGroup);
+        console.log("token", `Token ${cookies.token}`)
         const config = {
           headers: {
             'content-type': 'multipart/form-data',
+            'Authorization': `Token ${cookies.token}`
             // 'Access-Control-Allow-Origin': 'http://localhost:3001'
           },
         };
