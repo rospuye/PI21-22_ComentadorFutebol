@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 
-const fileTypes = ["LOG", "RPL3D"];
+const fileTypes = ["LOG", "REPLAY"];
 
 function DragDrop(props) {
 

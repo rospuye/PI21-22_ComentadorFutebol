@@ -15,7 +15,7 @@ from rest_framework.authtoken.models import Token
 from .models import Game
 from .serializers import GameSerializer, UserSerializer
 
-NUMBER_OF_GAMES_BY_USER = 2
+NUMBER_OF_GAMES_BY_USER = 10
 
 
 @csrf_exempt
@@ -109,41 +109,35 @@ def file_upload(request):
     # filename = game_json["fileName"]
     # print(filename)
     print("file uploaded")
-    print(f"{request.COOKIES = }")
-    print(f"{request.user = }")
-    print(f"{request.user.username = }")
-    print(f"{request.auth = }")
-    log_file = request.FILES['file']
+    log_file = request.FILES['logFile']
+    replay_file = request.FILES['replayFile']
     data = request.data
-    user_form = data["user"]
+    # user_form = data["user"]
     title = data["title"]
     description = data["description"]
-    isPublic = data["isPublic"]
+    is_public = True if data["isPublic"] == "Public" else False
     league = data["league"]
-    year = data["year"]
+    try:
+        year = int(data["year"])
+    except:
+        return JsonResponse({"message": "Year invalid"})
     roud = data["round"]
-    matchGroup = data["matchGroup"]
+    match_group = data["matchGroup"]
 
-    user = User.objects.get(username=user_form)
-    print(f"{user = }")
-    if user is not None:
-        token = Token.objects.get(user=user)
-        print(f"upload {token.key = }")
+    user = request.user
+    if user.is_anonymous:
+        return JsonResponse({"detail": "Authentication credentials were not provided."})
 
-    # user_games = Game.objects.get(user__username=user_form)
+    # try:
+    user_games = Game.objects.filter(user__username=user.username)
+    # except Game.DoesNotExist:
+    #     user_games = []
 
-    # if len(user_games) >= NUMBER_OF_GAMES_BY_USER:
-    #     return JsonResponse({"error": "Reached number of games by given user."})
-
-    # game = Game(replay_file=log_file, title=title, description=description,
-    #             isPublic=isPublic, league=league, year=year, round=roud, matchGroup=matchGroup)
-    #
-    # game.save()
+    if len(user_games) >= NUMBER_OF_GAMES_BY_USER:
+        return JsonResponse({"error": "Reached number of games by given user."})
 
     events, analytics, form, form_players = process_log(log_file)
     json_response = {"events": [], "form": form, "form_players": form_players}
-
-    # new_game = Game.objects.create(uploaded_file, )
 
     for event in events:
         json_response["events"].append(event.to_json())
@@ -156,6 +150,13 @@ def file_upload(request):
     json_response["stats"] = analytics
 
     response = generate_script(json_response['events'], json_response["stats"])
-    print(f"{response = }")
+    # print(f"{response = }")
+    print(f"{json_response = }")
+
+    game = Game(replay_file=replay_file, title=title, description=description, user=user,
+                is_public=is_public, league=league, year=year, round=roud, match_group=match_group,
+                processed_data=json_response)
+
+    game.save()
 
     return Response(response)

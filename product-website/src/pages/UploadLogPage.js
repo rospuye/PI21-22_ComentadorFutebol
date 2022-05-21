@@ -31,7 +31,7 @@ function UploadLogPage() {
   const [description, setDescription] = useState("")
   const [privacy, setPrivacy] = useState("Private")
   const [league, setLeague] = useState("")
-  const [year, setYear] = useState("")
+  const [year, setYear] = useState("2022")
   const [round, setRound] = useState("")
   const [matchGroup, setMatchGroup] = useState("")
 
@@ -63,7 +63,7 @@ function UploadLogPage() {
   }
 
   function processFile() {
-    if (logFile) {
+    if (logFile && replayFile) {
 
       if (validateFormField(title) && validateFormField(league) && validateFormField(round) && validateFormField(matchGroup)) {
 
@@ -71,12 +71,14 @@ function UploadLogPage() {
         const url = process.env.REACT_APP_API_URL + 'file_upload/';
         const formData = new FormData();
         formData.append('logFile', logFile);
-        formData.append('user', cookies.logged_user);
+        formData.append('replayFile', replayFile)
+        // formData.append('user', cookies.logged_user);
         formData.append('title', title);
         formData.append('description', description);
         formData.append('isPublic', privacy);
         formData.append('league', league);
         formData.append('year', year);
+        console.log("year", year)
         formData.append('round', round);
         formData.append('matchGroup', matchGroup);
         console.log("token", `Token ${cookies.token}`)
@@ -145,7 +147,7 @@ function UploadLogPage() {
       setLogFile(file);
       setTitle(filename);
     }
-    else if (file.name.endsWith(".rpl3d")) {
+    else if (file.name.endsWith(".replay")) {
       setReplayFile(file);
     }
   }
@@ -229,6 +231,7 @@ function UploadLogPage() {
                         else if (e.target.value < 1900) {
                           document.getElementById("game_year").value = 1900;
                         }
+                        console.log("sus year", e.target.value)
                         setYear(e.target.value)
                       }} />
                     </Form.Group>

@@ -6,7 +6,8 @@ from django.contrib.auth.models import User
 class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
-        fields = ['id', 'logfile', 'title', 'description', 'user', 'isPublic', 'league', 'year', 'round', 'matchGroup']
+        fields = ['id', 'replay_file', 'title', 'description', 'user', 'is_public', 'league', 'year', 'round',
+                  'match_group', 'processed_data']
 
 
 class GameViewSet(viewsets.ModelViewSet):
