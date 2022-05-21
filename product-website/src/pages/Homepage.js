@@ -29,8 +29,9 @@ import FocoNavbar from '../components/FocoNavbar';
 function Homepage() {
 
   let intro = "Automatic system for natural language commentary of robotic football games.";
-  const [cookies, setCookie] = useCookies(['logged_user'])
-  console.log("cookies: " + cookies.logged_user)
+  const [cookies, setCookie] = useCookies(['logged_user', 'token'])
+  console.log("logged_user: " + cookies.logged_user)
+  console.log("token: " + cookies.token)
 
   return (
     <>
@@ -54,11 +55,11 @@ function Homepage() {
           <div style={{ width: '100%',  paddingTop: '20%', textAlign:"center" }}>
             <p className='homepageP'><b>Enjoy the Experience!</b></p>
             <Link to="/select_game">
-              <button class="learn-more">
-                <span class="circle" aria-hidden="true">
-                  <span class="icon arrow"></span>
+              <button className="learn-more">
+                <span className="circle" aria-hidden="true">
+                  <span className="icon arrow"></span>
                 </span>
-                <span class="button-text">Start</span>
+                <span className="button-text">Start</span>
               </button>
             </Link>
           </div>
