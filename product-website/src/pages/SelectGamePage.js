@@ -39,6 +39,7 @@ function SelectGamePage() {
                         {login ?
                             <Button variant="light" style={{ height: '40px', marginTop: '5%' }} onClick={() => {
                                 setCookie('logged_user', '', { path: '/' })
+                                setCookie('token', '', {path: '/'})
                                 setLogin(cookies.logged_user !== '')
                                 window.location.reload()
                             }}>Logout</Button>

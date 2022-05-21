@@ -34,6 +34,7 @@ function YourGamesPage() {
                         {cookies.logged_user !== '' ?
                             <Button variant="light" style={{ height: '40px', marginTop: '5%' }} onClick={() => {
                                 setCookie('logged_user', '', { path: '/' })
+                                setCookie('token', '', {path: '/'})
                                 window.location.href = '../select_game'
                             }}>Logout</Button>
                             :

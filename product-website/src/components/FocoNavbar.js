@@ -38,6 +38,7 @@ function FocoNavbar({goesBack,backPage,hasLoginBtn,cookies,setCookie}) {
           {(cookies.logged_user !== '') ?
             <Button className='loginButton' variant="light" onClick={() => {
               setCookie('logged_user', '', { path: '/' })
+              setCookie('token', '', {path: '/'})
             }}>Logout</Button>
             :
             <Link to="/login">

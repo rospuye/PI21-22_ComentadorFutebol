@@ -102,11 +102,17 @@ function handleLogin(username, password, setCookie) {
                 console.log(res.data);
                 if (res.data.message === 'login_success') {
                     setCookie('logged_user', username, {path: '/', maxAge: '3600'})
+                    // setCookie('token', res.data.token, {path: '/', maxAge: '3600'})
+
+                    // console.log("logged_user: " + cookies.logged_user)
+                    // console.log("token: " + cookies.token)
+
                     window.location.href = '../select_game'
                 }
                 else if (res.data.message === 'login_failure') {
                     document.getElementById("loginWarning").style.display = 'block'
                     setCookie('logged_user', '', {path: '/'})
+                    setCookie('token', '', {path: '/'})
                 }
             })
     }
@@ -154,11 +160,17 @@ function handleRegister(username, email, password, conf_password, setCookie) {
                 console.log(res.data);
                 if (res.data.message === 'register_success') {
                     setCookie('logged_user', username, {path: '/', maxAge: '3600'})
+                    setCookie('token', res.data.token, {path: '/', maxAge: '3600'})
+
+                    console.log("logged_user: " + cookies.logged_user)
+                    console.log("token: " + cookies.token)
+
                     window.location.href = '../select_game'
                 }
                 else if (res.data.message === 'username_already_in_use') {
                     document.getElementById("registerUniqueUsernameWarning").style.display = 'block'
                     setCookie('logged_user', '', {path: '/'})
+                    setCookie('token', '', {path: '/'})
                 }
             })
 
@@ -176,9 +188,8 @@ function Login() {
     const [registerPassword, setRegisterPassword] = useState('');
     const [registerConfirmPassword, setRegisterConfirmPassword] = useState('');
 
-    const [cookies, setCookie] = useCookies(['logged_user'])
+    const [cookies, setCookie] = useCookies(['logged_user', 'token'])
     // setCookie('logged_user', '', {path: '/'})
-    console.log("cookies: " + cookies.logged_user)
 
     return (
         <>
