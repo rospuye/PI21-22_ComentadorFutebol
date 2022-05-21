@@ -16,7 +16,7 @@ class Preset(models.Model):
 
 class Game(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    logfile = models.FileField(upload_to="logs")
+    replay_file = models.FileField(upload_to="replays")
     title = models.CharField(max_length=50)
     description = models.CharField(max_length=255)
     user = models.ForeignKey(User, related_name="games", on_delete=models.CASCADE)

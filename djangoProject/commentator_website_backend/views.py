@@ -55,6 +55,9 @@ class GameList(generics.ListAPIView):
     serializer_class = GameSerializer
 
     def get_queryset(self):
+        print(f"{self.request.user = }")
+        print(f"{self.request.auth = }")
+
         queryset = Game.objects.all()
         query_params = self.request.query_params
         username = query_params.get('username')
@@ -107,7 +110,10 @@ def file_upload(request):
     # print(filename)
     print("file uploaded")
     print(f"{request.COOKIES = }")
-    uploaded_file = request.FILES['file']
+    print(f"{request.user = }")
+    print(f"{request.user.username = }")
+    print(f"{request.auth = }")
+    log_file = request.FILES['file']
     data = request.data
     user_form = data["user"]
     title = data["title"]
@@ -120,21 +126,21 @@ def file_upload(request):
 
     user = User.objects.get(username=user_form)
     print(f"{user = }")
-    if len(user) != 0:
-        token = Token.objects.get(user=user[0])
+    if user is not None:
+        token = Token.objects.get(user=user)
         print(f"upload {token.key = }")
 
-    user_games = Game.objects.get(user__username=user_form)
+    # user_games = Game.objects.get(user__username=user_form)
 
-    if len(user_games) >= NUMBER_OF_GAMES_BY_USER:
-        return Response({"error": "Reached number of games by given user."})
+    # if len(user_games) >= NUMBER_OF_GAMES_BY_USER:
+    #     return JsonResponse({"error": "Reached number of games by given user."})
 
-    game = Game(logfile=uploaded_file, title=title, description=description,
-                isPublic=isPublic, league=league, year=year, round=roud, matchGroup=matchGroup)
+    # game = Game(replay_file=log_file, title=title, description=description,
+    #             isPublic=isPublic, league=league, year=year, round=roud, matchGroup=matchGroup)
+    #
+    # game.save()
 
-    game.save()
-
-    events, analytics, form, form_players = process_log(uploaded_file)
+    events, analytics, form, form_players = process_log(log_file)
     json_response = {"events": [], "form": form, "form_players": form_players}
 
     # new_game = Game.objects.create(uploaded_file, )

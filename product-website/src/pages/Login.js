@@ -102,7 +102,7 @@ function handleLogin(username, password, setCookie) {
                 console.log(res.data);
                 if (res.data.message === 'login_success') {
                     setCookie('logged_user', username, {path: '/', maxAge: '3600'})
-                    // setCookie('token', res.data.token, {path: '/', maxAge: '3600'})
+                    setCookie('token', res.data.token, {path: '/', maxAge: '3600'})
 
                     // console.log("logged_user: " + cookies.logged_user)
                     // console.log("token: " + cookies.token)

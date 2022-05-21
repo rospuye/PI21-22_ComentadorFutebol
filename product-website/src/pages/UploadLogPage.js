@@ -22,7 +22,7 @@ import TTS from '../components/TTS'
 
 function UploadLogPage() {
 
-  const [cookies, setCookie] = useCookies(['logged_user'])
+  const [cookies, setCookie] = useCookies(['logged_user', 'token'])
   // const inputFile = useRef(null)
 
   const [file, setFile] = useState(null)
@@ -69,6 +69,8 @@ function UploadLogPage() {
 
         tts.speak("We are starting the convertion, please wait.", hasButtonClicked) // its necessary to create the initial speak
         const url = 'http://127.0.0.1:8000/file_upload/';
+        // const url = 'http://127.0.0.1:8000/test-games/';
+
         const formData = new FormData();
         formData.append('file', file);
         formData.append('user', cookies.logged_user);
@@ -79,9 +81,11 @@ function UploadLogPage() {
         formData.append('year', year);
         formData.append('round', round);
         formData.append('matchGroup', matchGroup);
+        console.log("token", `Token ${cookies.token}`)
         const config = {
           headers: {
             'content-type': 'multipart/form-data',
+            'Authorization': `Token ${cookies.token}`
             // 'Access-Control-Allow-Origin': 'http://localhost:3001'
           },
         };
