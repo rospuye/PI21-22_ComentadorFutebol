@@ -50,7 +50,7 @@ def file_upload(request):
     # print(filename)
 
     uploaded_file = request.FILES['file']
-    events, analytics, form, form_players = process_log(uploaded_file)
+    events, analytics, form, form_players, teams = process_log(uploaded_file)
     json_response = {"events": [], "form": form, "form_players": form_players}
 
     # new_game = Game.objects.create(uploaded_file, )
@@ -65,7 +65,15 @@ def file_upload(request):
             analytics[timestamp]["players"][player] = analytics[timestamp]["players"][player].to_json()
     json_response["stats"] = analytics
 
-    response = generate_script(json_response['events'], json_response["stats"])
+    # print(events_json)
+    # events_nl = {"texts": generate_script(events)}
+    # print(f"{events = }")
+
+    # At this stage, fetch modifiers
+    agr_frnd_mod = 0 # aggressive/friendly modifier (-50 to 50)
+    en_calm_mod = 0 # energetic/calm modifier (-5 to 5)
+    bias = 0 # -1 Left, 1 Right, 0 None
+    response = generate_script(json_response['events'], json_response["stats"], agr_frnd_mod, en_calm_mod, bias, teams)
     print(f"{response = }")
 
     return Response(response)
