@@ -144,6 +144,8 @@ def file_upload(request):
     json_response = {"events": [], "form": form, "form_players": form_players}
 
     # new_game = Game.objects.create(uploaded_file, )
+    if len(events) < 10:
+        return Response({"message": "Processing Failed"})
 
     for event in events:
         json_response["events"].append(event.to_json())
@@ -155,6 +157,7 @@ def file_upload(request):
             analytics[timestamp]["players"][player] = analytics[timestamp]["players"][player].to_json()
     json_response["stats"] = analytics
 
+    # Another endpoint?
     response = generate_script(json_response['events'], json_response["stats"])
     print(f"{response = }")
 
