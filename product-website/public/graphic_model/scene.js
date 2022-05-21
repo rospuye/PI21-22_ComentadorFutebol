@@ -21,47 +21,47 @@ let head_spin_counter = 0;
  * DEBUG PANEL
  */
 
-const gui = new dat.GUI();
+// const gui = new dat.GUI();
 
-const parameters = {
-    neutral: () =>
-    {
+// const parameters = {
+//     neutral: () =>
+//     {
 
-        head_spin_movement.to(eyebrow1.rotation, { z: 0, duration: 0 });
-        head_spin_movement.to(eyebrow2.rotation, { z: 0, duration: 0 });
+//         head_spin_movement.to(eyebrow1.rotation, { z: 0, duration: 0 });
+//         head_spin_movement.to(eyebrow2.rotation, { z: 0, duration: 0 });
 
-        gsap.to(ambientLight, { intensity: 0.6, duration: 2 });
+//         gsap.to(ambientLight, { intensity: 0.6, duration: 2 });
 
-        spotLight.color = new THREE.Color(0xffffff);
-        gsap.to(spotLight.position, { x: -5, duration: 2 });
-        gsap.to(spotLight.position, { y: 8, duration: 2 });
-        gsap.to(spotLight.position, { z: 0, duration: 2 });
-        gsap.to(spotLight, { intensity: 0.5, duration: 2 });
+//         spotLight.color = new THREE.Color(0xffffff);
+//         gsap.to(spotLight.position, { x: -5, duration: 2 });
+//         gsap.to(spotLight.position, { y: 8, duration: 2 });
+//         gsap.to(spotLight.position, { z: 0, duration: 2 });
+//         gsap.to(spotLight, { intensity: 0.5, duration: 2 });
 
-        sceneElements.sceneGraph.background = new THREE.Color( 0xf0ddaa );
-    },
-    upset: () =>
-    {
+//         sceneElements.sceneGraph.background = new THREE.Color( 0xf0ddaa );
+//     },
+//     upset: () =>
+//     {
 
-        head_spin_movement.to(eyebrow1.rotation, { z: -0.2, duration: 0 });
-        head_spin_movement.to(eyebrow2.rotation, { z: 0.2, duration: 0 });
+//         head_spin_movement.to(eyebrow1.rotation, { z: -0.2, duration: 0 });
+//         head_spin_movement.to(eyebrow2.rotation, { z: 0.2, duration: 0 });
 
-        gsap.to(ambientLight, { intensity: 0.8, duration: 2 });
-        // ambientLight.intensity = 0.8;
+//         gsap.to(ambientLight, { intensity: 0.8, duration: 2 });
+//         // ambientLight.intensity = 0.8;
 
-        spotLight.color = new THREE.Color(0xff0000);
-        gsap.to(spotLight.position, { x: 0, duration: 2 });
-        gsap.to(spotLight.position, { y: 10, duration: 2 });
-        gsap.to(spotLight.position, { z: 20, duration: 2 });
-        gsap.to(spotLight, { intensity: 0.3, duration: 2 });
-        // spotLight.intensity = 0.3;
+//         spotLight.color = new THREE.Color(0xff0000);
+//         gsap.to(spotLight.position, { x: 0, duration: 2 });
+//         gsap.to(spotLight.position, { y: 10, duration: 2 });
+//         gsap.to(spotLight.position, { z: 20, duration: 2 });
+//         gsap.to(spotLight, { intensity: 0.3, duration: 2 });
+//         // spotLight.intensity = 0.3;
 
-        sceneElements.sceneGraph.background = new THREE.Color( 0x000000 );
-    }
-}
+//         sceneElements.sceneGraph.background = new THREE.Color( 0x000000 );
+//     }
+// }
 
-gui.add(parameters, 'neutral')
-gui.add(parameters, 'upset')
+// gui.add(parameters, 'neutral')
+// gui.add(parameters, 'upset')
 
 helper.initEmptyScene(sceneElements); // initialize the empty scene
 load3DObjects(sceneElements.sceneGraph); // add elements within the scene
@@ -652,7 +652,7 @@ function computeFrame(time) {
     // Rendering
     helper.render(sceneElements);
     // Update control of the camera
-    sceneElements.control.update();
+    // sceneElements.control.update();
     // Call for the next frame
     requestAnimationFrame(computeFrame);
 }
