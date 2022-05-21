@@ -176,3 +176,24 @@ def file_upload(request):
     return Response({'game_id': serializer.data['id']})
 
     # return Response(response)
+
+
+@csrf_exempt
+@api_view(['POST'])
+def generate_script(request):
+    
+    # fetch game event in db
+
+    # process script with preset data
+
+
+    mock_script = "LET THE GAME BEGING"
+    return Response({"script": mock_script, "replay_file": None})
+
+
+@csrf_exempt
+@api_view(['GET'])
+def get_commentators(request):
+    """ returns the presets of commentators for the user """
+   
+    return Response({})
