@@ -156,7 +156,7 @@ def file_upload(request):
     # Another endpoint?
     response = generate_script(json_response['events'], json_response["stats"])
     # print(f"{response = }")
-    print(f"{json_response = }")
+    # print(f"{json_response = }")
 
     game = Game(replay_file=replay_file, title=title, description=description, user=user,
                 is_public=is_public, league=league, year=year, round=roud, match_group=match_group,
@@ -164,4 +164,9 @@ def file_upload(request):
 
     game.save()
 
-    return Response(response)
+    serializer = GameSerializer(game)
+    # print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ")
+    print(serializer.data['id'])
+    return Response({'game_id': serializer.data['id']})
+
+    # return Response(response)

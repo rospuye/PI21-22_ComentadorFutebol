@@ -94,12 +94,12 @@ function UploadLogPage() {
 
         setLoading(true)
         axios.post(url, formData, config).then((response) => {
-          let data = response.data
+          let data = response.data.game_id
           console.log(data);
 
-          for (let i = 0; i < 5; i++) {
-            tts.emmitAudio(data[i].text, hasButtonClicked)
-          }
+          // for (let i = 0; i < 5; i++) {
+          //   tts.emmitAudio(data[i].text, hasButtonClicked)
+          // }
 
           document.getElementById('confirmBtn').disabled = false;
           setLoading(false)
