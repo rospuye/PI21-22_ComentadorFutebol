@@ -68,7 +68,7 @@ function UploadLogPage() {
       if (validateFormField(title) && validateFormField(league) && validateFormField(round) && validateFormField(matchGroup)) {
 
         tts.speak("We are starting the convertion, please wait.", hasButtonClicked) // its necessary to create the initial speak
-        const url = 'http://127.0.0.1:8000/file_upload/';
+        const url = process.env.REACT_APP_API_URL + 'file_upload/';
         const formData = new FormData();
         formData.append('file', file);
         formData.append('user', cookies.logged_user);
