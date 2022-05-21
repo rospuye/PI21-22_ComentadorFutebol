@@ -13,13 +13,9 @@ class Preset(models.Model):
     energeticVal = models.IntegerField()
     bias = models.IntegerField()
 
-    # PRIMARY KEY (id),
-    # FOREIGN KEY (userid) REFERENCES auth_user(id)
-
 
 class Game(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # logfile
     logfile = models.FileField(upload_to="logs")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     isPublic = models.BooleanField()
@@ -29,5 +25,3 @@ class Game(models.Model):
     round = models.CharField(max_length=255)
     matchGroup = models.CharField(max_length=255)
 
-    # PRIMARY KEY (id),
-    # FOREIGN KEY (userid) REFERENCES auth_user(id)
