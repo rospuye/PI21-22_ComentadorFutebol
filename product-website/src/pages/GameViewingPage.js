@@ -1,5 +1,5 @@
 // React
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from "react-router-dom"
 
 // Components
@@ -12,25 +12,28 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
+import Button from 'react-bootstrap/Button'
 
 // Fontawesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHouse } from '@fortawesome/free-solid-svg-icons'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import { useEffect } from "react"
+
+// TTS
+import * as sdk from "microsoft-cognitiveservices-speech-sdk"
 
 
 
 function commentaryToSSML(text, mood, diction, gender) {
-    voice = "en-US-AnaNeural"
+    let voice = "en-US-AnaNeural"
     if (gender == "female") {
-        voice = "en-US-AshleyNeural"
+        voice = "en-US-JennyNeural"
     }
     else if (gender == "male") {
         voice = "en-US-BrandonNeural"
     }
 
-    style = null
+    let style = null
     if (mood == "aggressive") {
         style = "angry"
     }
@@ -38,20 +41,20 @@ function commentaryToSSML(text, mood, diction, gender) {
         style = "friendly"
     }
 
-    pitch = "medium"
-    rate = 1
+    let pitch = "medium"
+    let rate = 1
 
-    inner = ""
+    let inner = ""
     if (style) {
-        string = `<mstts:express-as style="${style}">${text}</mstts:express-as>`
-        inner = `<paropsy pitch=${pitch} rate=${rate}>${string}</paropsy>`
+        let string = `<mstts:express-as style="${style}">${text}</mstts:express-as>`
+        inner = `<paropsy pitch="${pitch}" rate="${rate}">${string}</paropsy>`
     }
     else {
-        inner = `<paropsy pitch=${pitch} rate=${rate}>${text}</paropsy>`
+        inner = `<paropsy pitch="${pitch}" rate="${rate}">${text}</paropsy>`
     }
     
-    speak = `<voice name=${voice}>${inner}</voice>` 
-    base = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">${speak}</speak>`
+    let speak = `<voice name="${voice}">${inner}</voice>` 
+    let base = `<speak version="1.0" xmlns:mstts="https://www.w3.org/2001/mstts" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">${speak}</speak>`
     return base
 
 }
@@ -59,9 +62,11 @@ function commentaryToSSML(text, mood, diction, gender) {
 
 function synthesizeSpeech() {
     const speechConfig = sdk.SpeechConfig.fromSubscription("dfb5fa14bd85423db7a60da4b0ac369f", "westeurope");
-    const synthesizer = new sdk.SpeechSynthesizer(speechConfig, null);
+    const audioConfig = sdk.AudioConfig.fromDefaultSpeakerOutput();
+    const synthesizer = new sdk.SpeechSynthesizer(speechConfig, audioConfig);
 
-    const ssml = commentaryToSSML("bees are very pretty", "angry", 1, "female")
+    const ssml = commentaryToSSML("bees are very pretty", "friendly", 1, "female")
+    console.log(ssml)
     synthesizer.speakSsmlAsync(
         ssml,
         result => {
@@ -106,11 +111,26 @@ function GameViewingPage() {
         {"start": 28.1405, "end": 28.1405, "text": "intersected the ball"},
     ]
 
-    useEffect(() => {synthesizeSpeech()}, [])
+
+
+    const [flg, setFlg] = useState(true)
+
+    useEffect(() => {
+        console.log("Start")
+
+        let jasm_time = 0
+
+        script.forEach((val) => {
+            if (jasm_time == val.start) {
+                synthesizeSpeech()
+            }
+        })
+        console.log("End")
+    }, [flg])
 
     return (
         <div>
-
+            <Button onClick={() => {synthesizeSpeech()}}></Button>
             <Container fluid >
                 <Row>
                     <Col>
