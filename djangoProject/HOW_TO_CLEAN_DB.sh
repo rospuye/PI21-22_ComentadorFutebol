@@ -1,3 +1,3 @@
-python migrate.py migrate commentator_website_backend zero # clean db
-python migrate.py makemigrations
-python migrate.py migrate
+python manage.py migrate commentator_website_backend zero # clean db
+python manage.py makemigrations
+python manage.py migrate

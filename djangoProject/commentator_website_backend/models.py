@@ -13,6 +13,9 @@ class Preset(models.Model):
     energetic_val = models.IntegerField()
     bias = models.IntegerField()
 
+    class Meta:
+        ordering = ['id']
+
 
 class Game(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -27,4 +30,7 @@ class Game(models.Model):
     year = models.IntegerField()
     round = models.CharField(max_length=50)
     match_group = models.CharField(max_length=50)
+
+    class Meta:
+        ordering = ['id']
 
