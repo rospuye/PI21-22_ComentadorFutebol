@@ -135,13 +135,17 @@ def file_upload(request):
 
     if len(user_games) >= NUMBER_OF_GAMES_BY_USER:
         return JsonResponse({"error": "Reached number of games by given user."})
-    events, analytics, form, form_players, teams = process_log(uploaded_file)
+
+    try:
+        events, analytics, form, form_players, teams = process_log(log_file)
+    except AssertionError:
+        return JsonResponse({"error": "Processing Failed"})
 
     json_response = {"events": [], "form": form, "form_players": form_players}
 
     # new_game = Game.objects.create(uploaded_file, )
     if len(events) < 10:
-        return Response({"message": "Processing Failed"})
+        return Response({"error": "Processing Failed"})
 
     for event in events:
         json_response["events"].append(event.to_json())
