@@ -20,6 +20,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import Img from '../images/graphic_model.PNG'
 import Img2 from '../images/plus.PNG'
 
+import axios from 'axios'
 import { useCookies } from 'react-cookie'
 
 function PersonalitySettings() {
@@ -45,18 +46,31 @@ function PersonalitySettings() {
   console.log("cookies_another_page: " + cookies.logged_user)
 
 
-  // const createPreset = () => {
+  const createPreset = () => {
 
-  //   const formData = new FormData()
-  //   formData.append()
+    const url = process.env.REACT_APP_API_URL + 'presets/';
 
-  //   axios.post(url, formData, config).then((response) => {
-  //     let game_id = response.data.game_id
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+        'Authorization': `Token ${cookies.token}`
+        // 'Access-Control-Allow-Origin': 'http://localhost:3001'
+      },
+    };
 
-  //     document.getElementById('confirmBtn').disabled = false;
-  //     setLoading(false)
-  //   });
-  // }
+    const formData = new FormData()
+    formData.append("gender", gender)
+    formData.append("aggressive_val", aggressiveness)    
+    formData.append("energetic_val", energy)
+    formData.append("bias", team)
+    console.log("preset create start")
+    axios.post(url, formData, config).then((response) => {
+      console.log("preset create response", response)
+
+      document.getElementById('confirmBtn').disabled = false;
+      // setLoading(false)
+    });
+  }
 
   return (
 
@@ -114,6 +128,7 @@ function PersonalitySettings() {
               setAggressiveness={setAggressiveness}
               bias={team}
               setBias={setTeam}
+              createPreset={createPreset}
             /></Col>
 
             <Col>
@@ -172,6 +187,7 @@ function PersonalitySettings() {
               setAggressiveness={setAggressiveness}
               bias={team}
               setBias={setTeam}
+              createPreset={createPreset}
             /></Col>
 
             <Col className="text-center mt-4 mb-4">

@@ -19,7 +19,7 @@ import { faPlay } from '@fortawesome/free-solid-svg-icons'
 
 
 function PersonalityDials({gender, setGender, energy, setEnergy, aggressiveness,
-    setAggressiveness, bias, setBias}) {
+    setAggressiveness, bias, setBias, createPreset}) {
     return <Container className="text-center" style={{ marginTop: '10%' }}>
                 <Row className="dialRow">
                     <Form.Label>Gender</Form.Label>
@@ -68,6 +68,8 @@ function PersonalityDials({gender, setGender, energy, setEnergy, aggressiveness,
                         <Button variant="success" size="lg">Start <FontAwesomeIcon icon={faPlay} /></Button>
                     </Link>
                 </Row>
+
+                <Button variant="success" size="lg" onClick={() => createPreset()}>Create <FontAwesomeIcon icon={faPlay} /></Button>
             </Container>;
 }
 
