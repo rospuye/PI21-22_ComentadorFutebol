@@ -1,13 +1,10 @@
-// React
-import React, { Component } from 'react';
-import { Link } from "react-router-dom";
+import React from 'react'
+
+import '../components/components_css/test.css';
 
 function Anotherpage() {
-    return (<div style={{ padding: '1%' }}>
-
-        <h1 className='titleH1'>ANOTHER PAGE</h1>
-
-    </div>);
+  return (<div>Hello</div>
+  )
 }
 
-export default Anotherpage;
+export default Anotherpage

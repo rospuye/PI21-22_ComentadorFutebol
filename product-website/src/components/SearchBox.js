@@ -19,6 +19,13 @@ function SearchBox({login}) {
     const [selectedRound,setSelectedRound] = useState("Round")
     const [selectedGroup,setSelectedGroup] = useState("Group")
 
+    const [inputValue, setInputValue] = useState('')
+  
+    const onInputChange = (e) => {
+      const { value } = e.target;
+      setInputValue(value);
+    }
+
     const _search = (() => {
         console.log("Searching...")
     })
@@ -26,17 +33,25 @@ function SearchBox({login}) {
   return (
     login ?
         <>
-        <Row>
-            <InputGroup className="mb-3">
-                <FormControl
-                placeholder="Search for a game"
-                aria-label="Search for a game"
-                aria-describedby="basic-addon2"
-                />
-                <Button onClick={_search} variant="outline-secondary" id="button-addon2" style={{color:'#e0d8c1'}}>
+        <Row className="align-items-center">
+            <Col xs={8}>
+                <div className='input-wrapper-searchBox'>
+                    <input className='input-searchBox'
+                        onChange={onInputChange}
+                        placeholder='Search...'
+                        value={inputValue}
+                        spellCheck={false}
+                        />
+                    <span className='input-highlight-searchBox'>
+                        { inputValue.replace(/ /g, "\u00a0") }
+                    </span>
+                </div>
+            </Col>
+            <Col xs={4}>
+                <Button className="loginButton" onClick={_search} variant="light" id="button-addon2" >
                 Search
                 </Button>
-            </InputGroup>
+            </Col>
         </Row>
         <Row>
             <Col>

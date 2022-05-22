@@ -1,12 +1,14 @@
 
 #sortP {
-    color: #e0d8c1;
+    color: whitesmoke;
     font-family: 'Helvetica Neue', sans-serif;
     font-size: 18px;
     line-height: 24px;
     /* margin: 0 0 24px; */
     text-align: right;
     text-justify: inter-word;
+    margin-top: 0;
+    margin-bottom: 0;
     /* padding-top: 0%; */
     /* vertical-align: middle; */
 }
