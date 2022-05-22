@@ -41,7 +41,7 @@ function MeetFoco() {
     <h2 className='titleH3'>Meet FoCo</h2>
 
     <Container>
-        <Row>
+        <Row style={{marginTop:'5%'}}>
             <Col>
                 <Row>
                     <Col>
@@ -64,12 +64,14 @@ function MeetFoco() {
                 </Row>
             </Col>
             <Col className='meetFocoDescription'>
+                <Row>
                 <p className='meetFocoP'>
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam fringilla placerat tristique. Ut vel purus commodo, vulputate ipsum eget, egestas urna. Ut magna augue, rutrum a finibus in, scelerisque id urna. Integer sed consectetur ligula. Phasellus vel rutrum erat, nec scelerisque ex. Nam non leo ut nibh consectetur rhoncus. In erat mauris, mattis non massa non, sagittis gravida tortor. Fusce et dui ultrices, placerat dui vitae, finibus lectus. Suspendisse potenti. Vivamus rutrum arcu non scelerisque fringilla. Sed sit amet erat id diam sollicitudin porttitor eu rhoncus erat. Nam pulvinar massa et eleifend tempus.
 
 Etiam dignissim sollicitudin blandit. Aenean id tincidunt velit. Pellentesque ultrices sed metus at lacinia. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae leo efficitur, faucibus elit vitae, luctus eros. Ut vehicula, felis non ultricies molestie, nunc purus vulputate orci, a fermentum justo nunc posuere felis. Nulla tristique viverra ornare. Nullam tempus orci ac nunc maximus tristique. Duis nec justo ac sem varius cursus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
 
 Nulla tincidunt urna a tristique faucibus. Nullam sed eros quis nibh bibendum tincidunt. Nulla tempus eleifend vulputate. Nam semper, justo quis cursus ultricies, lorem nisl ornare massa, non tristique sapien risus non ipsum. Nullam sed eros vitae nisi pellentesque fermentum. Vivamus egestas mauris quis porttitor vulputate. Sed augue augue, placerat at ipsum vitae, aliquam suscipit ligula. Maecenas sagittis, ante vitae gravida ultrices, ipsum erat pretium augue, tincidunt varius ipsum augue non ligula. Ut volutpat a nibh ut porttitor. Ut iaculis imperdiet mauris eu pulvinar. Nulla ante nunc, molestie lobortis purus vitae, dapibus elementum enim. Nam porttitor dictum sapien, sed pellentesque neque porta ac. Curabitur feugiat nibh in eros pellentesque, et varius felis pharetra. Nam libero lorem, accumsan quis auctor vel, cursus vitae justo. Nulla fringilla in dui eget pretium.</p>
+                </Row>
             </Col>
         </Row>
     </Container>
