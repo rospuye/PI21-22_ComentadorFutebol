@@ -11,12 +11,14 @@ import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import RangeSlider from 'react-bootstrap-range-slider';
 
 // Fontawesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 
-function PersonalityDials(props) {
+
+function PersonalityDials({energy, setEnergy, aggressiveness, setAggressiveness, bias, setBias}) {
     return <Container className="text-center" style={{ marginTop: '10%' }}>
                 <Row className="dialRow">
                     <Form.Label>Gender</Form.Label>
@@ -30,18 +32,34 @@ function PersonalityDials(props) {
                 </Row>
                 <Row className="dialRow">
                     <Col><Form.Label>Energetic</Form.Label></Col>
-                    <Col><Form.Range /></Col>
+                    {/* <Col><Form.Range /></Col> */}
+                    <RangeSlider
+                        value={energy}
+                        onChange={e => setEnergy(e.target.value)}
+                        min={-50}
+                        max={50}
+                    />
                     <Col><Form.Label>Calm</Form.Label></Col>
                 </Row>
                 <Row className="dialRow">
                     <Col><Form.Label>Aggressive</Form.Label></Col>
-                    <Col><Form.Range /></Col>
+                    <RangeSlider
+                        value={aggressiveness}
+                        onChange={e => setAggressiveness(e.target.value)}
+                        min={-50}
+                        max={50}
+                    />
                     <Col><Form.Label>Friendly</Form.Label></Col>
                 </Row>
                 <Row className="dialRow">
                     <Form.Label>Bias</Form.Label>
                     <Col><Form.Label>Team A</Form.Label></Col>
-                    <Col><Form.Range /></Col>
+                    <RangeSlider
+                        value={bias}
+                        onChange={e => setBias(e.target.value)}
+                        min={-1}
+                        max={1}
+                    />
                     <Col><Form.Label>Team B</Form.Label></Col>
                 </Row>
                 <Row className="dialRow">

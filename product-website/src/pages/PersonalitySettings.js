@@ -36,8 +36,15 @@ function PersonalitySettings() {
   ];
 
   const [login, setLogin] = useState(true);
+  const [energy, setEnergy] = useState(0)
+  const [aggressiveness, setAggressiveness] = useState(0)
+  const [team, setTeam] = useState(0)
+
   const [cookies, setCookie] = useCookies(['logged_user'])
   console.log("cookies_another_page: " + cookies.logged_user)
+
+
+
 
   return (
 
@@ -86,7 +93,14 @@ function PersonalitySettings() {
               }
             </Col>
 
-            <Col xs={6}><PersonalityDials /></Col>
+            <Col xs={6}><PersonalityDials
+              energy={energy}
+              setEnergy={setEnergy}
+              aggressiveness={aggressiveness}
+              setAggressiveness={setAggressiveness}
+              bias={team}
+              setBias={setTeam}
+            /></Col>
 
             <Col>
               {
@@ -135,7 +149,14 @@ function PersonalitySettings() {
               }
             </Col>
 
-            <Col xs={6}><PersonalityDials /></Col>
+            <Col xs={6}><PersonalityDials
+              energy={energy}
+              setEnergy={setEnergy}
+              aggressiveness={aggressiveness}
+              setAggressiveness={setAggressiveness}
+              bias={team}
+              setBias={setTeam}
+            /></Col>
 
             <Col className="text-center mt-4 mb-4">
               {

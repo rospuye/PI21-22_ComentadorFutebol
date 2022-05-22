@@ -3,7 +3,7 @@ import { Container, Row, Col, Button } from 'react-bootstrap'
 import SearchBox from '../components/SearchBox'
 import SortInput from '../components/SortInput'
 import Title from '../components/Title'
-import Select from 'react-select'
+// import Select from 'react-select'
 
 import '../components/components_css/Form.css';
 
