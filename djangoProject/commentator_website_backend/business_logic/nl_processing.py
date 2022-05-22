@@ -79,7 +79,7 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
 
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+    if p1['id'] in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
 
     lines = { 
         "neutral": 
@@ -243,7 +243,8 @@ def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_ma
     p1 = args.get("player")
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+    if p1['id'] in player_name_map.keys(): 
+        p1['id'] = player_name_map[p1['id']]
 
     lines_without_player = {
         "neutral": 
@@ -286,9 +287,9 @@ def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_ma
         }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
-    # lines = lines_without_player if p1 is None else lines_with_player + lines_without_player
-    # TODO
-    lines = lines_without_player
+
+    lines = lines_without_player if p1 is None else {**lines_with_player, **lines_without_player}
+
     return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
 
 def goal_shot_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams):
@@ -296,7 +297,7 @@ def goal_shot_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
     p1 = args["player"]
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+    if p1['id'] in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
 
     lines = { 
         "neutral": 
@@ -371,8 +372,8 @@ def aggression_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_
     p2 = args["player_2"]
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
-    if p2 in player_name_map.keys(): p2['id'] = player_name_map[p2['id']]
+    if p1['id'] in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+    if p2['id'] in player_name_map.keys(): p2['id'] = player_name_map[p2['id']]
 
     lines = { 
         "neutral": 
@@ -448,7 +449,7 @@ def intersect_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
     p1 = args["player"]
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+    if p1['id'] in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
     
 
     lines = { 
