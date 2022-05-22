@@ -58,6 +58,7 @@ function PersonalitySettings() {
             <Col style={{ display: 'flex', justifyContent: 'right' }}>
               <Button variant="light" style={{ height: '40px', marginTop: '5%' }} onClick={() => {
                 setCookie('logged_user', '', { path: '/' })
+                setCookie('token', '', {path: '/'})
               }}>Logout</Button>
             </Col>
           </Row>

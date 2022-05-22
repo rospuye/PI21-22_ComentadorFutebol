@@ -4,7 +4,9 @@ import re
 import copy
 import time
 
-from matplotlib.font_manager import json_dump
+from numpy import equal
+
+# from matplotlib.font_manager import json_dump
 from entities import Position, Ball, Player
 from heuristics import process
 import json
@@ -59,7 +61,11 @@ def process_log(log, skip=1, skip_flg=False):
     fieldParams = {}
     goalParams = {}
     entities = []
+    form = ""
+    form_players = dict()
     timestamp = 0
+    left = ""
+    right = ""
     # get fields when all 3 exist on the line
     # ((FieldLength 30)(FieldWidth 20)(FieldHeight 40)(GoalWidth 2.1)(GoalDepth 0.6)(GoalHeight 0.8)
     for line in inpt:
@@ -78,6 +84,15 @@ def process_log(log, skip=1, skip_flg=False):
         goalParams["height"] = float(tmp[11])
         print("Goal Height:",goalParams["height"])
         break
+    for line in inpt:
+        tmp = re.findall("\(team_left .*?\)", line)
+        tmp2 = re.findall("\(team_right .*?\)", line)
+        if tmp:
+            left = tmp[0].split(" ")[1].rstrip(")")
+        if tmp2:
+            right = tmp2[0].split(" ")[1].rstrip(")")
+        if left and right:
+            break
     c = 0
     for line in inpt:
         tmp = re.findall("soccerball.obj|models/naobody", line)
@@ -126,9 +141,8 @@ def process_log(log, skip=1, skip_flg=False):
                                 
                                 break
                         break
-
-            #write_to_file(timestamp, entities, output) # substituir por heuristics
-            events += process(entities, fieldParams, goalParams, timestamp)
+            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp)
+            events += messages
             break
 
     for line in inpt:
@@ -183,7 +197,8 @@ def process_log(log, skip=1, skip_flg=False):
                             new_pos = copy.deepcopy(entity.positions_lfoot[-1])
                             new_pos.timestamp = timestamp
                             entity.add_position_lfoot(new_pos)
-            events += process(entities, fieldParams, goalParams, timestamp)
+            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp)
+            events += messages
         count += 1  
         
         # if count == 5000: 
@@ -193,17 +208,36 @@ def process_log(log, skip=1, skip_flg=False):
         output.write(str(event)+"\n")
         
     output.close()
-    tok = time.time()
-    elapsed = tok - tik
-    print(elapsed)
-
     result = []
     for event in events:
-        #print(event)
         result.append(event.to_json())
-        #print(result[-1])
-
-    return json.dumps(result)
+    tok = time.time()
+    elapsed = tok - tik
+    print("Event detection in:", elapsed)
+    # Formation debug prints
+    # print("Formation for teamA:", form[0])
+    # print("Formation for teamB:", form[1])
+    # print("Players and their spot in the formation:")
+    # translate = {0: "defender", 1: "midfielder", 2: "forward"}
+    # for player in form_players:
+    #     print(player.id, translate[form_players[player]])
+    tik = time.time()
+    analytics_log = get_analytics(events, entities)
+    # Analytics debug prints
+    # for timestamp in analytics_log:
+    #     print(timestamp)
+    #     print("\tTeams:")
+    #     for team in analytics_log[timestamp]["teams"]:
+    #         print("\t\t",team,analytics_log[timestamp]["teams"][team])
+    #     print("\tPlayers:")
+    #     for player in analytics_log[timestamp]["players"]:
+    #         print("\t\t",player,analytics_log[timestamp]["players"][player])
+    # print(len(analytics_log))
+    tok = time.time()
+    elapsed2 = tok - tik
+    print("Analytics gathered in:", elapsed2)
+    print("Total processing time:", elapsed+elapsed2)
+    return [left, right]
 
 if __name__ == "__main__":
     log = sys.argv[1]
@@ -212,9 +246,10 @@ if __name__ == "__main__":
     if len(sys.argv) > 2:
         flg = True
         skip_lines = int(sys.argv[2])
-    events = process_log(log, skip=skip_lines, skip_flg=flg)
+    print(process_log(log, skip=skip_lines, skip_flg=flg))
     #print("Log processed!")
     
+
 
 
 
