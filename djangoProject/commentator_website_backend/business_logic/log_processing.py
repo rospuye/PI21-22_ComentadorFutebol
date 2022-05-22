@@ -5,26 +5,16 @@ import copy
 import time
 from .entities import Position, Entity, Ball, Player
 from .heuristics import process
+from .analytics import analytics, get_analytics
 
 
 def position_to_array(position, flg=False):
     tmp = re.findall("[-]?\d+[.]?\d*[eE]?[-]?\d*", position)
-    # print(tmp)
-    # print(position)
     pos = []
     for numb in tmp:
         pos.append(float(numb))
-    # print(len(pos))
-    assert len(pos) == 16
-    return pos
-    # tmp = position.split(" ")
-    # pos = []
-    # for i in range(2, len(tmp)):
-    #    pos.append(float(tmp[i].rstrip(")")))
-    # if len(pos) != 16:
-    #    pos = [float(tmp[1])] + pos
     # assert len(pos) == 16
-    # return pos
+    return pos
 
 
 def order_by_distance_to_ball(entities):
@@ -58,29 +48,24 @@ def write_to_file(timestamp, entities, output):
 
 def process_log(log, skip=1, skip_flg=False):
     tik = time.time()
-    #path = "logs/input/"
-    #out = "logs/output/" + log.rstrip(".log")
     count = 0
-    #inpt = open(path + log, "r")
-    #output = open(out, "w")
     flg = False
     events = []
 
     fieldParams = {}
     goalParams = {}
     entities = []
+    events_dict = {}
+    formation_counts = {}
     timestamp = 0
-    # TODO get fields when all 3 exist on the line
+    left = ""
+    right = ""
     # ((FieldLength 30)(FieldWidth 20)(FieldHeight 40)(GoalWidth 2.1)(GoalDepth 0.6)(GoalHeight 0.8)
     for line in log:
         line = line.decode()
-        #print(line)
-        #print("--------------------------------------------------")
         if not ("FieldLength" in line and "FieldWidth" in line):
             continue
-
         tmp = re.split('\s|\)', line)
-        print(tmp)
         fieldParams["length"] = float(tmp[1])
         print("Length:", fieldParams["length"])
         fieldParams["width"] = float(tmp[3])
@@ -92,21 +77,25 @@ def process_log(log, skip=1, skip_flg=False):
         goalParams["height"] = float(tmp[11])
         print("Goal Height:", goalParams["height"])
         break
+    for line in log:
+        tmp = re.findall("\(team_left .*?\)", line)
+        tmp2 = re.findall("\(team_right .*?\)", line)
+        if tmp:
+            left = tmp[0].split(" ")[1].rstrip(")")
+        if tmp2:
+            right = tmp2[0].split(" ")[1].rstrip(")")
+        if left and right:
+            break
     c = 0
     for line in log:
         line = line.decode()
-        #print(line)
-        #print("--------------------------------------------------")
         tmp = re.findall("soccerball.obj|models/naobody", line)
         c += 1
         if len(tmp) == 23 and not re.search("matTeam", line):
             timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
-            # print(timestamp)
-            # print(c)
             tmp = re.split("\(nd", line)
             tmp2 = [(tmp[i - 1].strip(), i) for i in range(len(tmp)) if re.search("soccerball.obj", tmp[i])]
             for pos, i in tmp2:
-                #print("aaaaaaaaaaaaaaaaa")
                 ball = Ball("ball", i, 1)
                 position_array = position_to_array(pos)
                 position = Position(position=position_array, timestamp=timestamp)
@@ -117,7 +106,6 @@ def process_log(log, skip=1, skip_flg=False):
             tmp4 = [(tmp[i - 2].strip(), re.findall(pattern, tmp[i])[0], i) for i in range(len(tmp)) if
                     re.search("naobody", tmp[i])]
             tmp5 = [(tmp[i - 1].strip(), i - 1, tmp[i]) for i in range(len(tmp)) if re.search("rfoot|lfoot", tmp[i])]
-            # output.write(str(tmp5))
             for pos, n, i in tmp4:
                 l = n.split(" ")
                 robotID = l[1] + l[2]
@@ -138,7 +126,6 @@ def process_log(log, skip=1, skip_flg=False):
                         l = id_node.split(" ")
                         robotID = l[1] + l[2]
                         for player in entities[1:]:
-                            # print(robotID)
                             if player.id == robotID:
                                 if re.search("lfoot", foot_dir):
                                     player.add_position_lfoot(position)
@@ -146,36 +133,12 @@ def process_log(log, skip=1, skip_flg=False):
                                 else:
                                     player.add_position_rfoot(position)
                                     player.rfootIndex = i
-
-                                # print(player.id, position.distance_between(player.positions[-1]))
-                                # print(player.positions[-1].timestamp, player.positions[-1].x,player.positions[-1].y,player.positions[-1].z)
-                                # print(position.timestamp, position.x,position.y,position.z)
-                                # print(f"{robotID =}, {player.lfootIndex = }, {player.rfootIndex = }")
                                 break
                         break
 
-            # j = 1
-            # k = 0
-            # print(len(tmp5))
-            # for i in range(0,len(tmp5), 2):
-            #     position_array = position_to_array(tmp5[i][0])
-            #     position = Position(position=position_array, timestamp=timestamp)
-            #     if k == 0:
-            #         entities[j].add_position_rfoot(position)
-            #         k += 1
-            #     else:
-            #         entities[j].add_position_lfoot(position)
-            #         j += 1
-            #         k = 0
-            #     print(entities[j].id, position.distance_between(entities[j].positions[-1]))
-            #     print(entities[j].positions[-1].timestamp, entities[j].positions[-1].x,entities[j].positions[-1].y,entities[j].positions[-1].z)
-            #     print(position.timestamp, position.x,position.y,position.z)
-            # for entity in entities:
-            #     print(entity.id, [pos.timestamp for pos in entity.positions])
-            # print("======")
 
-            # write_to_file(timestamp, entities, output) # substituir por heuristics
-            events += process(entities, fieldParams, goalParams, timestamp)
+            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp, events_dict, formation_counts)
+            events += messages
 
             break
 
@@ -192,17 +155,11 @@ def process_log(log, skip=1, skip_flg=False):
         new_timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
         if new_timestamp==timestamp:
             continue
-        #print("LINEEE")
-        #print(line)
-        # if re.search("soccerball.obj|models/naobody", line):
         timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
-        # print(type(timestamp), timestamp)
         if old_timestamp == timestamp:
             break
         old_timestamp = timestamp
         if not skip_flg or not count % skip == 0:
-            # print(f"======== Count: {count} ===========")
-
             tmp = re.split("\(nd", line)
             had_changes = [False] * len(entities)
             for idx in range(len(entities)):
@@ -220,10 +177,8 @@ def process_log(log, skip=1, skip_flg=False):
                     lIndex = entity.lfootIndex
 
                     if tmp[rIndex]:
-                        # print(f"{rIndex = }")
                         had_changes[idx] = True
                         new_pos = Position(position=position_to_array(tmp[rIndex].strip()), timestamp=timestamp)
-                        # print(count)
                         entity.add_position_rfoot(new_pos)
                     if tmp[lIndex]:
                         had_changes[idx] = True
@@ -248,28 +203,41 @@ def process_log(log, skip=1, skip_flg=False):
                             new_pos.timestamp = timestamp
                             entity.add_position_lfoot(new_pos)
 
-            # for entity in entities:
-            #     print(entity.id, [pos.timestamp for pos in entity.positions])
 
-            # write_to_file(timestamp, entities, output) # Substituir pela heuristic
-            #print("njkdnfjkdsbnf")
-            events += process(entities, fieldParams, goalParams, timestamp)
+            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp, events_dict, formation_counts)
+            events += messages
         count += 1
 
         if count == 5000:  # 1000 ~= 40 seg
             break
 
-    #for event in events:
-    #    output.write(str(event) + "\n")
-
-    # output.write("}")
-    #output.close()
     tok = time.time()
     elapsed = tok - tik
-    print(elapsed)
-    #print('events')
-    #print(events)
-    return events
+    print("Event detection in:", elapsed)
+    # Formation debug prints
+    # print("Formation for teamA:", form[0])
+    # print("Formation for teamB:", form[1])
+    # print("Players and their spot in the formation:")
+    # translate = {0: "defender", 1: "midfielder", 2: "forward"}
+    # for player in form_players:
+    #     print(player.id, translate[form_players[player]])
+    tik = time.time()
+    analytics_log = get_analytics(events, entities)
+    # Analytics debug prints
+    # for timestamp in analytics_log: # double
+    #     print(timestamp)
+    #     print("\tTeams:")
+    #     for team in analytics_log[timestamp]["teams"]: # str (A or B)
+    #         print("\t\t",team,analytics_log[timestamp]["teams"][team])
+    #     print("\tPlayers:")
+    #     for player in analytics_log[timestamp]["players"]: # playerid str
+    #         print("\t\t",player,analytics_log[timestamp]["players"][player])
+    # print(len(analytics_log))
+    tok = time.time()
+    elapsed2 = tok - tik
+    print("Analytics gathered in:", elapsed2)
+    print("Total processing time:", elapsed+elapsed2)
+    return events, analytics_log, form, form_players, [left, right]
 
 
 if __name__ == "__main__":

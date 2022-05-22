@@ -96,16 +96,23 @@ function handleLogin(username, password, setCookie) {
             password: password
         }
 
-        axios.post(`http://127.0.0.1:8000/users/login/`, user)
+        axios.post(process.env.REACT_APP_API_URL + `users/login/`, user)
             .then(res => {
-                console.log(res);
-                if (res.data === 'login_success') {
+                console.log(res)
+                console.log(res.data);
+                if (res.data.message === 'login_success') {
                     setCookie('logged_user', username, {path: '/', maxAge: '3600'})
+                    setCookie('token', res.data.token, {path: '/', maxAge: '3600'})
+
+                    // console.log("logged_user: " + cookies.logged_user)
+                    // console.log("token: " + cookies.token)
+
                     window.location.href = '../select_game'
                 }
-                else if (res.data === 'login_failure') {
+                else if (res.data.message === 'login_failure') {
                     document.getElementById("loginWarning").style.display = 'block'
                     setCookie('logged_user', '', {path: '/'})
+                    setCookie('token', '', {path: '/'})
                 }
             })
     }
@@ -147,17 +154,24 @@ function handleRegister(username, email, password, conf_password, setCookie) {
             email: email,
             password: password
         }
+        
 
-        axios.post(`http://127.0.0.1:8000/users/register/`, user)
+        axios.post(process.env.REACT_APP_API_URL + `users/register/`, user)
             .then(res => {
                 console.log(res.data);
-                if (res.data === 'register_success') {
+                if (res.data.message === 'register_success') {
                     setCookie('logged_user', username, {path: '/', maxAge: '3600'})
+                    setCookie('token', res.data.token, {path: '/', maxAge: '3600'})
+
+                    console.log("logged_user: " + cookies.logged_user)
+                    console.log("token: " + cookies.token)
+
                     window.location.href = '../select_game'
                 }
-                else if (res.data === 'username_already_in_use') {
+                else if (res.data.message === 'username_already_in_use') {
                     document.getElementById("registerUniqueUsernameWarning").style.display = 'block'
                     setCookie('logged_user', '', {path: '/'})
+                    setCookie('token', '', {path: '/'})
                 }
             })
 
@@ -175,9 +189,8 @@ function Login() {
     const [registerPassword, setRegisterPassword] = useState('');
     const [registerConfirmPassword, setRegisterConfirmPassword] = useState('');
 
-    const [cookies, setCookie] = useCookies(['logged_user'])
+    const [cookies, setCookie] = useCookies(['logged_user', 'token'])
     // setCookie('logged_user', '', {path: '/'})
-    console.log("cookies: " + cookies.logged_user)
 
     return (
         <>

@@ -4,7 +4,7 @@ import VideoThumbnail from './VideoThumbnail'
 import Img from '../images/videoThumbnail.png'
 import { Link } from "react-router-dom";
 
-function VideoGrid({ login,yourGames }) {
+function VideoGrid({ login, yourGames }) {
     return (
         <>
         {yourGames ?
