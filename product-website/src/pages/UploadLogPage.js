@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useNavigate } from "react-router-dom";
 import Title from '../components/Title'
 import DragDrop from '../components/DragDrop'
 import { Container } from 'react-bootstrap'
@@ -36,6 +37,8 @@ function UploadLogPage() {
   const [matchGroup, setMatchGroup] = useState("")
 
   const [loading, setLoading] = useState(false)
+
+  let navigate = useNavigate();
 
   // // tts states
   // const [tts, setTts] = useState(new TTS())
@@ -93,7 +96,7 @@ function UploadLogPage() {
         setLoading(true)
         axios.post(url, formData, config).then((response) => {
           let game_id = response.data.game_id
-
+          navigate('/personality/' + game_id, {state: { game_id: game_id }});
           document.getElementById('confirmBtn').disabled = false;
           setLoading(false)
         });
@@ -145,126 +148,127 @@ function UploadLogPage() {
     }
   }
 
-  return (<>
-    <div className='particlesBG'>
-      <ParticlesBg className="particles-bg-canvas-self" type="cobweb" bg={true} color="#DADADA" />
-    </div>
-    <div style={{ padding: '1%' }}>
-      <Container>
-        <FocoNavbar goesBack={true} backPage="/select_game" hasLoginBtn={true} cookies={cookies} setCookie={setCookie} />
-      </Container>
+  return (
+    <>
+      <div className='particlesBG'>
+        <ParticlesBg className="particles-bg-canvas-self" type="cobweb" bg={true} color="#DADADA" />
+      </div>
+      <div style={{ padding: '1%' }}>
+        <Container>
+          <FocoNavbar goesBack={true} backPage="/select_game" hasLoginBtn={true} cookies={cookies} setCookie={setCookie} />
+        </Container>
 
-      <Container>
-        <Row>
-          <Col>
-            <Title title="FoCo" subtitle="Upload Your Log File"></Title>
-          </Col>
-        </Row>
-      </Container>
-
-      <Container>
-        <Col style={{ marginLeft: '10%', marginRight: '10%' }}>
-
-          <Row className='text-center' style={{ marginTop: '5%', marginBottom: '5%', display: 'flex', justifyContent: 'center' }}>
-            <h6 style={{ color: 'white' }}>Upload both a log file and a replay file of your game!</h6>
-            <DragDrop parentCallback={handleCallback} />
+        <Container>
+          <Row>
+            <Col>
+              <Title title="FoCo" subtitle="Upload Your Log File"></Title>
+            </Col>
           </Row>
+        </Container>
 
-          {(logFile && replayFile) ?
-            <Row style={{ marginBottom: '5%' }}>
-              <Col style={{ paddingLeft: '20%', paddingRight: '20%' }}>
-                <Container className='logUpload'>
-                  <Form>
+        <Container>
+          <Col style={{ marginLeft: '10%', marginRight: '10%' }}>
 
-                    <Form.Group className="mb-3">
-                      <Form.Label>Title</Form.Label>
-                      <Form.Control type="text" placeholder="Enter title" defaultValue={logFile.name} onChange={(e) => { setTitle(e.target.value) }} />
-                      {/* style={{ display: 'none' }} */}
-                      <Form.Text className="text-muted errorMessage" id="titleWarning" style={{ display: 'none' }}>
-                        This title is not long enough.
-                      </Form.Text>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label>Description</Form.Label>
-                      <FloatingLabel label="Comments">
-                        <Form.Control
-                          as="textarea"
-                          placeholder="Enter description"
-                          style={{ height: '100px' }}
-                          onChange={(e) => { setDescription(e.target.value) }}
-                        />
-                      </FloatingLabel>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label>Video Privacy</Form.Label>
-                      <FloatingLabel>
-                        <Form.Select style={{ paddingTop: '0px', paddingBottom: '0px', height: '40px' }} onChange={(e) => { setPrivacy(e.target.value) }}>
-                          <option value="Private">Private</option>
-                          <option value="Public">Public</option>
-                        </Form.Select>
-                      </FloatingLabel>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label>League</Form.Label>
-                      <Form.Control type="text" placeholder="Enter league" onChange={(e) => { setLeague(e.target.value) }} />
-                      <Form.Text className="text-muted errorMessage" id="leagueWarning" style={{ display: 'none' }}>
-                        A value for the league is mandatory.
-                      </Form.Text>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label>Year</Form.Label>
-                      <Form.Control id="game_year" type="number" min="1900" max={new Date().getFullYear()} step="1" defaultValue={new Date().getFullYear()} placeholder="Enter year" onChange={(e) => {
-                        if (e.target.value > new Date().getFullYear()) {
-                          document.getElementById("game_year").value = new Date().getFullYear();
-                        }
-                        else if (e.target.value < 1900) {
-                          document.getElementById("game_year").value = 1900;
-                        }
-                        setYear(e.target.value)
-                      }} />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label>Round</Form.Label>
-                      <Form.Control type="text" placeholder="Enter round" onChange={(e) => { setRound(e.target.value) }} />
-                      <Form.Text className="text-muted errorMessage" id="roundWarning" style={{ display: 'none' }}>
-                        A value for the round is mandatory.
-                      </Form.Text>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label>Match group</Form.Label>
-                      <Form.Control type="text" placeholder="Enter match group" onChange={(e) => { setMatchGroup(e.target.value) }} />
-                      <Form.Text className="text-muted errorMessage" id="matchGroupWarning" style={{ display: 'none' }}>
-                        A value for the match group is mandatory.
-                      </Form.Text>
-                    </Form.Group>
-
-                    <Form.Group style={{ textAlign: 'center', marginTop: '5%' }}>
-                      <Button id='confirmBtn' className='btnUpload' type="button" variant="primary" size="lg" style={{ width: '18%', margin: 'auto' }} onClick={processFile}>
-                        {loading ?
-                          <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>
-                          :
-                          "Confirm"
-                        }
-                      </Button>
-                    </Form.Group>
-
-                  </Form>
-                </Container>
-              </Col>
+            <Row className='text-center' style={{ marginTop: '5%', marginBottom: '5%', display: 'flex', justifyContent: 'center' }}>
+              <h6 style={{ color: 'white' }}>Upload both a log file and a replay file of your game!</h6>
+              <DragDrop parentCallback={handleCallback} />
             </Row>
-            :
-            <></>}
 
-        </Col>
-      </Container>
-    </div>
-  </>
+            {(logFile && replayFile) ?
+              <Row style={{ marginBottom: '5%' }}>
+                <Col style={{ paddingLeft: '20%', paddingRight: '20%' }}>
+                  <Container className='logUpload'>
+                    <Form>
+
+                      <Form.Group className="mb-3">
+                        <Form.Label>Title</Form.Label>
+                        <Form.Control type="text" placeholder="Enter title" defaultValue={logFile.name} onChange={(e) => { setTitle(e.target.value) }} />
+                        {/* style={{ display: 'none' }} */}
+                        <Form.Text className="text-muted errorMessage" id="titleWarning" style={{ display: 'none' }}>
+                          This title is not long enough.
+                        </Form.Text>
+                      </Form.Group>
+
+                      <Form.Group className="mb-3">
+                        <Form.Label>Description</Form.Label>
+                        <FloatingLabel label="Comments">
+                          <Form.Control
+                            as="textarea"
+                            placeholder="Enter description"
+                            style={{ height: '100px' }}
+                            onChange={(e) => { setDescription(e.target.value) }}
+                          />
+                        </FloatingLabel>
+                      </Form.Group>
+
+                      <Form.Group className="mb-3">
+                        <Form.Label>Video Privacy</Form.Label>
+                        <FloatingLabel>
+                          <Form.Select style={{ paddingTop: '0px', paddingBottom: '0px', height: '40px' }} onChange={(e) => { setPrivacy(e.target.value) }}>
+                            <option value="Private">Private</option>
+                            <option value="Public">Public</option>
+                          </Form.Select>
+                        </FloatingLabel>
+                      </Form.Group>
+
+                      <Form.Group className="mb-3">
+                        <Form.Label>League</Form.Label>
+                        <Form.Control type="text" placeholder="Enter league" onChange={(e) => { setLeague(e.target.value) }} />
+                        <Form.Text className="text-muted errorMessage" id="leagueWarning" style={{ display: 'none' }}>
+                          A value for the league is mandatory.
+                        </Form.Text>
+                      </Form.Group>
+
+                      <Form.Group className="mb-3">
+                        <Form.Label>Year</Form.Label>
+                        <Form.Control id="game_year" type="number" min="1900" max={new Date().getFullYear()} step="1" defaultValue={new Date().getFullYear()} placeholder="Enter year" onChange={(e) => {
+                          if (e.target.value > new Date().getFullYear()) {
+                            document.getElementById("game_year").value = new Date().getFullYear();
+                          }
+                          else if (e.target.value < 1900) {
+                            document.getElementById("game_year").value = 1900;
+                          }
+                          setYear(e.target.value)
+                        }} />
+                      </Form.Group>
+
+                      <Form.Group className="mb-3">
+                        <Form.Label>Round</Form.Label>
+                        <Form.Control type="text" placeholder="Enter round" onChange={(e) => { setRound(e.target.value) }} />
+                        <Form.Text className="text-muted errorMessage" id="roundWarning" style={{ display: 'none' }}>
+                          A value for the round is mandatory.
+                        </Form.Text>
+                      </Form.Group>
+
+                      <Form.Group className="mb-3">
+                        <Form.Label>Match group</Form.Label>
+                        <Form.Control type="text" placeholder="Enter match group" onChange={(e) => { setMatchGroup(e.target.value) }} />
+                        <Form.Text className="text-muted errorMessage" id="matchGroupWarning" style={{ display: 'none' }}>
+                          A value for the match group is mandatory.
+                        </Form.Text>
+                      </Form.Group>
+
+                      <Form.Group style={{ textAlign: 'center', marginTop: '5%' }}>
+                        <Button id='confirmBtn' className='btnUpload' type="button" variant="primary" size="lg" style={{ width: '18%', margin: 'auto' }} onClick={processFile}>
+                          {loading ?
+                            <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>
+                            :
+                            "Confirm"
+                          }
+                        </Button>
+                      </Form.Group>
+
+                    </Form>
+                  </Container>
+                </Col>
+              </Row>
+              :
+              <></>}
+
+          </Col>
+        </Container>
+      </div>
+    </>
   )
 }
 

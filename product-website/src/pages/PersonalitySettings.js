@@ -1,6 +1,6 @@
 // React
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 // Components
 import Title from '../components/Title';
@@ -43,7 +43,8 @@ function PersonalitySettings() {
   const [team, setTeam] = useState(0)
 
   const [cookies, setCookie] = useCookies(['logged_user'])
-  console.log("cookies_another_page: " + cookies.logged_user)
+
+  let { game_id } = useParams();
 
 
   const createPreset = () => {
@@ -120,6 +121,7 @@ function PersonalitySettings() {
             </Col>
 
             <Col xs={6}><PersonalityDials
+              game_id={game_id}
               gender={gender}
               setGender={setGender}
               energy={energy}
@@ -179,6 +181,7 @@ function PersonalitySettings() {
             </Col>
 
             <Col xs={6}><PersonalityDials
+              game_id={game_id}
               gender={gender}
               setGender={setGender}
               energy={energy}
