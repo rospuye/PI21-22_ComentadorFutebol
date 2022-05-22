@@ -163,8 +163,8 @@ function handleRegister(username, email, password, conf_password, setCookie) {
                     setCookie('logged_user', username, {path: '/', maxAge: '3600'})
                     setCookie('token', res.data.token, {path: '/', maxAge: '3600'})
 
-                    console.log("logged_user: " + cookies.logged_user)
-                    console.log("token: " + cookies.token)
+                    // console.log("logged_user: " + cookies.logged_user)
+                    // console.log("token: " + cookies.token)
 
                     window.location.href = '../select_game'
                 }
