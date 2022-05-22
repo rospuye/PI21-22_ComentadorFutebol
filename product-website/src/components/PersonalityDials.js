@@ -18,15 +18,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 
 
-function PersonalityDials({energy, setEnergy, aggressiveness, setAggressiveness, bias, setBias}) {
+function PersonalityDials({gender, setGender, energy, setEnergy, aggressiveness,
+    setAggressiveness, bias, setBias}) {
     return <Container className="text-center" style={{ marginTop: '10%' }}>
                 <Row className="dialRow">
                     <Form.Label>Gender</Form.Label>
                     <Col>
                         <ButtonGroup aria-label="Basic example">
                             {/* className="genderChoiceSelected" */}
-                            <Button variant="primary">Male</Button>
-                            <Button variant="light">Female</Button>
+                            <Button variant={gender == "Male" ? "primary" : "light"} onClick={() => {setGender("Male")}}>Male</Button>
+                            <Button variant={gender == "Female" ? "primary" : "light"} onClick={() => {setGender("Female")}}>Female</Button>
                         </ButtonGroup>
                     </Col>
                 </Row>

@@ -35,7 +35,8 @@ function PersonalitySettings() {
     { alt: "Robot Model 2", src: { Img2 } }
   ];
 
-  const [login, setLogin] = useState(true);
+  const [login, setLogin] = useState(true)
+  const [gender, setGender] = useState("Male")
   const [energy, setEnergy] = useState(0)
   const [aggressiveness, setAggressiveness] = useState(0)
   const [team, setTeam] = useState(0)
@@ -44,7 +45,18 @@ function PersonalitySettings() {
   console.log("cookies_another_page: " + cookies.logged_user)
 
 
+  // const createPreset = () => {
 
+  //   const formData = new FormData()
+  //   formData.append()
+
+  //   axios.post(url, formData, config).then((response) => {
+  //     let game_id = response.data.game_id
+
+  //     document.getElementById('confirmBtn').disabled = false;
+  //     setLoading(false)
+  //   });
+  // }
 
   return (
 
@@ -94,6 +106,8 @@ function PersonalitySettings() {
             </Col>
 
             <Col xs={6}><PersonalityDials
+              gender={gender}
+              setGender={setGender}
               energy={energy}
               setEnergy={setEnergy}
               aggressiveness={aggressiveness}
@@ -150,6 +164,8 @@ function PersonalitySettings() {
             </Col>
 
             <Col xs={6}><PersonalityDials
+              gender={gender}
+              setGender={setGender}
               energy={energy}
               setEnergy={setEnergy}
               aggressiveness={aggressiveness}
