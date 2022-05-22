@@ -3,14 +3,21 @@ Label {
 }
 
 .formBtn {
-    border-radius: 1.5rem;
-    background-color: #6577ab;
+    /* border-radius: 1.5rem; */
+    border-radius: 15px;
+    background-color: whitesmoke;
+    color: black;
     border-color: #6577ab60;
+    transition: box-shadow 200ms, transform 200ms;
 }
 
-.formBtn:hover {
-    background-color: #6577abc0;
-    border-color: #6577ab60;
+.formBtn:hover,
+.formBtn:focus {
+    background-color: whitesmoke;
+    border-color: #dddddd;
+    color:black;
+    box-shadow: rgb(255, 255, 255) 0 3px 3px -1px;
+    transform: translateY(-0.25em);
 }
 
 .vl {
