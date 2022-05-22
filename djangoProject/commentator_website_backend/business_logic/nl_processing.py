@@ -1,6 +1,5 @@
 import random
 
-from numpy import double
 from .log_processing import process_log
 
 BIAS_PROB = 30
@@ -570,7 +569,7 @@ def whos_winning(stats):
     elif A_score > B_score: return "Left", 1
     else: return "Right", 1
     
-def get_stats(timestamp : double, stats : dict):
+def get_stats(timestamp : float, stats : dict):
     timestamps = list(stats.keys())
     timestamps.sort()
     
