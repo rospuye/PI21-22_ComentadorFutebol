@@ -3,6 +3,7 @@ from rest_framework import serializers, viewsets
 from djangoProject.permissions import IsOwnerOrIsAdmin
 from .models import Game, Preset
 from django.contrib.auth.models import User
+from rest_framework.response import Response
 
 
 class GameSerializer(serializers.ModelSerializer):
@@ -72,3 +73,41 @@ class PresetViewSet(viewsets.ModelViewSet):
     queryset = Preset.objects.all()
     serializer_class = PresetSerializer
     permission_classes = [IsOwnerOrIsAdmin]
+
+    def create(self, request, *args, **kwargs):
+        print(f"create {request = }")
+        print(f"{request.user = }")
+        print(f"{request.data = }")
+        print(f"{args = }")
+        print(f"{kwargs = }")
+        data = request.data
+        missing_fields = []
+        if "gender" not in data:
+            missing_fields.append("gender")
+
+        if "aggressive_val" not in data:
+            missing_fields.append("aggressive_val")
+
+        if "energetic_val" not in data:
+            missing_fields.append("energetic_val")
+
+        if "bias" not in data:
+            missing_fields.append("bias")
+
+        if len(missing_fields) != 0:
+            miss_fields = ""
+            for field in missing_fields:
+                miss_fields += field + ","
+
+            return Response({"message": f"Missing fields: {miss_fields[:-1]}."})
+
+        user = request.user
+        if user.is_anonymous:
+            return Response({"message": "Not authenticated user."})
+
+        preset = Preset(gender=data["gender"], aggressive_val=data["aggressive_val"],
+                        energetic_val=data["energetic_val"], bias=data["bias"], user=user)
+        preset.save()
+        serializer = PresetSerializer(preset)
+
+        return Response(serializer.data)
