@@ -75,11 +75,6 @@ class PresetViewSet(viewsets.ModelViewSet):
     permission_classes = [IsOwnerOrIsAdmin]
 
     def create(self, request, *args, **kwargs):
-        print(f"create {request = }")
-        print(f"{request.user = }")
-        print(f"{request.data = }")
-        print(f"{args = }")
-        print(f"{kwargs = }")
         data = request.data
         missing_fields = []
         if "gender" not in data:

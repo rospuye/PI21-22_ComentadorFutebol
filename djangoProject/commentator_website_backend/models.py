@@ -25,7 +25,6 @@ class Game(models.Model):
     user = models.ForeignKey(User, related_name="games", on_delete=models.CASCADE)
     is_public = models.BooleanField()
     processed_data = models.JSONField()
-    # jasminLink = models.CharField(max_length=255)
     league = models.CharField(max_length=50)
     year = models.IntegerField()
     round = models.CharField(max_length=50)
@@ -33,4 +32,3 @@ class Game(models.Model):
 
     class Meta:
         ordering = ['id']
-
