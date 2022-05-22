@@ -37,23 +37,23 @@ function UploadLogPage() {
 
   const [loading, setLoading] = useState(false)
 
-  // tts states
-  const [tts, setTts] = useState(new TTS())
-  const [hasLoadedVoices, setHasLoadedVoices] = useState(false)
-  let hasButtonClicked = { value: false }
+  // // tts states
+  // const [tts, setTts] = useState(new TTS())
+  // const [hasLoadedVoices, setHasLoadedVoices] = useState(false)
+  // let hasButtonClicked = { value: false }
 
-  useEffect(() => {
-    if (!tts.isSearchingVoices) {
-      tts.updateStateWhenVoicesLoaded(setHasLoadedVoices)
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (!tts.isSearchingVoices) {
+  //     tts.updateStateWhenVoicesLoaded(setHasLoadedVoices)
+  //   }
+  // }, [])
 
-  useEffect(() => {
-    console.log("loaded voices", tts.voices)
-    const lang_voices = tts.getVoicesByLanguage("en")
-    const voices_names = tts.getVoicesByName("male", lang_voices)
-    tts.setVoice(voices_names[0])
-  }, [hasLoadedVoices])
+  // useEffect(() => {
+  //   console.log("loaded voices", tts.voices)
+  //   const lang_voices = tts.getVoicesByLanguage("en")
+  //   const voices_names = tts.getVoicesByName("male", lang_voices)
+  //   tts.setVoice(voices_names[0])
+  // }, [hasLoadedVoices])
 
   function validateFormField(field) {
     if ((field.length > 0 && field.length <= 255)) {
@@ -67,7 +67,7 @@ function UploadLogPage() {
 
       if (validateFormField(title) && validateFormField(league) && validateFormField(round) && validateFormField(matchGroup)) {
 
-        tts.speak("We are starting the convertion, please wait.", hasButtonClicked) // its necessary to create the initial speak
+        // tts.speak("We are starting the convertion, please wait.", hasButtonClicked) // its necessary to create the initial speak
         const url = process.env.REACT_APP_API_URL + 'file_upload/';
         const formData = new FormData();
         formData.append('logFile', logFile);
@@ -78,10 +78,8 @@ function UploadLogPage() {
         formData.append('isPublic', privacy);
         formData.append('league', league);
         formData.append('year', year);
-        console.log("year", year)
         formData.append('round', round);
         formData.append('matchGroup', matchGroup);
-        console.log("token", `Token ${cookies.token}`)
         const config = {
           headers: {
             'content-type': 'multipart/form-data',
@@ -94,12 +92,7 @@ function UploadLogPage() {
 
         setLoading(true)
         axios.post(url, formData, config).then((response) => {
-          let data = response.data.game_id
-          console.log(data);
-
-          // for (let i = 0; i < 5; i++) {
-          //   tts.emmitAudio(data[i].text, hasButtonClicked)
-          // }
+          let game_id = response.data.game_id
 
           document.getElementById('confirmBtn').disabled = false;
           setLoading(false)
@@ -231,7 +224,6 @@ function UploadLogPage() {
                         else if (e.target.value < 1900) {
                           document.getElementById("game_year").value = 1900;
                         }
-                        console.log("sus year", e.target.value)
                         setYear(e.target.value)
                       }} />
                     </Form.Group>
