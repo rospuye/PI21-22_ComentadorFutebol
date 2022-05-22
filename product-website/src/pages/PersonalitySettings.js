@@ -20,6 +20,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import Img from '../images/graphic_model.PNG'
 import Img2 from '../images/plus.PNG'
 
+import axios from 'axios'
 import { useCookies } from 'react-cookie'
 
 function PersonalitySettings() {
@@ -35,9 +36,41 @@ function PersonalitySettings() {
     { alt: "Robot Model 2", src: { Img2 } }
   ];
 
-  const [login, setLogin] = useState(true);
+  const [login, setLogin] = useState(true)
+  const [gender, setGender] = useState("Male")
+  const [energy, setEnergy] = useState(0)
+  const [aggressiveness, setAggressiveness] = useState(0)
+  const [team, setTeam] = useState(0)
+
   const [cookies, setCookie] = useCookies(['logged_user'])
   console.log("cookies_another_page: " + cookies.logged_user)
+
+
+  const createPreset = () => {
+
+    const url = process.env.REACT_APP_API_URL + 'presets/';
+
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+        'Authorization': `Token ${cookies.token}`
+        // 'Access-Control-Allow-Origin': 'http://localhost:3001'
+      },
+    };
+
+    const formData = new FormData()
+    formData.append("gender", gender)
+    formData.append("aggressive_val", aggressiveness)    
+    formData.append("energetic_val", energy)
+    formData.append("bias", team)
+    console.log("preset create start")
+    axios.post(url, formData, config).then((response) => {
+      console.log("preset create response", response)
+
+      document.getElementById('confirmBtn').disabled = false;
+      // setLoading(false)
+    });
+  }
 
   return (
 
@@ -86,7 +119,17 @@ function PersonalitySettings() {
               }
             </Col>
 
-            <Col xs={6}><PersonalityDials /></Col>
+            <Col xs={6}><PersonalityDials
+              gender={gender}
+              setGender={setGender}
+              energy={energy}
+              setEnergy={setEnergy}
+              aggressiveness={aggressiveness}
+              setAggressiveness={setAggressiveness}
+              bias={team}
+              setBias={setTeam}
+              createPreset={createPreset}
+            /></Col>
 
             <Col>
               {
@@ -135,7 +178,17 @@ function PersonalitySettings() {
               }
             </Col>
 
-            <Col xs={6}><PersonalityDials /></Col>
+            <Col xs={6}><PersonalityDials
+              gender={gender}
+              setGender={setGender}
+              energy={energy}
+              setEnergy={setEnergy}
+              aggressiveness={aggressiveness}
+              setAggressiveness={setAggressiveness}
+              bias={team}
+              setBias={setTeam}
+              createPreset={createPreset}
+            /></Col>
 
             <Col className="text-center mt-4 mb-4">
               {
