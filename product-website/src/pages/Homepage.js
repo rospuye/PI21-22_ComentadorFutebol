@@ -48,7 +48,7 @@ function Homepage() {
 
     <Container>
       <Row>
-        <Col>
+        <Col style={{paddingTop:'5%'}}>
           <ThreeJSCanvas/>
         </Col>
         <Col>
