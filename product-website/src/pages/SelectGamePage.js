@@ -25,6 +25,12 @@ function SelectGamePage() {
     const [cookies, setCookie] = useCookies(['logged_user'])
     const [login, setLogin] = useState(cookies.logged_user !== '');
 
+    const updateLogin = () => {
+        console.log("UPDATE LOGIN WAS CALLED")
+        setLogin(cookies.logged_user !== '')
+        window.location.reload()
+    }
+
     axios.get(process.env.REACT_APP_API_URL + `games`)
         .then(res => {
             console.log(res);
@@ -55,20 +61,20 @@ function SelectGamePage() {
         </div>
         <div style={{ padding: '1%' }}>
             <Container>
-                <FocoNavbar goesBack={true} backPage={"/"} hasLoginBtn={true} cookies={cookies} setCookie={setCookie}/>
+                <FocoNavbar goesBack={true} backPage={"/"} hasLoginBtn={true} cookies={cookies} setCookie={setCookie} updateLogin={updateLogin}/>
             </Container>
 
             <Container>
                 <Row>
-                    <Col>
+                    {/* <Col>
                         <Link to="/">
                             <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '5%', marginLeft: '2%' }} />
                         </Link>
-                    </Col>
+                    </Col> */}
                     <Col>
                         <Title title="FoCo" subtitle="Select Your Game"></Title>
                     </Col>
-                    <Col style={{ display: 'flex', justifyContent: 'right' }}>
+                    {/* <Col style={{ display: 'flex', justifyContent: 'right' }}>
                         {login ?
                             <Button variant="light" style={{ height: '40px', marginTop: '5%' }} onClick={() => {
                                 setCookie('logged_user', '', { path: '/' })
@@ -79,7 +85,7 @@ function SelectGamePage() {
                             :
                             <></>
                         }
-                    </Col>
+                    </Col> */}
                 </Row>
             </Container>
 

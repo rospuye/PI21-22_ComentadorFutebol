@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/Container'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
-function FocoNavbar({goesBack,backPage,hasLoginBtn,cookies,setCookie}) {
+function FocoNavbar({goesBack,backPage,hasLoginBtn,cookies,setCookie,updateLogin}) {
   return (
     <Navbar style={{borderRadius:"15px"}} collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Container>
@@ -39,6 +39,7 @@ function FocoNavbar({goesBack,backPage,hasLoginBtn,cookies,setCookie}) {
             <Button className='loginButton' variant="light" onClick={() => {
               setCookie('logged_user', '', { path: '/' })
               setCookie('token', '', {path: '/'})
+              updateLogin()
             }}>Logout</Button>
             :
             <Link to="/login">
