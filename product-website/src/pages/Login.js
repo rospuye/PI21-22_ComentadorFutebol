@@ -219,10 +219,7 @@ function Login() {
                                 Your login credentials are incorrect.
                             </Form.Text>
                         </Form.Group>
-                        <Form.Group className="mb-3" id="loginRemember">
-                            <Form.Check type="checkbox" label="Remember me" />
-                        </Form.Group>
-                        <div style={{ textAlign: "center" }}>
+                        <div style={{ textAlign: "center",marginTop:"10%"}}>
                             {/* type="submit" */}
                             <Button className='btnUpload' variant="primary" onClick={() => {
                                 handleLogin(loginUsername, loginPassword, setCookie)
@@ -272,10 +269,7 @@ function Login() {
                                 Your password confirmation is different from your initial password.
                             </Form.Text>
                         </Form.Group>
-                        <Form.Group className="mb-3" id="registerRemember">
-                            <Form.Check type="checkbox" label="Remember me" />
-                        </Form.Group>
-                        <div style={{ textAlign: "center" }}>
+                        <div style={{ textAlign: "center",marginTop:"10%"}}>
                             <Button className='btnUpload' variant="primary" onClick={() => {
                                 handleRegister(registerUsername, registerEmail, registerPassword, registerConfirmPassword, setCookie)
                                 // console.log("registered: " + cookies.logged_user)
