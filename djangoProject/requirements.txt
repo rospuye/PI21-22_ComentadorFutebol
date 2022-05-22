@@ -4,4 +4,3 @@ django-filter
 django-cors-headers
 django-mysql
 PyMySql
-numpy

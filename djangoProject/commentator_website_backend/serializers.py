@@ -1,5 +1,7 @@
 from rest_framework import serializers, viewsets
-from .models import Game
+
+from djangoProject.permissions import IsOwnerOrIsAdmin
+from .models import Game, Preset
 from django.contrib.auth.models import User
 
 
@@ -15,7 +17,7 @@ class GameViewSet(viewsets.ModelViewSet):
     serializer_class = GameSerializer
 
     def get_queryset(self):
-
+        print(f"get_queryset")
         queryset = Game.objects.all()
         query_params = self.request.query_params
         username = query_params.get('username')
@@ -28,10 +30,10 @@ class GameViewSet(viewsets.ModelViewSet):
 
         if username is not None:
             queryset = queryset.filter(user__username=username)
-            if username != self.request.user.username:
+            if not self.request.user.is_superuser and username != self.request.user.username:
                 queryset = queryset.filter(is_public=True)
 
-        else:
+        elif not self.request.user.is_superuser:
             queryset = queryset.filter(is_public=True)
 
         queryset = queryset.filter(round__contains=roud)
@@ -52,9 +54,21 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'games']
+        fields = ['id', 'username', 'games', 'presets']
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class PresetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Preset
+        fields = ['id', 'user', 'gender', 'aggressive_val', 'energetic_val', 'bias']
+
+
+class PresetViewSet(viewsets.ModelViewSet):
+    queryset = Preset.objects.all()
+    serializer_class = PresetSerializer
+    permission_classes = [IsOwnerOrIsAdmin]
