@@ -1,6 +1,5 @@
 import random
 
-from numpy import double
 from .log_processing import process_log
 
 BIAS_PROB = 30
@@ -80,7 +79,7 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
 
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map: p1['id'] = player_name_map[p1['id']]
+    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
 
     lines = { 
         "neutral": 
@@ -117,8 +116,8 @@ def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, t
     team = teams[1] if p1["team"] else teams[1]
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map: p1['id'] = player_name_map[p1['id']]
-    if p2 in player_name_map: p2['id'] = player_name_map[p2['id']]
+    if p1['id'] in player_name_map: p1['id'] = player_name_map[p1['id']]
+    if p2['id'] in player_name_map: p2['id'] = player_name_map[p2['id']]
 
     lines = { 
         "neutral": {
@@ -244,7 +243,7 @@ def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_ma
     p1 = args.get("player")
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map: p1['id'] = player_name_map[p1['id']]
+    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
 
     lines_without_player = {
         "neutral": 
@@ -295,7 +294,7 @@ def goal_shot_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
     p1 = args["player"]
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map: p1['id'] = player_name_map[p1['id']]
+    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
 
     lines = { 
         "neutral": 
@@ -370,8 +369,8 @@ def aggression_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_
     p2 = args["player_2"]
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map: p1['id'] = player_name_map[p1['id']]
-    if p2 in player_name_map: p2['id'] = player_name_map[p2['id']]
+    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+    if p2 in player_name_map.keys(): p2['id'] = player_name_map[p2['id']]
 
     lines = { 
         "neutral": 
@@ -447,7 +446,7 @@ def intersect_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
     p1 = args["player"]
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map: p1['id'] = player_name_map[p1['id']]
+    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
     
 
     lines = { 
@@ -570,7 +569,7 @@ def whos_winning(stats):
     elif A_score > B_score: return "Left", 1
     else: return "Right", 1
     
-def get_stats(timestamp : double, stats : dict):
+def get_stats(timestamp : float, stats : dict):
     timestamps = list(stats.keys())
     timestamps.sort()
     
@@ -594,8 +593,8 @@ def generate_player_names():
 
     random.shuffle(names)
     for i in range(11):
-        idLeft = "matNum"+i+"matLeft"
-        idRight = "matNum"+i+"matRight"
+        idLeft = "matNum" + str(i) + "matLeft"
+        idRight = "matNum" + str(i) + "matRight"
         ret[idLeft] = names[i]
         ret[idRight] = names[i+11]
 

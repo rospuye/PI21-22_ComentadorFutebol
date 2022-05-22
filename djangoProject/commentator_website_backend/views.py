@@ -1,178 +1,613 @@
-import django.db.utils
-from django.contrib.auth import authenticate
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
-import json
+import random
 
-from djangoProject.permissions import IsOwnerOrIsAdmin
-from .business_logic.log_processing import process_log
-from .business_logic.nl_processing import generate_script
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import generics, permissions
-from rest_framework.authtoken.models import Token
-from .models import Game
-from .serializers import GameSerializer, UserSerializer
+from .log_processing import process_log
 
-NUMBER_OF_GAMES_BY_USER = 10
+BIAS_PROB = 30
 
+# Bias: bias
+# -1: favors Left team, base 25% chance to trigger a biased line
+# 0: no bias
+# 1: favors Right team, base 25% chance to trigger a biased line
 
-@csrf_exempt
-def new_login(request):
-    user_str = request.body.decode()
-    user_json = json.loads(user_str)
-    username = user_json["username"]
-    password = user_json["password"]
+# Aggressive / Friendly: agr_frnd
+# -50: 50% chance for aggressive line
+# ...
+# 0: 0% chance for emotional line
+# ...
+# 50: 50% chance for friendly line
 
-    user = authenticate(username=username, password=password)
+# Neutral line probability never goes below 25%
 
-    if user is not None:
-        token = Token.objects.get(user=user)
-        return JsonResponse({"message": "login_success", "token": token.key})
-    return JsonResponse({"message": "login_failure"})
+class Comentary:
+    def __init__(self, text, mood, diction, timestamp) -> None:
+        self.text = text # commentary text
+        self.mood = mood # commentary emotion (aggressive/neutral/friendly)
+                         # affects robot color and expression
+                         # values: aggressive/neutral/friendly (ternary)
+        self.diction = diction # commentary diction (calm/neutral/energetic)
+                               # affects robot voice speed and pitch
+                               # calm -> lower pitched, slower diction
+                               # energetic -> higher pitched, faster diction
+                               # ranges from 9 to -9
+        self.timestamp = timestamp # time at which the commentary must be innitiated
 
+    def to_json(self):
+        return {"text": self.text, "mood": self.mood, "diction": self.diction, "timestamp": self.timestamp}
 
-@csrf_exempt
-def new_register(request):
-    user_str = request.body.decode()
-    user_json = json.loads(user_str)
-    username = user_json["username"]
-    email = user_json["email"]
-    password = user_json["password"]
+class Bounded_Queue():
+    def __init__(self, max) -> None:
+        self.max = max
+        self.queue = []       
 
-    try:
-        user = User.objects.create_user(username, email, password)
-        user.save()
-        token = Token.objects.create(user=user)
-        print(f"register {token.key = }")
-        return JsonResponse({"message": "register_success", "token": token.key})
-    except django.db.utils.IntegrityError:
-        return JsonResponse({"message": "username_already_in_use"})
+    def add(self, el):
+        if len(self.queue) >= self.max:
+            self.pop()
+        self.queue.append(el)
 
+    def pop(self):
+        if len(self.queue) > 0: 
+            return self.queue.pop(0)
+        else: return None
 
-class GameList(generics.ListAPIView):
-    serializer_class = GameSerializer
+lines_repeated = Bounded_Queue(10)
+        
+def dice_roll(mod, bias : bool, supporting):
+    """Returns the type of the next line based on the given modifier and bias."""
+    
+    bias_prob = BIAS_PROB if bias else 0
+    emotion_prob = abs(mod)
 
-    def get_queryset(self):
-        print(f"{self.request.user = }")
-        print(f"{self.request.auth = }")
+    roll = random.randint(0,100) # roll for line type
+    if roll < emotion_prob:
+        emotions = ["aggressive","friendly"]
+        return emotions[mod > 0]
+    elif roll < emotion_prob+bias_prob:
+        return "biased" + ("_supporting" if supporting else "_opposing")
+    else:
+        return "neutral"
 
-        queryset = Game.objects.all()
-        query_params = self.request.query_params
-        username = query_params.get('username')
-        title = query_params.get('title', '')
-        league = query_params.get('league', '')
-        group = query_params.get('matchGroup', '')
-        year = query_params.get('year')
-        roud = query_params.get('round', '')
-        sort_field = query_params.get('sort')
+def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams):
+    timestamp = event["start"]
+    statistic = get_stats(timestamp, stats)
+    p1 = None
+    if event.event in ["short_pass", "long_pass"]:
+        p1 = event["args"]["from"]
+    elif event.event in ["dribble", "kick_off", "defense", "intersect"]:
+        p1 = event["args"]["player"]
+    elif event.event in ["aggression"]: 
+        p1 = event["args"]["player_1"] 
 
-        if username is not None:
-            queryset = queryset.filter(user__username=username)
+    supporting = True if p1["team"] == (bias > 0) else False
 
-        queryset = queryset.filter(round__in=roud)
-        queryset = queryset.filter(title__in=title)
-        queryset = queryset.filter(league__in=league)
-        queryset = queryset.filter(matchGroup__in=group)
+    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
 
-        if year is not None:
-            queryset = queryset.filter(year=year)
-        if sort_field is not None:
-            queryset = queryset.order_by(sort_field)
+    lines = { 
+        "neutral": 
+            []
+        ,
+        "aggressive": 
+            []
+        , 
+        "friendly": 
+            [] 
+        ,
+        "biased_supporting": 
+            []
+        ,
+        "biased_opposing": 
+            []
+    }
 
-        return queryset
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-
-class UserList(generics.ListAPIView):
-    # Access only to the admin
-    permission_classes = [permissions.IsAdminUser]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-    # Access only to the admin and to the requested user
-    permission_classes = [IsOwnerOrIsAdmin]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-@csrf_exempt
-@api_view(['POST'])
-def file_upload(request):
-    # game_str = request.body.decode()
-    # game_json = json.loads(game_str)
-    # filename = game_json["fileName"]
-    # print(filename)
-    print("file uploaded")
-    log_file = request.FILES['logFile']
-    replay_file = request.FILES['replayFile']
-    data = request.data
-    # user_form = data["user"]
-    title = data["title"]
-    description = data["description"]
-    is_public = True if data["isPublic"] == "Public" else False
-    league = data["league"]
-    try:
-        year = int(data["year"])
-    except:
-        return JsonResponse({"message": "Year invalid"})
-    roud = data["round"]
-    match_group = data["matchGroup"]
-
-    user = request.user
-    if user.is_anonymous:
-        return JsonResponse({"detail": "Authentication credentials were not provided."})
-
-    # try:
-    user_games = Game.objects.filter(user__username=user.username)
-    # except Game.DoesNotExist:
-    #     user_games = []
-
-    if len(user_games) >= NUMBER_OF_GAMES_BY_USER:
-        return JsonResponse({"error": "Reached number of games by given user."})
-    events, analytics, form, form_players, teams = process_log(uploaded_file)
-
-    json_response = {"events": [], "form": form, "form_players": form_players}
-
-    # new_game = Game.objects.create(uploaded_file, )
-    if len(events) < 10:
-        return Response({"message": "Processing Failed"})
-
-    for event in events:
-        json_response["events"].append(event.to_json())
-
-    for timestamp in analytics:
-        for team in analytics[timestamp]["teams"]:
-            analytics[timestamp]["teams"][team] = analytics[timestamp]["teams"][team].to_json()
-        for player in analytics[timestamp]["players"]:
-            analytics[timestamp]["players"][player] = analytics[timestamp]["players"][player].to_json()
-    json_response["stats"] = analytics
+    line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
+    return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
 
 
-    # Another endpoint?
-    # At this stage, fetch modifiers
-    agr_frnd_mod = 0 # aggressive/friendly modifier (-50 to 50)
-    en_calm_mod = 0 # energetic/calm modifier (-5 to 5)
-    bias = 0 # -1 Left, 1 Right, 0 None
-    response = generate_script(json_response['events'], json_response["stats"], agr_frnd_mod, en_calm_mod, bias, teams)
-    # print(f"{response = }")
-    # print(f"{json_response = }")
+STATS_TIMES = []
 
-    game = Game(replay_file=replay_file, title=title, description=description, user=user,
-                is_public=is_public, league=league, year=year, round=roud, match_group=match_group,
-                processed_data=json_response)
+def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams):
 
-    game.save()
+    for t in STATS_TIMES:
+        if event["start"] < t < event["end"]:
+            return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
+
+    args = event["args"]
+    p1 = args["from"]
+    p2 = args["to"]
+    team = teams[1] if p1["team"] else teams[1]
+    supporting = True if p1["team"] == (bias > 0) else False
+
+    if p1['id'] in player_name_map: p1['id'] = player_name_map[p1['id']]
+    if p2['id'] in player_name_map: p2['id'] = player_name_map[p2['id']]
+
+    lines = { 
+        "neutral": {
+            "pass_success": [
+                f"{p1['id']} passes the ball to {p2['id']}",
+                f"{p1['id']} sends it to {p2['id']}",
+                f"Successful pass from the {team} team",
+                f"{team} team maintains the ball in their posession",
+                f"{team} advances with the ball"
+            ],
+            "pass_fail": [
+                f"{p2['id']} stole the ball",
+                f"{p1['id']} lost the ball for his team",
+                f"Team {team} loses the ball"
+            ]
+        },
+        "aggressive": {
+            "pass_success": [
+                f"{p1['id']} shot the ball straight into {p2['id']}'s direction",
+                f"{p1['id']} threw it to {p2['id']}",
+                f"terrific pass by {p1['id']}",
+                f"what a strong pass, {p2['id']} was barely able to hold on to the ball",
+                f"{p2['id']} almost lost his footing there getting the ball from his teammate",
+                f"{p2['id']} has the ball now! keep going! keep going!"
+            ],
+            "pass_fail": [
+                f"{p1['id']} stupidly lost the ball to {p2['id']}",
+                f"that was a ridiculous attempt at passing on {p1['id']}'s part",
+                f"{p1['id']} has to be drunk or something",
+                f"{p1['id']} can't stay with the ball without losing it at the next moment",
+                f"{p1['id']} unsurprisingly lost the ball. now the ball is with {p2['id']}",
+                f"if {p1['id']} doesn't want to play, he shouldn't have come today",
+                f"c'mon {p1['id']}, please at least try to keeping the ball with the team",
+                f"{p1['id']} better work on getting the ball he just lost back!",
+                f"terrible aiming on {p1['id']}'s part, they just lost the ball to the opposing team",
+                f"{p1['id']} just lost his team's advantage by having the motor skills of a toddler"
+            ]
+        }, 
+        "friendly": {
+            "pass_success": [
+                f"incredible pass by {p1['id']}",
+                f"{p2['id']} catching the shot from his teammate with style"
+            ],
+            "pass_fail": [
+                f"pass missed! they can still bounce back though",
+                f"{p1['id']} failed their pass, I'm sure they'll get it next time"
+            ]
+        },
+        "biased_supporting": {
+            "pass_success": [
+                
+            ],
+            "pass_fail": [
+                
+            ]
+        },
+        "biased_opposing": {
+            "pass_success": [
+                
+            ],
+            "pass_fail": [
+                
+            ]
+        }
+    }
+
+    line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
+    if p1["team"] == p2["team"]:
+        return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type]["pass_success"])
+    else:
+        return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type]["pass_fail"])
+
+def dribble_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams):
+
+    for t in STATS_TIMES:
+        if event["start"] < t < event["end"]:
+            return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
+
+    args = event["args"]
+    p1 = args["player"]
+    supporting = True if p1["team"] == (bias > 0) else False
+
+    if p1 in player_name_map: p1['id'] = player_name_map[p1['id']]
+
+    lines = { 
+        "neutral": 
+            [
+                f"{p1['id']} is racing through the field",
+                f"{p1['id']} has the ball!",
+                f"{p1['id']} is dribbling around!"
+            ]
+        ,
+        "aggressive": 
+            []
+        , 
+        "friendly": 
+            [] 
+        ,
+        "biased_supporting": 
+            [
+                f"Amazing, {p1['id']} is racing through the field",
+                f"Amazing, {p1['id']} is dribbling around!"
+            ]
+        ,
+        "biased_opposing": 
+            [
+               f"Oh no, {p1['id']} is racing through the field",
+               f"Oh no, {p1['id']} is dribbling around!"
+            ]
+        
+    }
+
+    line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
+    return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
+
+def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams):
+
+    for t in STATS_TIMES:
+        if event["start"] < t < event["end"]:
+            return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
+
+    args = event["args"]
+    p1 = args.get("player")
+    supporting = True if p1["team"] == (bias > 0) else False
+
+    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+
+    lines_without_player = {
+        "neutral": 
+            [
+                "and the games goes on"
+            ]
+        ,
+        "aggressive": 
+            []
+        , 
+        "friendly": 
+            [] 
+        ,
+        "biased_supporting": 
+            []
+        ,
+        "biased_opposing": 
+            []
+    }
+    
+
+    if p1 is not None:
+        lines_with_player = {
+            "neutral": 
+                [
+                    f"{p1['id']} starts the game"
+                ]
+            ,
+            "aggressive": 
+                []
+            , 
+            "friendly": 
+                [] 
+            ,
+            "biased_supporting": 
+                []
+            ,
+            "biased_opposing": 
+                []
+        }
+
+    line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
+    lines = lines_without_player if p1 is None else lines_with_player + lines_without_player
+    return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
+
+def goal_shot_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams):
+    args = event["args"]
+    p1 = args["player"]
+    supporting = True if p1["team"] == (bias > 0) else False
+
+    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+
+    lines = { 
+        "neutral": 
+            [
+                f"{p1['id']} shoots!",
+                "And he kicks"
+            ]
+        ,
+        "aggressive": 
+            []
+        , 
+        "friendly": 
+            [
+                f"Great kick by {p1['id']}"
+            ] 
+        ,
+        "biased_supporting": 
+            []
+        ,
+        "biased_opposing": 
+            []
+    }
+
+    line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
+    return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
 
 
-    serializer = GameSerializer(game)
-    # print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ")
-    print(serializer.data['id'])
-    return Response({'game_id': serializer.data['id']})
+def goal_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams):
+    args = event["args"]
+    team = args["team"]
+    supporting = True if team == (bias > 0) else False
 
-    # return Response(response)
+    lines = { 
+        "neutral": 
+            [
+                f"{team} SCORES!!",
+            ]
+        ,
+        "aggressive": 
+            [
+                "Its a GOAL!!!"
+            ]
+        , 
+        "friendly": 
+            [
+                "What a great goal"
+            ] 
+        ,
+        "biased_supporting": 
+            [
+                "GOOOOOOOOOOOOOOOOOOOOOOAAAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLl"
+            ]
+        ,
+        "biased_opposing": 
+            [
+                f"Oh no {team} scores"
+            ]
+    }
+
+    line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
+    return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
+
+
+def aggression_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, team):
+
+    for t in STATS_TIMES:
+        if event["start"] < t < event["end"]:
+            return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
+
+    args = event["args"]
+    p1 = args["player_1"]
+    p2 = args["player_2"]
+    supporting = True if p1["team"] == (bias > 0) else False
+
+    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+    if p2 in player_name_map.keys(): p2['id'] = player_name_map[p2['id']]
+
+    lines = { 
+        "neutral": 
+            [f"{p1['id']} and {p2['id']} fall down",
+            f"{p1['id']} and {p2['id']} are going at it",
+            "Oh no! They fell."]
+        ,
+        "aggressive": 
+            []
+        , 
+        "friendly": 
+            [] 
+        ,
+        "biased_supporting": 
+            []
+        ,
+        "biased_opposing": 
+            []
+    }
+
+    line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
+    return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
+
+
+def defense_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, team):
+
+    for t in STATS_TIMES:
+        if event["start"] < t < event["end"]:
+            return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
+
+    args = event["args"]
+    team = team[1] if args["player"]["team"] else team[0]
+    supporting = True if (team == "Right") == (bias > 0) else False
+
+    lines = { 
+        "neutral": 
+            [
+                f"Team {team} makes a defense.",
+                f"The shot was defended by Team {team}"
+            ]
+        ,
+        "aggressive": 
+            [
+                f"What a defense by team {team}"
+            ]
+        , 
+        "friendly": 
+            [
+                f"Great defence"
+            ] 
+        ,
+        "biased_supporting": 
+            [
+                f"A beutiful defense by team {team}"
+            ]
+        ,
+        "biased_opposing": 
+            [
+                f"Dammit team {team} defends the goal"
+            ]
+    }
+
+    line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
+    return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
+
+
+def intersect_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, team):
+    for t in STATS_TIMES:
+        if event["start"] < t < event["end"]:
+            return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
+
+    args = event["args"]
+    p1 = args["player"]
+    supporting = True if p1["team"] == (bias > 0) else False
+
+    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+    
+
+    lines = { 
+        "neutral": 
+            [
+                f"{p1['id']} stole the ball.",
+                f"But {p1['id']} intersected."
+            ]
+        ,
+        "aggressive": 
+            [
+                f"What a steal!"
+            ]
+        , 
+        "friendly": 
+            [
+                f"Nice intersect {p1['id']}"
+            ] 
+        ,
+        "biased_supporting": 
+            [
+                f"Amazing steal by {p1['id']}"
+            ]
+        ,
+        "biased_opposing": 
+            [
+                f"God dammit {p1} steals the ball"
+            ]
+    }
+
+    line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
+    return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
+
+def event_to_text(event, type, stats, en_calm_mod, bias, lines=None):
+    if lines is None:
+        lines = []
+    for line in lines:
+        if remove_players(line) in lines_repeated.queue:
+            lines.remove(line)
+            
+    n = random.randint(0, len(lines) - 1)
+    if bias != 0:
+        winning, mod = whos_winning(stats)
+        if winning:
+            if winning == "Left":
+                if bias > 0: # Supporting Right team
+                    en_calm_mod += 2*mod # gets more nervous
+                else:
+                    en_calm_mod -= 2*mod # is calmer
+            else:
+                if bias > 0:
+                    en_calm_mod -= 2*mod
+                else:
+                    en_calm_mod += 2*mod
+    commentary = Comentary(lines[n], type, en_calm_mod, event["start"])
+    lines_repeated.add(lines[n])
+    # return f"({event['start']}, {event['end']}) " + lines[n]
+    return {
+        "start": event['start'],
+        "end": event['end'],
+        "text": lines[n]
+    }
+
+def remove_players(line):
+    names = ["Dinis", "Isabel", "Afonso", "Miguel", "Lucius", "Joanne", "Louis", "Camila", \
+        "Dianne", "Amber", "Carl", "Martha", "Bob", "Helen", "Joseph", "Josephine", "Gared", \
+        "Ursula", "Bernard"]
+        
+    l = ""
+    for name in names:
+        l = line.replace(name, "")
+
+    return l
+
+lines = {
+    "dribble": dribble_lines,
+    "short_pass": pass_lines,
+    "long_pass": pass_lines,
+    "kick_off": kick_off_lines,
+    "goal_shot": goal_shot_lines,
+    "goal": goal_lines,
+    "defense": defense_lines,
+    "intersect": intersect_lines,
+    "aggression": aggression_lines
+}
+
+
+def generate_script(events, stats, agr_frnd_mod, en_calm_mod, bias, teams):
+    player_name_map = generate_player_names() # ran at the start and fixed for the rest of the duration
+
+    commentary = [
+        lines.get(event["event"],
+                  lambda x: event_to_text(event, ["Not implemented yet :)"]))(event, get_stats(event["start"], stats), agr_frnd_mod, en_calm_mod, bias, player_name_map, teams)
+                  # lambda x: f"({event['start']}, {event['end']}) \'{event['event']}\' Not implemented yet :)")(event)
+        for event in events
+    ]
+
+    return commentary
+
+
+
+def whos_winning(stats):
+    """Returns the team that's winning, plus how bad they are winning"""
+    # 2 - team is winning by goals
+    # 1 - team is winning by shots, defenses and ball posession
+    if stats["teams"]["A"]["goals"] > stats["teams"]["B"]["goals"]:
+        return "Left", 2
+    elif stats["teams"]["A"]["goals"] < stats["teams"]["B"]["goals"]:
+        return "Right", 2
+    
+    A_score = stats["teams"]["A"]["shots"]+stats["teams"]["A"]["defenses"]
+    B_score = stats["teams"]["B"]["shots"]+stats["teams"]["B"]["defenses"]
+    if stats["teams"]["A"]["ball_pos"] > stats["teams"]["B"]["ball_pos"]:
+        A_score += 2
+    elif stats["teams"]["A"]["ball_pos"] < stats["teams"]["B"]["ball_pos"]:
+        B_score += 2
+
+    diff = abs(A_score-B_score)
+    if diff == 0: return None, 0
+    elif A_score > B_score: return "Left", 1
+    else: return "Right", 1
+    
+def get_stats(timestamp : float, stats : dict):
+    timestamps = list(stats.keys())
+    timestamps.sort()
+    
+    if timestamp < timestamps[0]:
+        return None
+    last = timestamps[0]
+    for stamp in timestamps[1:]:
+        if stamp <= timestamp:
+            last = stamp
+            continue
+        else:
+            return stats[last]
+    return stats[timestamps[-1]]
+
+def generate_player_names():
+    ret = {}
+    
+    names = ["Dinis", "Isabel", "Afonso", "Miguel", "Lucius", "Joanne", "Louis", "Camila", \
+        "Dianne", "Amber", "Carl", "Martha", "Bob", "Helen", "Joseph", "Josephine", "Gared", \
+        "Ursula", "Bernard", "Kimberly", "Troy", "Ginny"]
+
+    random.shuffle(names)
+    for i in range(11):
+        idLeft = "matNum" + str(i) + "matLeft"
+        idRight = "matNum" + str(i) + "matRight"
+        ret[idLeft] = names[i]
+        ret[idRight] = names[i+11]
+
+    return ret
+
+if __name__ == "__main__":
+
+    events = process_log("sparkmonitor.log")
+    # print(events)
+    script = generate_script(events)
+    print(script)
+    f = open("script.txt", "w")
+    for line in script:
+        f.write(line)
+        f.write("\n")
+    f.close()
