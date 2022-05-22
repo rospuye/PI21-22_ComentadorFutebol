@@ -33,7 +33,10 @@ function SelectGamePage() {
 
     axios.get(process.env.REACT_APP_API_URL + `games`)
         .then(res => {
-            console.log(res);
+            // console.log(res);
+
+
+
             // if (res.data.message === 'register_success') {
             //     setCookie('logged_user', username, { path: '/', maxAge: '3600' })
             //     setCookie('token', res.data.token, { path: '/', maxAge: '3600' })
