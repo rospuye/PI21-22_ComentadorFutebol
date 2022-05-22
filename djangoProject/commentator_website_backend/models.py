@@ -7,11 +7,14 @@ from django.contrib.auth.models import User
 
 class Preset(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    gender = models.CharField(max_length=255)
-    aggressiveVal = models.IntegerField()
-    energeticVal = models.IntegerField()
+    user = models.ForeignKey(User, related_name="presets", on_delete=models.CASCADE)
+    gender = models.CharField(max_length=20)
+    aggressive_val = models.IntegerField()
+    energetic_val = models.IntegerField()
     bias = models.IntegerField()
+
+    class Meta:
+        ordering = ['id']
 
 
 class Game(models.Model):
@@ -22,9 +25,10 @@ class Game(models.Model):
     user = models.ForeignKey(User, related_name="games", on_delete=models.CASCADE)
     is_public = models.BooleanField()
     processed_data = models.JSONField()
-    # jasminLink = models.CharField(max_length=255)
     league = models.CharField(max_length=50)
     year = models.IntegerField()
     round = models.CharField(max_length=50)
     match_group = models.CharField(max_length=50)
 
+    class Meta:
+        ordering = ['id']

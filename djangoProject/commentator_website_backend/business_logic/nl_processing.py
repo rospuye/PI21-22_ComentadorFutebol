@@ -37,7 +37,7 @@ class Comentary:
 class Bounded_Queue():
     def __init__(self, max) -> None:
         self.max = max
-        self.queue = []       
+        self.queue = []
 
     def add(self, el):
         if len(self.queue) >= self.max:
@@ -45,15 +45,15 @@ class Bounded_Queue():
         self.queue.append(el)
 
     def pop(self):
-        if len(self.queue) > 0: 
+        if len(self.queue) > 0:
             return self.queue.pop(0)
         else: return None
 
 lines_repeated = Bounded_Queue(10)
-        
+
 def dice_roll(mod, bias : bool, supporting):
     """Returns the type of the next line based on the given modifier and bias."""
-    
+
     bias_prob = BIAS_PROB if bias else 0
     emotion_prob = abs(mod)
 
@@ -74,12 +74,12 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
         p1 = event["args"]["from"]
     elif event.event in ["dribble", "kick_off", "defense", "intersect"]:
         p1 = event["args"]["player"]
-    elif event.event in ["aggression"]: 
-        p1 = event["args"]["player_1"] 
+    elif event.event in ["aggression"]:
+        p1 = event["args"]["player_1"]
 
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+    if p1['id'] in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
 
     lines = { 
         "neutral": 
@@ -119,7 +119,7 @@ def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, t
     if p1['id'] in player_name_map: p1['id'] = player_name_map[p1['id']]
     if p2['id'] in player_name_map: p2['id'] = player_name_map[p2['id']]
 
-    lines = { 
+    lines = {
         "neutral": {
             "pass_success": [
                 f"{p1['id']} passes the ball to {p2['id']}",
@@ -155,7 +155,7 @@ def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, t
                 f"terrible aiming on {p1['id']}'s part, they just lost the ball to the opposing team",
                 f"{p1['id']} just lost his team's advantage by having the motor skills of a toddler"
             ]
-        }, 
+        },
         "friendly": {
             "pass_success": [
                 f"incredible pass by {p1['id']}",
@@ -168,18 +168,18 @@ def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, t
         },
         "biased_supporting": {
             "pass_success": [
-                
+
             ],
             "pass_fail": [
-                
+
             ]
         },
         "biased_opposing": {
             "pass_success": [
-                
+
             ],
             "pass_fail": [
-                
+
             ]
         }
     }
@@ -200,7 +200,7 @@ def dribble_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map
     p1 = args["player"]
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map: p1['id'] = player_name_map[p1['id']]
+    if p1['id'] in player_name_map: p1['id'] = player_name_map[p1['id']]
 
     lines = { 
         "neutral": 
@@ -243,7 +243,8 @@ def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_ma
     p1 = args.get("player")
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+    if p1['id'] in player_name_map.keys(): 
+        p1['id'] = player_name_map[p1['id']]
 
     lines_without_player = {
         "neutral": 
@@ -263,7 +264,7 @@ def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_ma
         "biased_opposing": 
             []
     }
-    
+
 
     if p1 is not None:
         lines_with_player = {
@@ -286,7 +287,9 @@ def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_ma
         }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
-    lines = lines_without_player if p1 is None else lines_with_player + lines_without_player
+
+    lines = lines_without_player if p1 is None else {**lines_with_player, **lines_without_player}
+
     return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
 
 def goal_shot_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams):
@@ -294,7 +297,7 @@ def goal_shot_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
     p1 = args["player"]
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+    if p1['id'] in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
 
     lines = { 
         "neutral": 
@@ -369,8 +372,8 @@ def aggression_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_
     p2 = args["player_2"]
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
-    if p2 in player_name_map.keys(): p2['id'] = player_name_map[p2['id']]
+    if p1['id'] in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+    if p2['id'] in player_name_map.keys(): p2['id'] = player_name_map[p2['id']]
 
     lines = { 
         "neutral": 
@@ -446,7 +449,7 @@ def intersect_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
     p1 = args["player"]
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+    if p1['id'] in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
     
 
     lines = { 
@@ -486,7 +489,7 @@ def event_to_text(event, type, stats, en_calm_mod, bias, lines=None):
     for line in lines:
         if remove_players(line) in lines_repeated.queue:
             lines.remove(line)
-            
+
     n = random.randint(0, len(lines) - 1)
     if bias != 0:
         winning, mod = whos_winning(stats)
@@ -514,7 +517,7 @@ def remove_players(line):
     names = ["Dinis", "Isabel", "Afonso", "Miguel", "Lucius", "Joanne", "Louis", "Camila", \
         "Dianne", "Amber", "Carl", "Martha", "Bob", "Helen", "Joseph", "Josephine", "Gared", \
         "Ursula", "Bernard"]
-        
+
     l = ""
     for name in names:
         l = line.replace(name, "")
@@ -556,7 +559,7 @@ def whos_winning(stats):
         return "Left", 2
     elif stats["teams"]["A"]["goals"] < stats["teams"]["B"]["goals"]:
         return "Right", 2
-    
+
     A_score = stats["teams"]["A"]["shots"]+stats["teams"]["A"]["defenses"]
     B_score = stats["teams"]["B"]["shots"]+stats["teams"]["B"]["defenses"]
     if stats["teams"]["A"]["ball_pos"] > stats["teams"]["B"]["ball_pos"]:
@@ -572,7 +575,7 @@ def whos_winning(stats):
 def get_stats(timestamp : float, stats : dict):
     timestamps = list(stats.keys())
     timestamps.sort()
-    
+
     if timestamp < timestamps[0]:
         return None
     last = timestamps[0]
@@ -586,7 +589,7 @@ def get_stats(timestamp : float, stats : dict):
 
 def generate_player_names():
     ret = {}
-    
+
     names = ["Dinis", "Isabel", "Afonso", "Miguel", "Lucius", "Joanne", "Louis", "Camila", \
         "Dianne", "Amber", "Carl", "Martha", "Bob", "Helen", "Joseph", "Josephine", "Gared", \
         "Ursula", "Bernard", "Kimberly", "Troy", "Ginny"]

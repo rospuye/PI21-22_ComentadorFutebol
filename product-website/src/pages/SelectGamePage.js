@@ -3,7 +3,7 @@ import { Container, Row, Col, Button } from 'react-bootstrap'
 import SearchBox from '../components/SearchBox'
 import SortInput from '../components/SortInput'
 import Title from '../components/Title'
-import Select from 'react-select'
+// import Select from 'react-select'
 
 import '../components/components_css/Form.css';
 
@@ -93,7 +93,7 @@ function SelectGamePage() {
             </Container>
 
             <Container>
-                <Row>
+                <Row style={{marginTop:'3%'}}>
                 <Col xs={3}>
                         {/* Filters and Buttons */}
                         <SearchBox login={login} />
@@ -112,7 +112,7 @@ function SelectGamePage() {
                             : <></>}
                     </Col>
                     <Col xs={9}>
-                        <Row style={{display:'flex',alignItems:'center',justifyContent:'right',marginTop:'2%',marginBottom:'3%'}}>
+                        <Row style={{display:'flex',alignItems:'center',justifyContent:'right',marginBottom:'3%'}}>
                             <Container style={{width:'60%',marginLeft:'30%'}}>
                                 <SortInput />
                             </Container>
