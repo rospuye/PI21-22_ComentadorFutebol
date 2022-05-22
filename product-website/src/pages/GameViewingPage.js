@@ -1,5 +1,5 @@
 // React
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from "react-router-dom"
 
 // Components
@@ -17,15 +17,69 @@ import ToastContainer from 'react-bootstrap/ToastContainer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHouse } from '@fortawesome/free-solid-svg-icons'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { useEffect } from "react"
 
 
 
+function commentaryToSSML(text, mood, diction, gender) {
+    voice = "en-US-AnaNeural"
+    if (gender == "female") {
+        voice = "en-US-AshleyNeural"
+    }
+    else if (gender == "male") {
+        voice = "en-US-BrandonNeural"
+    }
+
+    style = null
+    if (mood == "aggressive") {
+        style = "angry"
+    }
+    else if (mood == "friendly") {
+        style = "friendly"
+    }
+
+    pitch = "medium"
+    rate = 1
+
+    inner = ""
+    if (style) {
+        string = `<mstts:express-as style="${style}">${text}</mstts:express-as>`
+        inner = `<paropsy pitch=${pitch} rate=${rate}>${string}</paropsy>`
+    }
+    else {
+        inner = `<paropsy pitch=${pitch} rate=${rate}>${text}</paropsy>`
+    }
+    
+    speak = `<voice name=${voice}>${inner}</voice>` 
+    base = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">${speak}</speak>`
+    return base
+
+}
 
 
+function synthesizeSpeech() {
+    const speechConfig = sdk.SpeechConfig.fromSubscription("dfb5fa14bd85423db7a60da4b0ac369f", "westeurope");
+    const synthesizer = new sdk.SpeechSynthesizer(speechConfig, null);
 
+    const ssml = commentaryToSSML("bees are very pretty", "angry", 1, "female")
+    synthesizer.speakSsmlAsync(
+        ssml,
+        result => {
+            if (result.errorDetails) {
+                console.error(result.errorDetails);
+            } else {
+                console.log(JSON.stringify(result));
+            }
+
+            synthesizer.close();
+        },
+        error => {
+            console.log(error);
+            synthesizer.close();
+        });
+}
 
 function GameViewingPage() {
-
     const script = [
         {"start": 3.1, "end": 8.3, "text": "Not implemented yet"},
         {"start": 8.34, "end": 9.10002, "text": "matNum4matLeft has the ball!"},
@@ -52,8 +106,7 @@ function GameViewingPage() {
         {"start": 28.1405, "end": 28.1405, "text": "intersected the ball"},
     ]
 
-
-
+    useEffect(() => {synthesizeSpeech()}, [])
 
     return (
         <div>
