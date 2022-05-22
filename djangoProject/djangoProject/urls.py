@@ -19,22 +19,17 @@ from django.urls import path, include
 from commentator_website_backend import views, serializers
 from rest_framework import routers
 
-from rest_framework.authtoken import views as restViews
-
 router = routers.DefaultRouter()
 router.register(r'games', serializers.GameViewSet, basename='Game')
-
-
+router.register(r'presets', serializers.PresetViewSet, basename='Preset')
+router.register(r'users', serializers.UserViewSet, basename='User')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/login/', views.new_login),
     path('users/register/', views.new_register),
+    path('generate_script/<str:i>', views.game_generate_script),
     path('file_upload/', views.file_upload),
-    path('users/', views.UserList.as_view()),
-    path('users/<int:pk>', views.UserDetail.as_view()),
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
-    path('test-games/', views.GameList.as_view()),
-    # path('token-auth/', include(restViews.obtain_auth_token)),
 ]
