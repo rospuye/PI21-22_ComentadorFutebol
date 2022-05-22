@@ -1,6 +1,6 @@
 // React
 import React from 'react'
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom";
 
 // Components
 import JasminPlayer from '../components/JasminPlayer'
@@ -19,6 +19,9 @@ import { faHouse } from '@fortawesome/free-solid-svg-icons'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 function GameViewingPage() {
+
+    let { game_id } = useParams();
+
     return (
         <div>
 

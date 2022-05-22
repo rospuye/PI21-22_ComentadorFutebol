@@ -1,6 +1,6 @@
 // React
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 // Components
 import Title from '../components/Title';
@@ -37,7 +37,8 @@ function PersonalitySettings() {
 
   const [login, setLogin] = useState(true);
   const [cookies, setCookie] = useCookies(['logged_user'])
-  console.log("cookies_another_page: " + cookies.logged_user)
+
+  let { game_id } = useParams();
 
   return (
 
@@ -86,7 +87,7 @@ function PersonalitySettings() {
               }
             </Col>
 
-            <Col xs={6}><PersonalityDials /></Col>
+            <Col xs={6}><PersonalityDials game_id={game_id} /></Col>
 
             <Col>
               {
@@ -135,7 +136,7 @@ function PersonalitySettings() {
               }
             </Col>
 
-            <Col xs={6}><PersonalityDials /></Col>
+            <Col xs={6}><PersonalityDials game_id={game_id} /></Col>
 
             <Col className="text-center mt-4 mb-4">
               {
