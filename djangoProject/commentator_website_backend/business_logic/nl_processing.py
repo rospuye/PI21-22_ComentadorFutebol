@@ -39,7 +39,7 @@ class Comentary:
 class Bounded_Queue():
     def __init__(self, max) -> None:
         self.max = max
-        self.queue = []       
+        self.queue = []
 
     def add(self, el):
         if len(self.queue) >= self.max:
@@ -47,15 +47,15 @@ class Bounded_Queue():
         self.queue.append(el)
 
     def pop(self):
-        if len(self.queue) > 0: 
+        if len(self.queue) > 0:
             return self.queue.pop(0)
         else: return None
 
 lines_repeated = Bounded_Queue(10)
-        
+
 def dice_roll(mod, bias : bool, supporting):
     """Returns the type of the next line based on the given modifier and bias."""
-    
+
     bias_prob = BIAS_PROB if bias else 0
     emotion_prob = abs(mod)
 
@@ -76,22 +76,22 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
         p1 = event["args"]["from"]
     elif event.event in ["dribble", "kick_off", "defense", "intersect"]:
         p1 = event["args"]["player"]
-    elif event.event in ["aggression"]: 
-        p1 = event["args"]["player_1"] 
+    elif event.event in ["aggression"]:
+        p1 = event["args"]["player_1"]
 
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map: p1['id'] = player_name_map[p1['id']]
+    if p1['id'] in player_name_map: p1['id'] = player_name_map[p1['id']]
 
-    lines = { 
+    lines = {
         "neutral": {
             []
         },
         "aggressive": {
             []
-        }, 
+        },
         "friendly": {
-            [] 
+            []
         },
         "biased_supporting": {
             []
@@ -119,10 +119,10 @@ def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, t
     team = teams[1] if p1["team"] else teams[1]
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map: p1['id'] = player_name_map[p1['id']]
-    if p2 in player_name_map: p2['id'] = player_name_map[p2['id']]
+    if p1['id'] in player_name_map: p1['id'] = player_name_map[p1['id']]
+    if p2['id'] in player_name_map: p2['id'] = player_name_map[p2['id']]
 
-    lines = { 
+    lines = {
         "neutral": {
             "pass_success": [
                 f"{p1['id']} passes the ball to {p2['id']}",
@@ -158,7 +158,7 @@ def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, t
                 f"terrible aiming on {p1['id']}'s part, they just lost the ball to the opposing team",
                 f"{p1['id']} just lost his team's advantage by having the motor skills of a toddler"
             ]
-        }, 
+        },
         "friendly": {
             "pass_success": [
                 f"incredible pass by {p1['id']}",
@@ -171,18 +171,18 @@ def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, t
         },
         "biased_supporting": {
             "pass_success": [
-                
+
             ],
             "pass_fail": [
-                
+
             ]
         },
         "biased_opposing": {
             "pass_success": [
-                
+
             ],
             "pass_fail": [
-                
+
             ]
         }
     }
@@ -203,34 +203,34 @@ def dribble_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map
     p1 = args["player"]
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map: p1['id'] = player_name_map[p1['id']]
+    if p1['id'] in player_name_map: p1['id'] = player_name_map[p1['id']]
 
-    lines = { 
-        "neutral": {
+    lines = {
+        "neutral":
             [
                 f"{p1['id']} is racing through the field",
                 f"{p1['id']} has the ball!",
                 f"{p1['id']} is dribbling around!"
             ]
-        },
-        "aggressive": {
+        ,
+        "aggressive":
             []
-        }, 
-        "friendly": {
-            [] 
-        },
-        "biased_supporting": {
+        ,
+        "friendly":
+            []
+        ,
+        "biased_supporting":
             [
                 f"Amazing, {p1['id']} is racing through the field",
                 f"Amazing, {p1['id']} is dribbling around!"
             ]
-        },
-        "biased_opposing": {
+        ,
+        "biased_opposing":
             [
                f"Oh no, {p1['id']} is racing through the field",
                f"Oh no, {p1['id']} is dribbling around!"
             ]
-        }
+
     }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
@@ -245,53 +245,54 @@ def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_ma
     args = event["args"]
     p1 = args.get("player")
     supporting = True if p1["team"] == (bias > 0) else False
-
-    if p1 in player_name_map: p1['id'] = player_name_map[p1['id']]
+    if p1['id'] in player_name_map: p1['id'] = player_name_map[p1['id']]
 
     lines_without_player = {
-        "neutral": {
+        "neutral":
             [
                 "and the games goes on"
             ]
-        },
-        "aggressive": {
+        ,
+        "aggressive":
             []
-        }, 
-        "friendly": {
-            [] 
-        },
-        "biased_supporting": {
+        ,
+        "friendly":
             []
-        },
-        "biased_opposing": {
+        ,
+        "biased_supporting":
             []
-        }
+        ,
+        "biased_opposing":
+            []
+
     }
-    
+
 
     if p1 is not None:
         lines_with_player = {
-            "neutral": {
+            "neutral":
                 [
                     f"{p1['id']} starts the game"
                 ]
-            },
-            "aggressive": {
+            ,
+            "aggressive":
                 []
-            }, 
-            "friendly": {
-                [] 
-            },
-            "biased_supporting": {
+            ,
+            "friendly":
                 []
-            },
-            "biased_opposing": {
+            ,
+            "biased_supporting":
                 []
-            }
+            ,
+            "biased_opposing":
+                []
+
         }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
-    lines = lines_without_player if p1 is None else lines_with_player + lines_without_player
+    # lines = lines_without_player if p1 is None else lines_with_player + lines_without_player
+    # TODO
+    lines = lines_without_player
     return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
 
 def goal_shot_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams):
@@ -299,29 +300,29 @@ def goal_shot_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
     p1 = args["player"]
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map: p1['id'] = player_name_map[p1['id']]
+    if p1['id'] in player_name_map: p1['id'] = player_name_map[p1['id']]
 
-    lines = { 
-        "neutral": {
+    lines = {
+        "neutral":
             [
                 f"{p1['id']} shoots!",
                 "And he kicks"
             ]
-        },
-        "aggressive": {
+        ,
+        "aggressive":
             []
-        }, 
-        "friendly": {
+        ,
+        "friendly":
             [
                 f"Great kick by {p1['id']}"
-            ] 
-        },
-        "biased_supporting": {
+            ]
+        ,
+        "biased_supporting":
             []
-        },
-        "biased_opposing": {
+        ,
+        "biased_opposing":
             []
-        }
+
     }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
@@ -333,32 +334,32 @@ def goal_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, t
     team = args["team"]
     supporting = True if team == (bias > 0) else False
 
-    lines = { 
-        "neutral": {
+    lines = {
+        "neutral":
             [
                 f"{team} SCORES!!",
             ]
-        },
-        "aggressive": {
+        ,
+        "aggressive":
             [
                 "Its a GOAL!!!"
             ]
-        }, 
-        "friendly": {
+        ,
+        "friendly":
             [
                 "What a great goal"
-            ] 
-        },
-        "biased_supporting": {
+            ]
+        ,
+        "biased_supporting":
             [
                 "GOOOOOOOOOOOOOOOOOOOOOOAAAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLl"
             ]
-        },
-        "biased_opposing": {
+        ,
+        "biased_opposing":
             [
                 f"Oh no {team} scores"
             ]
-        }
+
     }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
@@ -376,27 +377,27 @@ def aggression_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_
     p2 = args["player_2"]
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map: p1['id'] = player_name_map[p1['id']]
-    if p2 in player_name_map: p2['id'] = player_name_map[p2['id']]
+    if p1['id'] in player_name_map: p1['id'] = player_name_map[p1['id']]
+    if p2['id'] in player_name_map: p2['id'] = player_name_map[p2['id']]
 
-    lines = { 
-        "neutral": {
+    lines = {
+        "neutral":
             [f"{p1['id']} and {p2['id']} fall down",
             f"{p1['id']} and {p2['id']} are going at it",
             "Oh no! They fell."]
-        },
-        "aggressive": {
+        ,
+        "aggressive":
             []
-        }, 
-        "friendly": {
-            [] 
-        },
-        "biased_supporting": {
+        ,
+        "friendly":
             []
-        },
-        "biased_opposing": {
+        ,
+        "biased_supporting":
             []
-        }
+        ,
+        "biased_opposing":
+            []
+
     }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
@@ -413,33 +414,33 @@ def defense_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map
     team = team[1] if args["player"]["team"] else team[0]
     supporting = True if (team == "Right") == (bias > 0) else False
 
-    lines = { 
-        "neutral": {
+    lines = {
+        "neutral":
             [
                 f"Team {team} makes a defense.",
                 f"The shot was defended by Team {team}"
             ]
-        },
-        "aggressive": {
+        ,
+        "aggressive":
             [
                 f"What a defense by team {team}"
             ]
-        }, 
-        "friendly": {
+        ,
+        "friendly":
             [
                 f"Great defence"
-            ] 
-        },
-        "biased_supporting": {
+            ]
+        ,
+        "biased_supporting":
             [
                 f"A beutiful defense by team {team}"
             ]
-        },
-        "biased_opposing": {
+        ,
+        "biased_opposing":
             [
                 f"Dammit team {team} defends the goal"
             ]
-        }
+
     }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
@@ -455,36 +456,36 @@ def intersect_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
     p1 = args["player"]
     supporting = True if p1["team"] == (bias > 0) else False
 
-    if p1 in player_name_map: p1['id'] = player_name_map[p1['id']]
-    
+    if p1['id'] in player_name_map: p1['id'] = player_name_map[p1['id']]
 
-    lines = { 
-        "neutral": {
+
+    lines = {
+        "neutral":
             [
                 f"{p1['id']} stole the ball.",
                 f"But {p1['id']} intersected."
             ]
-        },
-        "aggressive": {
+        ,
+        "aggressive":
             [
                 f"What a steal!"
             ]
-        }, 
-        "friendly": {
+        ,
+        "friendly":
             [
                 f"Nice intersect {p1['id']}"
-            ] 
-        },
-        "biased_supporting": {
+            ]
+        ,
+        "biased_supporting":
             [
                 f"Amazing steal by {p1['id']}"
             ]
-        },
-        "biased_opposing": {
+        ,
+        "biased_opposing":
             [
                 f"God dammit {p1} steals the ball"
             ]
-        }
+
     }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
@@ -496,7 +497,7 @@ def event_to_text(event, type, stats, en_calm_mod, bias, lines=None):
     for line in lines:
         if remove_players(line) in lines_repeated.queue:
             lines.remove(line)
-            
+
     n = random.randint(0, len(lines) - 1)
     if bias != 0:
         winning, mod = whos_winning(stats)
@@ -524,7 +525,7 @@ def remove_players(line):
     names = ["Dinis", "Isabel", "Afonso", "Miguel", "Lucius", "Joanne", "Louis", "Camila", \
         "Dianne", "Amber", "Carl", "Martha", "Bob", "Helen", "Joseph", "Josephine", "Gared", \
         "Ursula", "Bernard"]
-        
+
     l = ""
     for name in names:
         l = line.replace(name, "")
@@ -566,7 +567,7 @@ def whos_winning(stats):
         return "Left", 2
     elif stats["teams"]["A"]["goals"] < stats["teams"]["B"]["goals"]:
         return "Right", 2
-    
+
     A_score = stats["teams"]["A"]["shots"]+stats["teams"]["A"]["defenses"]
     B_score = stats["teams"]["B"]["shots"]+stats["teams"]["B"]["defenses"]
     if stats["teams"]["A"]["ball_pos"] > stats["teams"]["B"]["ball_pos"]:
@@ -578,11 +579,11 @@ def whos_winning(stats):
     if diff == 0: return None, 0
     elif A_score > B_score: return "Left", 1
     else: return "Right", 1
-    
+
 def get_stats(timestamp : double, stats : dict):
     timestamps = list(stats.keys())
     timestamps.sort()
-    
+
     if timestamp < timestamps[0]:
         return None
     last = timestamps[0]
@@ -596,15 +597,15 @@ def get_stats(timestamp : double, stats : dict):
 
 def generate_player_names():
     ret = {}
-    
+
     names = ["Dinis", "Isabel", "Afonso", "Miguel", "Lucius", "Joanne", "Louis", "Camila", \
         "Dianne", "Amber", "Carl", "Martha", "Bob", "Helen", "Joseph", "Josephine", "Gared", \
         "Ursula", "Bernard", "Kimberly", "Troy", "Ginny"]
 
     random.shuffle(names)
     for i in range(11):
-        idLeft = "matNum"+i+"matLeft"
-        idRight = "matNum"+i+"matRight"
+        idLeft = "matNum"+str(i)+"matLeft"
+        idRight = "matNum"+str(i)+"matRight"
         ret[idLeft] = names[i]
         ret[idRight] = names[i+11]
 

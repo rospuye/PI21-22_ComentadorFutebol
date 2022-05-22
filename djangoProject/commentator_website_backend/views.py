@@ -29,6 +29,7 @@ def new_login(request):
 
     if user is not None:
         token = Token.objects.get(user=user)
+        print(f"{token = }")
         return JsonResponse({"message": "login_success", "token": token.key})
     return JsonResponse({"message": "login_failure"})
 
@@ -49,43 +50,6 @@ def new_register(request):
         return JsonResponse({"message": "register_success", "token": token.key})
     except django.db.utils.IntegrityError:
         return JsonResponse({"message": "username_already_in_use"})
-
-
-class GameList(generics.ListAPIView):
-    serializer_class = GameSerializer
-
-    def get_queryset(self):
-        print(f"{self.request.user = }")
-        print(f"{self.request.auth = }")
-
-        queryset = Game.objects.all()
-        query_params = self.request.query_params
-        username = query_params.get('username')
-        title = query_params.get('title', '')
-        league = query_params.get('league', '')
-        group = query_params.get('matchGroup', '')
-        year = query_params.get('year')
-        roud = query_params.get('round', '')
-        sort_field = query_params.get('sort')
-
-        if username is not None:
-            queryset = queryset.filter(user__username=username)
-
-        queryset = queryset.filter(round__in=roud)
-        queryset = queryset.filter(title__in=title)
-        queryset = queryset.filter(league__in=league)
-        queryset = queryset.filter(matchGroup__in=group)
-
-        if year is not None:
-            queryset = queryset.filter(year=year)
-        if sort_field is not None:
-            queryset = queryset.order_by(sort_field)
-
-        return queryset
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
 
 class UserList(generics.ListAPIView):
     # Access only to the admin
@@ -135,7 +99,7 @@ def file_upload(request):
 
     if len(user_games) >= NUMBER_OF_GAMES_BY_USER:
         return JsonResponse({"error": "Reached number of games by given user."})
-    events, analytics, form, form_players, teams = process_log(uploaded_file)
+    events, analytics, form, form_players, teams = process_log(log_file)
 
     json_response = {"events": [], "form": form, "form_players": form_players}
 
@@ -159,7 +123,7 @@ def file_upload(request):
     agr_frnd_mod = 0 # aggressive/friendly modifier (-50 to 50)
     en_calm_mod = 0 # energetic/calm modifier (-5 to 5)
     bias = 0 # -1 Left, 1 Right, 0 None
-    response = generate_script(json_response['events'], json_response["stats"], agr_frnd_mod, en_calm_mod, bias, teams)
+    # response = generate_script(json_response['events'], json_response["stats"], agr_frnd_mod, en_calm_mod, bias, teams)
     # print(f"{response = }")
     # print(f"{json_response = }")
 

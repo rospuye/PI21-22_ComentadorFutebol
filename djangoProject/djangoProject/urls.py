@@ -35,6 +35,5 @@ urlpatterns = [
     path('users/<int:pk>', views.UserDetail.as_view()),
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
-    path('test-games/', views.GameList.as_view()),
     # path('token-auth/', include(restViews.obtain_auth_token)),
 ]
