@@ -39,7 +39,7 @@ function SearchBox({login, selectedLeague, setSelectedLeague, selectedUser,setSe
                         spellCheck={false}
                         />
                     <span className='input-highlight-searchBox'>
-                        { inputValue.replace(/ /g, "\u00a0") }
+                        { selectedTitle.replace(/ /g, "\u00a0") }
                     </span>
                 </div>
             </Col>
@@ -51,6 +51,7 @@ function SearchBox({login, selectedLeague, setSelectedLeague, selectedUser,setSe
         </Row>
         <Row>
             <Col>
+            <div className='input-wrapper-searchBox'>
                 {/* <Dropdown className='inputDropdown' options={leagueOptions} onChange={} value={selectedLeague} placeholder="League" />; */}
                 <input className='input-searchBox'
                     onChange={(e) => {setSelectedLeague(e.target.value)}}
@@ -58,8 +59,13 @@ function SearchBox({login, selectedLeague, setSelectedLeague, selectedUser,setSe
                     value={selectedLeague}
                     spellCheck={false}
                 />
+                <span className='input-highlight-searchBox'>
+                        { selectedLeague.replace(/ /g, "\u00a0") }
+                </span>
+            </div>
             </Col>
             <Col>
+                <div className='input-wrapper-searchBox'>
                 {/* <Dropdown className='inputDropdown' options={groupOptions} onChange={(e) => {setSelectedGroup(e.value)}} value={selectedGroup} placeholder="Group" />; */}
                 <input className='input-searchBox'
                     onChange={(e) => {setSelectedGroup(e.target.value)}}
@@ -67,10 +73,15 @@ function SearchBox({login, selectedLeague, setSelectedLeague, selectedUser,setSe
                     value={selectedGroup}
                     spellCheck={false}
                 />
+                <span className='input-highlight-searchBox'>
+                        { selectedGroup.replace(/ /g, "\u00a0") }
+                </span>
+                </div>
             </Col>
         </Row>
         <Row>
             <Col>
+                <div className='input-wrapper-searchBox'>
                 {/* <Dropdown className='inputDropdown' options={yearOptions} onChange={(e) => {setSelectedYear(e.value)}} value={selectedYear} placeholder="Year" />; */}
                 <input className='input-searchBox'
                     onChange={(e) => {setSelectedYear(e.target.value)}}
@@ -78,8 +89,13 @@ function SearchBox({login, selectedLeague, setSelectedLeague, selectedUser,setSe
                     value={selectedYear}
                     spellCheck={false}
                 />
+                <span className='input-highlight-searchBox'>
+                        { selectedYear.replace(/ /g, "\u00a0") }
+                </span>
+                </div>
             </Col>
             <Col>
+                <div className='input-wrapper-searchBox'>
                 {/* <Dropdown className='inputDropdown' options={roundOptions} onChange={(e) => {setSelectedRound(e.value)}} value={selectedRound} placeholder="Round" />; */}
                 <input className='input-searchBox'
                     onChange={(e) => {setSelectedRound(e.target.value)}}
@@ -87,10 +103,15 @@ function SearchBox({login, selectedLeague, setSelectedLeague, selectedUser,setSe
                     value={selectedRound}
                     spellCheck={false}
                 />
+                <span className='input-highlight-searchBox'>
+                        { selectedRound.replace(/ /g, "\u00a0") }
+                </span>
+                </div>
             </Col>
         </Row>
         <Row>
         <Col>
+            <div className='input-wrapper-searchBox'>
                 {/* <Dropdown className='inputDropdown' options={userOptions} onChange={(e) => {setSelectedUser(e.value)}} value={selectedUser} placeholder="User" />; */}
                 <input className='input-searchBox'
                     onChange={(e) => {setSelectedUser(e.target.value)}}
@@ -98,6 +119,10 @@ function SearchBox({login, selectedLeague, setSelectedLeague, selectedUser,setSe
                     value={selectedUser}
                     spellCheck={false}
                 />
+                <span className='input-highlight-searchBox'>
+                        { selectedUser.replace(/ /g, "\u00a0") }
+                </span>
+            </div>
             </Col>
         </Row>
     </>)
