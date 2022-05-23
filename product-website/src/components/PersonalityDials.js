@@ -18,13 +18,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 
 function PersonalityDials({gender, setGender, energy, setEnergy, aggressiveness,
-    setAggressiveness, bias, setBias, createPreset}) {
+    setAggressiveness, bias, setBias, createPreset, game_id}) {
               
     const navigate = useNavigate();
     let { id } = useParams();
 
     function goToGameViewing() {
-        navigate('/game_viewing/' + id, { state: { game_id: props.game_id } });
+        console.log(id)
+        navigate('/game_viewing/' + id, { state: { game_id: game_id } });
     }
               
     return <Container className="text-center" style={{ marginTop: '10%' }}>
@@ -71,9 +72,7 @@ function PersonalityDials({gender, setGender, energy, setEnergy, aggressiveness,
                     <Col><Form.Label>Team B</Form.Label></Col>
                 </Row>
                 <Row className="dialRow">
-                    <Link to="/game_viewing">
-                        <Button variant="success" size="lg">Start <FontAwesomeIcon icon={faPlay} /></Button>
-                    </Link>
+                    <Button variant="success" size="lg" onClick={goToGameViewing}>Start <FontAwesomeIcon icon={faPlay} /></Button>
                 </Row>
 
                 <Button variant="success" size="lg" onClick={() => createPreset()}>Create <FontAwesomeIcon icon={faPlay} /></Button>

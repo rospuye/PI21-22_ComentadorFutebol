@@ -225,11 +225,13 @@ function UploadLogPage() {
                           if (e.target.value > new Date().getFullYear()) {
                             document.getElementById("game_year").value = new Date().getFullYear();
                           }
-                          else if (e.target.value < 1900) {
-                            document.getElementById("game_year").value = 1900;
-                          }
                           setYear(e.target.value)
-                        }} />
+                        }} onBlur={(e) => {
+                          if (document.getElementById("game_year").value < 1900) {
+                            document.getElementById("game_year").value = 1900;
+                            setYear(e.target.value)
+                          }
+                        }}/>
                       </Form.Group>
 
                       <Form.Group className="mb-3">
