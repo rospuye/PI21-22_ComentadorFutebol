@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import './components_css/PersonalityDials.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -18,13 +18,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 
 function PersonalityDials({gender, setGender, energy, setEnergy, aggressiveness,
-    setAggressiveness, bias, setBias, createPreset}) {
+    setAggressiveness, bias, setBias, createPreset, game_id}) {
               
     const navigate = useNavigate();
     let { id } = useParams();
 
     function goToGameViewing() {
-        navigate('/game_viewing/' + id, { state: { game_id: props.game_id } });
+        navigate('/game_viewing/' + id, { state: { game_id: game_id } });
     }
               
     return <Container className="text-center" style={{ marginTop: '10%' }}>
