@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import './components_css/PersonalityDials.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,9 +17,9 @@ import RangeSlider from 'react-bootstrap-range-slider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 
-function PersonalityDials({ gender, setGender, energy, setEnergy, aggressiveness,
-    setAggressiveness, bias, setBias, createPreset, game_id }) {
-
+function PersonalityDials({gender, setGender, energy, setEnergy, aggressiveness,
+    setAggressiveness, bias, setBias, createPreset, game_id}) {
+              
     const navigate = useNavigate();
     let { id } = useParams();
 
