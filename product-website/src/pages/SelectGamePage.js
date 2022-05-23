@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Button } from 'react-bootstrap'
 import SearchBox from '../components/SearchBox'
 import SortInput from '../components/SortInput'
@@ -25,33 +25,50 @@ function SelectGamePage() {
     const [cookies, setCookie] = useCookies(['logged_user'])
     const [login, setLogin] = useState(cookies.logged_user !== '');
 
+    const [selectedLeague,setSelectedLeague] = useState("League")
+    const [selectedUser,setSelectedUser] = useState("User")
+    const [selectedYear,setSelectedYear] = useState("Year")
+    const [selectedRound,setSelectedRound] = useState("Round")
+    const [selectedGroup,setSelectedGroup] = useState("Group")
+
+    const [games, setGames] = useState([])
+
     const updateLogin = () => {
         console.log("UPDATE LOGIN WAS CALLED")
         setLogin(cookies.logged_user !== '')
         window.location.reload()
     }
 
-    axios.get(process.env.REACT_APP_API_URL + `games`)
+    useEffect(() => {
+        let url = process.env.REACT_APP_API_URL + `games?`
+        if (selectedLeague != "League") {
+            url += `league=${selectedLeague}&`
+        }
+
+        if (selectedUser != "User") {
+            url += `username=${selectedUser}&`
+        }
+
+        if (selectedYear != "Year") {
+            url += `year=${selectedYear}&`
+        }
+
+        if (selectedRound != "Round") {
+            url += `round=${selectedRound}&`
+        }
+
+        if (selectedGroup != "Group") {
+            url += `matchGroup=${selectedGroup}`
+        }
+
+        console.log("url", url)
+
+        axios.get(url)
         .then(res => {
-            // console.log(res);
-
-
-
-            // if (res.data.message === 'register_success') {
-            //     setCookie('logged_user', username, { path: '/', maxAge: '3600' })
-            //     setCookie('token', res.data.token, { path: '/', maxAge: '3600' })
-
-            //     console.log("logged_user: " + cookies.logged_user)
-            //     console.log("token: " + cookies.token)
-
-            //     window.location.href = '../select_game'
-            // }
-            // else if (res.data.message === 'username_already_in_use') {
-            //     document.getElementById("registerUniqueUsernameWarning").style.display = 'block'
-            //     setCookie('logged_user', '', { path: '/' })
-            //     setCookie('token', '', { path: '/' })
-            // }
+            console.log(res.data)
+            setGames(res.data.results)
         })
+    }, [selectedLeague, selectedUser, selectedYear, selectedRound, selectedGroup])
 
     return (
         <>
@@ -96,7 +113,19 @@ function SelectGamePage() {
                 <Row style={{marginTop:'3%'}}>
                 <Col xs={3}>
                         {/* Filters and Buttons */}
-                        <SearchBox login={login} />
+                        <SearchBox 
+                            login={login} 
+                            selectedLeague={selectedLeague}
+                            setSelectedLeague={setSelectedLeague}
+                            selectedUser={selectedUser}
+                            setSelectedUser={setSelectedUser}
+                            selectedYear={selectedYear}
+                            setSelectedYear={setSelectedYear}
+                            selectedRound={selectedRound}
+                            setSelectedRound={setSelectedRound}
+                            selectedGroup={selectedGroup}
+                            setSelectedGroup={setSelectedGroup}
+                        />
                         {login ?
                             <div className='searchBoxDiv'>
                                 <Link to="/your_games">

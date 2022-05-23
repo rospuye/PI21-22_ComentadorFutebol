@@ -7,18 +7,13 @@ import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import './components_css/Title.css'
 
-function SearchBox({login}) {
+function SearchBox({login, selectedLeague, setSelectedLeague, selectedUser,setSelectedUser, 
+    selectedYear, setSelectedYear, selectedRound, setSelectedRound, selectedGroup,setSelectedGroup}) {
     const leagueOptions = ['League 1','League 2'];
     const userOptions = ['user1','user2','user3'];
     const yearOptions = ['2019','2020','2021','2022']
     const roundOptions = ['Round 1',"Round 2"]
     const groupOptions = ['Group 1','Group 2']
-    
-    const [selectedLeague,setSelectedLeague] = useState("League")
-    const [selectedUser,setSelectedUser] = useState("User")
-    const [selectedYear,setSelectedYear] = useState("Year")
-    const [selectedRound,setSelectedRound] = useState("Round")
-    const [selectedGroup,setSelectedGroup] = useState("Group")
 
     const [inputValue, setInputValue] = useState('')
   
@@ -56,23 +51,23 @@ function SearchBox({login}) {
         </Row>
         <Row>
             <Col>
-                <Dropdown className='inputDropdown' options={leagueOptions} onChange={setSelectedLeague} value={selectedLeague} placeholder="League" />;
+                <Dropdown className='inputDropdown' options={leagueOptions} onChange={(e) => {setSelectedLeague(e.value)}} value={selectedLeague} placeholder="League" />;
             </Col>
             <Col>
-                <Dropdown className='inputDropdown' options={groupOptions} onChange={setSelectedGroup} value={selectedGroup} placeholder="Group" />;
+                <Dropdown className='inputDropdown' options={groupOptions} onChange={(e) => {setSelectedGroup(e.value)}} value={selectedGroup} placeholder="Group" />;
             </Col>
         </Row>
         <Row>
             <Col>
-                <Dropdown className='inputDropdown' options={yearOptions} onChange={setSelectedYear} value={selectedYear} placeholder="Year" />;
+                <Dropdown className='inputDropdown' options={yearOptions} onChange={(e) => {setSelectedYear(e.value)}} value={selectedYear} placeholder="Year" />;
             </Col>
             <Col>
-                <Dropdown className='inputDropdown' options={roundOptions} onChange={setSelectedRound} value={selectedRound} placeholder="Round" />;
+                <Dropdown className='inputDropdown' options={roundOptions} onChange={(e) => {setSelectedRound(e.value)}} value={selectedRound} placeholder="Round" />;
             </Col>
         </Row>
         <Row>
         <Col>
-                <Dropdown className='inputDropdown' options={userOptions} onChange={setSelectedUser} value={selectedUser} placeholder="User" />;
+                <Dropdown className='inputDropdown' options={userOptions} onChange={(e) => {setSelectedUser(e.value)}} value={selectedUser} placeholder="User" />;
             </Col>
         </Row>
         </>
