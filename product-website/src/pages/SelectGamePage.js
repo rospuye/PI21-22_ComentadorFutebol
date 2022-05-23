@@ -25,39 +25,40 @@ function SelectGamePage() {
     const [cookies, setCookie] = useCookies(['logged_user'])
     const [login, setLogin] = useState(cookies.logged_user !== '');
 
-    const [selectedLeague,setSelectedLeague] = useState("League")
-    const [selectedUser,setSelectedUser] = useState("User")
-    const [selectedYear,setSelectedYear] = useState("Year")
-    const [selectedRound,setSelectedRound] = useState("Round")
-    const [selectedGroup,setSelectedGroup] = useState("Group")
+    const [selectedLeague,setSelectedLeague] = useState("")
+    const [selectedUser,setSelectedUser] = useState("")
+    const [selectedYear,setSelectedYear] = useState("")
+    const [selectedRound,setSelectedRound] = useState("")
+    const [selectedGroup,setSelectedGroup] = useState("")
+    const [selectedTitle,setSelectedTitle] = useState("")
+
 
     const [games, setGames] = useState([])
 
-    const updateLogin = () => {
-        console.log("UPDATE LOGIN WAS CALLED")
-        setLogin(cookies.logged_user !== '')
-        window.location.reload()
-    }
-
-    useEffect(() => {
+    const requestGame = () => {
         let url = process.env.REACT_APP_API_URL + `games?`
-        if (selectedLeague != "League") {
+
+        if (selectedTitle != "") {
+            url += `title=${selectedTitle}&`
+        }
+
+        if (selectedLeague != "") {
             url += `league=${selectedLeague}&`
         }
 
-        if (selectedUser != "User") {
+        if (selectedUser != "") {
             url += `username=${selectedUser}&`
         }
 
-        if (selectedYear != "Year") {
+        if (selectedYear != "") {
             url += `year=${selectedYear}&`
         }
 
-        if (selectedRound != "Round") {
+        if (selectedRound != "") {
             url += `round=${selectedRound}&`
         }
 
-        if (selectedGroup != "Group") {
+        if (selectedGroup != "") {
             url += `matchGroup=${selectedGroup}`
         }
 
@@ -68,7 +69,14 @@ function SelectGamePage() {
             console.log(res.data)
             setGames(res.data.results)
         })
-    }, [selectedLeague, selectedUser, selectedYear, selectedRound, selectedGroup])
+    }
+
+    const updateLogin = () => {
+        console.log("UPDATE LOGIN WAS CALLED")
+        setLogin(cookies.logged_user !== '')
+        window.location.reload()
+    }
+
 
     return (
         <>
@@ -125,6 +133,9 @@ function SelectGamePage() {
                             setSelectedRound={setSelectedRound}
                             selectedGroup={selectedGroup}
                             setSelectedGroup={setSelectedGroup}
+                            selectedTitle={selectedTitle}
+                            setSelectedTitle={setSelectedTitle}
+                            requestGame={requestGame}
                         />
                         {login ?
                             <div className='searchBoxDiv'>
