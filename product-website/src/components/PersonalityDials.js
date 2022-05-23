@@ -27,7 +27,7 @@ function PersonalityDials({gender, setGender, energy, setEnergy, aggressiveness,
         console.log(id)
         navigate('/game_viewing/' + id + '/' + gender + '/' + energy + '/' + aggressiveness + '/' + bias,
             { state: {
-                game_id: game_id,
+                game_id: id,
                 gender: gender,
                 energy: energy,
                 aggressiveness: aggressiveness,

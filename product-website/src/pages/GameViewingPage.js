@@ -1,6 +1,7 @@
 // React
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link, useParams } from "react-router-dom";
+import { useCookies } from 'react-cookie';
 
 // Components
 import JasminPlayer from '../components/JasminPlayer'
@@ -18,13 +19,42 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHouse } from '@fortawesome/free-solid-svg-icons'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
+import axios from 'axios';
+
 function GameViewingPage() {
 
-    let { game_id, gender, energy, aggressiveness, bias } = useParams();
+    let { id, gender, energy, aggressiveness, bias } = useParams();
+    const [cookies, setCookie] = useCookies(['logged_user'])
+
+    console.log("game_id", id)
     console.log("gender: " + gender)
     console.log("energy: " + energy)
     console.log("aggressiveness: " + aggressiveness)
     console.log("bias: " + bias)
+
+    const requestGame = () => {
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data',
+                'Authorization': `Token ${cookies.token}`
+                // 'Access-Control-Allow-Origin': 'http://localhost:3001'
+            },
+        };
+
+        let url = `${process.env.REACT_APP_API_URL}generate_script/${id}?en_calm_mod=${energy}&agr_frnd_mod=${aggressiveness}&bias=${bias}`
+
+        console.log("Get request")
+
+        axios.get(url, config)
+        .then(res => {
+            console.log(res)
+            // setGames(res.data)
+        })
+    }
+
+    useEffect(() => {
+        requestGame()
+    })
 
     return (
         <div>
