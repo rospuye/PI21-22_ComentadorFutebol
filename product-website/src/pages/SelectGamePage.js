@@ -137,7 +137,7 @@ function SelectGamePage() {
                             setSelectedTitle={setSelectedTitle}
                             requestGame={requestGame}
                         />
-                        {true ?
+                        {login ?
                             <div className='searchBoxDiv'>
                                 <Link to="/your_games">
                                     <Button variant="primary" type="submit" size="lg" className='formBtn searchBoxDivInput'>Your Games</Button>
