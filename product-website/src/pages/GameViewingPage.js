@@ -20,7 +20,11 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 function GameViewingPage() {
 
-    let { game_id } = useParams();
+    let { game_id, gender, energy, aggressiveness, bias } = useParams();
+    console.log("gender: " + gender)
+    console.log("energy: " + energy)
+    console.log("aggressiveness: " + aggressiveness)
+    console.log("bias: " + bias)
 
     return (
         <div>
