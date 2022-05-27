@@ -11,30 +11,24 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import Form from 'react-bootstrap/Form'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 
+import FocoNavbar from '../components/FocoNavbar';
+import ParticlesBg from 'particles-bg'
+
 function EditVideoPage() {
   const [cookies, setCookie] = useCookies(['logged_user'])
   return (
     <>
+    <div className='particlesBG'>
+      <ParticlesBg className="particles-bg-canvas-self" type="cobweb" bg={true} color="#DADADA" height={'100%'}/>
+    </div>
+    <div style={{ padding: '1%' }}>
+    <Container>
+      <FocoNavbar goesBack={true} backPage={'/select_game'} hasLoginBtn={true} cookies={cookies} setCookie={setCookie}/>
+    </Container>
       <Container>
         <Row>
           <Col>
-            <Link to="/select_game">
-              <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '10%', marginLeft: '2%' }} />
-            </Link>
-          </Col>
-          <Col>
             <Title title="Commentator" subtitle="Edit Your Video"></Title>
-          </Col>
-          <Col style={{ display: 'flex', justifyContent: 'right' }}>
-            {cookies.logged_user !== '' ?
-              <Button variant="light" style={{ height: '40px', marginTop: '5%' }} onClick={() => {
-                setCookie('logged_user', '', { path: '/' })
-                setCookie('token', '', {path: '/'})
-                window.location.href = '../select_game'
-              }}>Logout</Button>
-              :
-              <></>
-            }
           </Col>
         </Row>
       </Container>
@@ -76,12 +70,12 @@ function EditVideoPage() {
             </Row>
             <Row style={{ marginTop: '5%' }}>
               <Col style={{ textAlign: 'center' }}>
-                <Button variant="success" type="submit">
+                <Button className="editVideoButtonSave"variant="success" type="submit">
                   Save
                 </Button>
               </Col>
               <Col style={{ textAlign: 'center' }}>
-                <Button variant="danger" type="submit">
+                <Button className="editVideoButtonCancel"variant="danger" type="submit">
                   Delete Video
                 </Button>
               </Col>
@@ -91,7 +85,7 @@ function EditVideoPage() {
         </Row>
       </Container>
 
-
+    </div>
     </>
   )
 }
