@@ -40,14 +40,14 @@ import { Canvas, useFrame } from '@react-three/fiber'
 function iframe() {
     return {
         // src = /JaSMIn-master/dist/archive/3D%20Simulation/test25Hz.rpl3d
-        __html: '<iframe src="/graphic_model/index.html" width="500px" height="300px"></iframe>'
+        __html: '<iframe src="/graphic_model/index.html" width="500px" height="300px" style="border-radius:6px"></iframe>'
     }
 }
 
 
 function ThreeJSCanvas() {
     return (
-        <div>
+        <div >
             <div dangerouslySetInnerHTML={iframe()} />
         </div>)
     // return Scene();

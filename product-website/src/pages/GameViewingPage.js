@@ -1,6 +1,7 @@
 // React
 import React, { useEffect, useState } from 'react'
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom";
+import { useCookies } from 'react-cookie';
 
 // Components
 import JasminPlayer from '../components/JasminPlayer'
@@ -21,6 +22,8 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 // TTS
 import * as sdk from "microsoft-cognitiveservices-speech-sdk"
+
+import axios from "axios"
 
 const testScript = [
     {"start": 3.1, "end": 8.3, "text": "Not implemented yet"},
@@ -84,17 +87,22 @@ function commentaryToSSML(text, mood, diction, gender) {
 
 }
 
-
-
-
 function GameViewingPage() {
 
     const [synthetiser, setSynthetiser] = useState()
     const [mood, setMood] = useState("friendly")
     const [diction, setDiction] = useState(1)
-    const [gender, setGender] = useState("female")
     const [script, setScript] = useState([])
     const startPhrase = "Let's start the convertion."
+
+    let { id, gender, energy, aggressiveness, bias } = useParams();
+    const [cookies, setCookie] = useCookies(['logged_user'])
+
+    console.log("game_id", id)
+    console.log("gender: " + gender)
+    console.log("energy: " + energy)
+    console.log("aggressiveness: " + aggressiveness)
+    console.log("bias: " + bias)
 
     let gameTime = document.getElementsByClassName("game_time_lbl")
     let iframe = document.getElementById("video-game-iframe")
@@ -165,26 +173,34 @@ function GameViewingPage() {
             });
     }
 
+    const requestGame = () => {
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data',
+                'Authorization': `Token ${cookies.token}`
+                // 'Access-Control-Allow-Origin': 'http://localhost:3001'
+            },
+        };
 
+        let url = `${process.env.REACT_APP_API_URL}generate_script/${id}?en_calm_mod=${energy}&agr_frnd_mod=${aggressiveness}&bias=${bias}`
 
+        console.log("Get request")
 
-    // const [flg, setFlg] = useState(true)
-    //
+        axios.get(url, config)
+        .then(res => {
+            console.log(res)
+            // setGames(res.data)
+        })
+    }
+
     // useEffect(() => {
-    //     console.log("Start")
-    //
-    //     let jasm_time = 0
-    //
-    //     script.forEach((val) => {
-    //         if (jasm_time == val.start) {
-    //             synthesizeSpeech()
-    //         }
-    //     })
-    //     console.log("End")
-    // }, [flg])
+    //     setScript(testScript)
+    // }, [])
+
+    
 
     useEffect(() => {
-        setScript(testScript)
+        requestGame()
     }, [])
 
 

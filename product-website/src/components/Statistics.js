@@ -8,15 +8,15 @@ import '../components/components_css/Statistics.css';
 function Statistics({nameOfTeamA,nameOfTeamB,conditions,resultsA,resultsB}) {
   return (
     <Container>
-        <Row>
+        <Row style={{marginTop:'2%'}}>
             <Col>
-                <h4 className='titleH4'>{nameOfTeamA}</h4>
+                <h4 className='statisticsH4'>{nameOfTeamA}</h4>
             </Col>
             <Col>
             
             </Col>
             <Col>
-                <h4 className='titleH4'>{nameOfTeamB}</h4>
+                <h4 className='statisticsH4'>{nameOfTeamB}</h4>
             </Col>
         </Row>
         <hr

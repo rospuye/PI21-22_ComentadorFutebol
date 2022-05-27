@@ -78,6 +78,7 @@ def process_log(log, skip=1, skip_flg=False):
         print("Goal Height:", goalParams["height"])
         break
     for line in log:
+        line = line.decode()
         tmp = re.findall("\(team_left .*?\)", line)
         tmp2 = re.findall("\(team_right .*?\)", line)
         if tmp:

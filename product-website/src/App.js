@@ -33,9 +33,9 @@ export default function App() {
           <Route path="/login" element={<Login/>}/>
           <Route path="/statistics" element={<GameStatistics/>}/>
           <Route path="/upload" element={<UploadLogPage/>}/>
-          <Route path="/personality" element={<PersonalitySettings/>}/>
+          <Route path="/personality/:id" element={<PersonalitySettings/>}/>
           <Route path="/select_game" element={<SelectGamePage/>}/>
-          <Route path="/game_viewing" element={<GameViewingPage/>}/>
+          <Route path="/game_viewing/:id/:gender/:energy/:aggressiveness/:bias" element={<GameViewingPage/>}/>
           <Route path="/your_games" element={<YourGamesPage/>}/>
           <Route path="/edit_video" element={<EditVideoPage/>}/>
           <Route path="/test_tts" element={<TTSTest/>}/>
