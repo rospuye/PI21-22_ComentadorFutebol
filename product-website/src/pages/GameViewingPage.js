@@ -60,31 +60,63 @@ function commentaryToSSML(text, mood, diction, gender) {
 }
 
 
-function synthesizeSpeech() {
-    const speechConfig = sdk.SpeechConfig.fromSubscription("dfb5fa14bd85423db7a60da4b0ac369f", "westeurope");
-    const audioConfig = sdk.AudioConfig.fromDefaultSpeakerOutput();
-    const synthesizer = new sdk.SpeechSynthesizer(speechConfig, audioConfig);
 
-    const ssml = commentaryToSSML("bees are very pretty", "friendly", 1, "female")
-    console.log(ssml)
-    synthesizer.speakSsmlAsync(
-        ssml,
-        result => {
-            if (result.errorDetails) {
-                console.error(result.errorDetails);
-            } else {
-                console.log(JSON.stringify(result));
-            }
-
-            synthesizer.close();
-        },
-        error => {
-            console.log(error);
-            synthesizer.close();
-        });
-}
 
 function GameViewingPage() {
+
+    const [synthetiser, setSynthetiser] = useState()
+    const [mood, setMood] = useState("friendly")
+    const [diction, setDiction] = useState(1)
+    const [gender, setGender] = useState("female")
+    const startPhrase = "Let's start the convertion."
+    let gameTime = document.getElementsByClassName("game_time_lbl")
+    let iframe = document.getElementById("video-game-iframe")
+    console.log("time", gameTime)
+
+
+    const initializeScript = () => {
+        const speechConfig = sdk.SpeechConfig.fromSubscription("dfb5fa14bd85423db7a60da4b0ac369f", "westeurope");
+        const audioConfig = sdk.AudioConfig.fromDefaultSpeakerOutput();
+        let synth = new sdk.SpeechSynthesizer(speechConfig, audioConfig)
+        setSynthetiser(synth)
+
+        iframe = document.getElementById("video-game-iframe")
+        gameTime = iframe.contentWindow.document.getElementsByClassName("game_time_lbl")
+        if (gameTime.length !== 0)
+            gameTime = gameTime[0].innerText
+
+
+        console.log("time2", gameTime)
+
+        const ssml = commentaryToSSML(startPhrase, mood, diction, gender)
+        console.log(ssml)
+        speakSsml(ssml, synth)
+    }
+
+    const speak = (text) => {
+        const ssml = commentaryToSSML(text, mood, diction, gender)
+        speakSsml(ssml, synthetiser)
+    }
+
+    const speakSsml = (ssml, synthesizer) => {
+
+        synthesizer.speakSsmlAsync(
+            ssml,
+            result => {
+                if (result.errorDetails) {
+                    console.error(result.errorDetails);
+                } else {
+                    console.log(JSON.stringify(result));
+                }
+
+                synthesizer.close();
+            },
+            error => {
+                console.log(error);
+                synthesizer.close();
+            });
+    }
+
     const script = [
         {"start": 3.1, "end": 8.3, "text": "Not implemented yet"},
         {"start": 8.34, "end": 9.10002, "text": "matNum4matLeft has the ball!"},
@@ -113,24 +145,26 @@ function GameViewingPage() {
 
 
 
-    const [flg, setFlg] = useState(true)
+    // const [flg, setFlg] = useState(true)
+    //
+    // useEffect(() => {
+    //     console.log("Start")
+    //
+    //     let jasm_time = 0
+    //
+    //     script.forEach((val) => {
+    //         if (jasm_time == val.start) {
+    //             synthesizeSpeech()
+    //         }
+    //     })
+    //     console.log("End")
+    // }, [flg])
 
-    useEffect(() => {
-        console.log("Start")
 
-        let jasm_time = 0
-
-        script.forEach((val) => {
-            if (jasm_time == val.start) {
-                synthesizeSpeech()
-            }
-        })
-        console.log("End")
-    }, [flg])
 
     return (
         <div>
-            <Button onClick={() => {synthesizeSpeech()}}></Button>
+            <Button onClick={() => {initializeScript()}}></Button>
             <Container fluid >
                 <Row>
                     <Col>
