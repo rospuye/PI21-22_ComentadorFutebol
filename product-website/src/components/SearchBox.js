@@ -29,6 +29,7 @@ function SearchBox({login, selectedLeague, setSelectedLeague, selectedUser,setSe
 
   return (
     <>
+    <Container className="logUpload">
         <Row className="align-items-center">
             <Col xs={8}>
                 <div className='input-wrapper-searchBox'>
@@ -125,6 +126,7 @@ function SearchBox({login, selectedLeague, setSelectedLeague, selectedUser,setSe
             </div>
             </Col>
         </Row>
+        </Container>
     </>)
 }
 

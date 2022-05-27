@@ -135,7 +135,7 @@
     font-size: 20px;
     border: none;
     outline: none;
-    border-bottom: 3px solid rgb(91, 91, 91);
+    border-bottom: 3px solid rgb(119, 119, 119);
     font-family: Roboto Slab, sans-serif;
 }
 .input-searchBox:focus + .input-highlight-searchBox {
