@@ -484,34 +484,39 @@ def intersect_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
     return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type])
 
 def event_to_text(event, type, stats, en_calm_mod, bias, lines=None):
+    # print(f"event_to_text {stats = }")
     if lines is None:
         lines = []
     for line in lines:
         if remove_players(line) in lines_repeated.queue:
             lines.remove(line)
 
-    n = random.randint(0, len(lines) - 1)
-    if bias != 0:
-        winning, mod = whos_winning(stats)
-        if winning:
-            if winning == "Left":
-                if bias > 0: # Supporting Right team
-                    en_calm_mod += 2*mod # gets more nervous
-                else:
-                    en_calm_mod -= 2*mod # is calmer
+    if len(lines) == 0:
+        phrase = "Not implemented with those parameters."
+    else:
+        n = random.randint(0, len(lines) - 1)
+        phrase = lines[n]
+        if bias != 0:
+            curr_stats = get_stats(event['start'], stats)
+            if not curr_stats:
+                winning, mod = None, 0
             else:
-                if bias > 0:
-                    en_calm_mod -= 2*mod
+                winning, mod = whos_winning(curr_stats)
+            if winning:
+                if winning == "Left":
+                    if bias > 0: # Supporting Right team
+                        en_calm_mod += 2*mod # gets more nervous
+                    else:
+                        en_calm_mod -= 2*mod # is calmer
                 else:
-                    en_calm_mod += 2*mod
-    commentary = Comentary(lines[n], type, en_calm_mod, event["start"])
-    lines_repeated.add(lines[n])
+                    if bias > 0:
+                        en_calm_mod -= 2*mod
+                    else:
+                        en_calm_mod += 2*mod
+    commentary = Comentary(phrase, type, en_calm_mod, event["start"])
+    lines_repeated.add(phrase)
     # return f"({event['start']}, {event['end']}) " + lines[n]
-    return {
-        "start": event['start'],
-        "end": event['end'],
-        "text": lines[n]
-    }
+    return commentary
 
 def remove_players(line):
     names = ["Dinis", "Isabel", "Afonso", "Miguel", "Lucius", "Joanne", "Louis", "Camila", \
@@ -539,13 +544,22 @@ lines = {
 
 def generate_script(events, stats, agr_frnd_mod, en_calm_mod, bias, teams):
     player_name_map = generate_player_names() # ran at the start and fixed for the rest of the duration
+    # print(f"generate_script {stats = }")
+    commentary = []
+    for event in events:
+        if event["event"] not in lines:
+            commentary.append(Comentary(event["event"] + " not implemented yet", "neutral", 0, event['start']).to_json())
+        else:
+            commentary.append(
+                lines.get(event["event"])(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams).to_json())
 
-    commentary = [
-        lines.get(event["event"],
-                  lambda x: event_to_text(event, ["Not implemented yet :)"]))(event, get_stats(event["start"], stats), agr_frnd_mod, en_calm_mod, bias, player_name_map, teams)
-                  # lambda x: f"({event['start']}, {event['end']}) \'{event['event']}\' Not implemented yet :)")(event)
-        for event in events
-    ]
+
+    # commentary = [
+    #     lines.get(event["event"],
+    #               lambda x: event_to_text(event, ["Not implemented yet :)"]))(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams)
+    #               # lambda x: f"({event['start']}, {event['end']}) \'{event['event']}\' Not implemented yet :)")(event)
+    #     for event in events
+    # ]
 
     return commentary
 
@@ -555,6 +569,8 @@ def whos_winning(stats):
     """Returns the team that's winning, plus how bad they are winning"""
     # 2 - team is winning by goals
     # 1 - team is winning by shots, defenses and ball posession
+
+    # print(f"whos_winning - {stats = }")
     if stats["teams"]["A"]["goals"] > stats["teams"]["B"]["goals"]:
         return "Left", 2
     elif stats["teams"]["A"]["goals"] < stats["teams"]["B"]["goals"]:
@@ -576,11 +592,16 @@ def get_stats(timestamp : float, stats : dict):
     timestamps = list(stats.keys())
     timestamps.sort()
 
-    if timestamp < timestamps[0]:
+    # print(f"get_stats {stats = }")
+
+    if timestamp < float(timestamps[0]):
+        print("returning None")
         return None
+
     last = timestamps[0]
+
     for stamp in timestamps[1:]:
-        if stamp <= timestamp:
+        if float(stamp) <= float(timestamp):
             last = stamp
             continue
         else:

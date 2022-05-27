@@ -75,6 +75,12 @@ def game_generate_script(request, i):
     agr_frnd_mod = params.get("agr_frnd_mod", 0)  # aggressive/friendly modifier (-50 to 50)
     en_calm_mod = params.get("en_calm_mod", 0)  # energetic/calm modifier (-5 to 5)
     bias = params.get("bias", 0)  # -1 Left, 1 Right, 0 None
+    try:
+        bias = int(bias)
+        agr_frnd_mod = int(agr_frnd_mod)
+        en_calm_mod = int(en_calm_mod)
+    except:
+        return Response({"message": "Not valid modifiers!"})
 
     # TODO Errors because of NL not working
     response = generate_script(data["events"], data["stats"], agr_frnd_mod, en_calm_mod, bias, data["teams"])
