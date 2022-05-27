@@ -25,18 +25,20 @@ function EditVideoPage() {
     <Container>
       <FocoNavbar goesBack={true} backPage={'/select_game'} hasLoginBtn={true} cookies={cookies} setCookie={setCookie}/>
     </Container>
-      <Container>
+      <Container style={{marginBottom:'2%'}}>
         <Row>
           <Col>
             <Title title="Commentator" subtitle="Edit Your Video"></Title>
           </Col>
         </Row>
       </Container>
-      <Container>
+      <Container style={{marginBottom:'5%'}}>
         <Row>
           <Col xs={3} />
           <Col xs={6}>
+            <Container className = "logUpload">
             <Row>
+              <Col  style={{backgroundColor:"#212428"}}>
               <Form>
                 <Form.Group className="mb-3">
                   <Form.Label>Title</Form.Label>
@@ -55,7 +57,7 @@ function EditVideoPage() {
                 </Form.Group>
 
 
-                <Form.Group>
+                <Form.Group className="mb-3">
                   <Form.Label>Video Privacy</Form.Label>
                   <FloatingLabel>
                     <Form.Select style={{ paddingTop: '0px', paddingBottom: '0px' }}>
@@ -66,9 +68,30 @@ function EditVideoPage() {
                   </FloatingLabel>
                 </Form.Group>
 
+                <Form.Group className="mb-3">
+                  <Form.Label>League</Form.Label>
+                  <Form.Control type="text" placeholder="Enter league" />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Year</Form.Label>
+                  <Form.Control type="text" placeholder="Enter year" />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Round</Form.Label>
+                  <Form.Control type="text" placeholder="Enter round" />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Match Group</Form.Label>
+                  <Form.Control type="text" placeholder="Enter match group" />
+                </Form.Group>
+
               </Form>
+              </Col>
             </Row>
-            <Row style={{ marginTop: '5%' }}>
+            <Row style={{ marginTop: '5%' , marginBottom:'3%'}}>
               <Col style={{ textAlign: 'center' }}>
                 <Button className="editVideoButtonSave"variant="success" type="submit">
                   Save
@@ -80,6 +103,7 @@ function EditVideoPage() {
                 </Button>
               </Col>
             </Row>
+            </Container>
           </Col>
           <Col xs={3} />
         </Row>
