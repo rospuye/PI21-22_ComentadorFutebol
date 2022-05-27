@@ -141,3 +141,37 @@
 .input-searchBox:focus + .input-highlight-searchBox {
     border-top: 3px solid #fbc91b;
 }
+
+.statisticsH4 {
+    color: whitesmoke;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 25px;
+    font-weight: bold;
+    line-height: 32px;
+    margin-top: 2%;
+    margin-inline: 10%;
+    text-align: center;
+}
+
+.statisticsH3 {
+    color: whitesmoke;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 25px;
+    font-weight: normal;
+    letter-spacing: -1px;
+    line-height: 1;
+    text-align: center;
+    margin-top: 5%;
+    text-shadow: 2px 2px #424242;
+}
+
+#statisticLineP {
+    color: whitesmoke;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 18px;
+    line-height: 24px;
+    margin: 0 0 24px;
+    text-align: center;
+    text-justify: inter-word;
+    padding-top: 7%;
+}
