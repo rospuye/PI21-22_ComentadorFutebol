@@ -74,10 +74,9 @@ function GameViewingPage() {
         // console.log("script", script)
         gameTime = mutations[0].target.innerText
         gameTime = convertTime(gameTime)
-        console.log("expected end", phraseTimeEnd)
+        // console.log("expected end", phraseTimeEnd)
         if (gameTime < phraseTimeEnd)  // if should be a narration happening right now, it doesn't matter
             return
-        // TODO do stuff with gameTime
         const phrase = getPhraseByTimestamp(gameTime)
         console.log(gameTime, phrase)
 
@@ -87,10 +86,11 @@ function GameViewingPage() {
 
             // get the best phrase in the estimated time that the commentator would be saying
             const bestPhrase = getPhraseByTimestamp(phrase.timestamp + timeDifference/2, timeDifference/2)
-            console.log("bestPhrase", bestPhrase, "phrase", phrase)
+            console.log("gameTime", gameTime, "bestPhrase", bestPhrase, "phrase", phrase)
 
             if (bestPhrase == null || phrase.priority <= bestPhrase.priority) {
                 phraseTimeEnd = phraseEnd
+                console.log("expected end", phraseTimeEnd)
                 console.log("it spoke", phrase.text)
                 chatHistory.push(phrase)
                 speak(phrase.text)
@@ -118,7 +118,7 @@ function GameViewingPage() {
         }
 
         const ssml = commentaryToSSML(startPhrase, mood, diction, gender)
-        console.log(ssml)
+        // console.log(ssml)
         speakSsml(ssml, synthetiser)
     }
 
@@ -126,7 +126,6 @@ function GameViewingPage() {
         let synthetiser = initializeSynthetiser()
 
         const ssml = commentaryToSSML(text, mood, diction, gender)
-        console.log("speak synthetiser", synthetiser)
         speakSsml(ssml, synthetiser)
     }
 
@@ -135,11 +134,11 @@ function GameViewingPage() {
         synthesizer.speakSsmlAsync(
             ssml,
             result => {
-                if (result.errorDetails) {
-                    console.error(result.errorDetails);
-                } else {
-                    console.log(JSON.stringify(result));
-                }
+                // if (result.errorDetails) {
+                //     console.error(result.errorDetails);
+                // } else {
+                //     console.log(JSON.stringify(result));
+                // }
 
                 synthesizer.close();
             },

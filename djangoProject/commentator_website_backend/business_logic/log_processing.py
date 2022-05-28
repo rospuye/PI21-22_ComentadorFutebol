@@ -209,8 +209,8 @@ def process_log(log, skip=1, skip_flg=False):
             events += messages
         count += 1
 
-        if count == 5000:  # 1000 ~= 40 seg
-            break
+        # if count == 5000:  # 1000 ~= 40 seg
+        #     break
 
     tok = time.time()
     elapsed = tok - tik
