@@ -94,26 +94,9 @@ function SelectGamePage() {
 
             <Container>
                 <Row>
-                    {/* <Col>
-                        <Link to="/">
-                            <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '5%', marginLeft: '2%' }} />
-                        </Link>
-                    </Col> */}
                     <Col>
                         <Title title="FoCo" subtitle="Select Your Game"></Title>
                     </Col>
-                    {/* <Col style={{ display: 'flex', justifyContent: 'right' }}>
-                        {login ?
-                            <Button variant="light" style={{ height: '40px', marginTop: '5%' }} onClick={() => {
-                                setCookie('logged_user', '', { path: '/' })
-                                setCookie('token', '', { path: '/' })
-                                setLogin(cookies.logged_user !== '')
-                                window.location.reload()
-                            }}>Logout</Button>
-                            :
-                            <></>
-                        }
-                    </Col> */}
                 </Row>
             </Container>
 

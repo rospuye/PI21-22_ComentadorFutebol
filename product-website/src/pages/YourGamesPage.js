@@ -91,10 +91,7 @@ function YourGamesPage() {
             </Container>
 
             <Container>
-                <Row>
-                    <SortInput />
-                </Row>
-                <Row style={{ marginTop: '20px' }}>
+                <Row style={{ marginTop: '3%' }}>
                     <Col xs={3}>
                         {/* Filters and Buttons */}
                         <SearchBox 
@@ -115,8 +112,14 @@ function YourGamesPage() {
                         />
                     </Col>
                     <Col xs={9}>
+                        <Row style={{display:'flex',alignItems:'center',justifyContent:'right',marginBottom:'3%'}}>
+                            <Container style={{width:'60%',marginLeft:'30%'}}>
+                                <SortInput />
+                            </Container>
+                        </Row>
+                        <Row style={{ marginTop: '20px' }}>
                         <VideoGrid login={true} yourGames={true}/>
-                        {/* Grid with videos and pages */}
+                        </Row>
                     </Col>
                 </Row>
             </Container>
