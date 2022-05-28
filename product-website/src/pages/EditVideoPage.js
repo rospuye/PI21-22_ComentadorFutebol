@@ -11,38 +11,34 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import Form from 'react-bootstrap/Form'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 
+import FocoNavbar from '../components/FocoNavbar';
+import ParticlesBg from 'particles-bg'
+
 function EditVideoPage() {
   const [cookies, setCookie] = useCookies(['logged_user'])
   return (
     <>
-      <Container>
+    <div className='particlesBG'>
+      <ParticlesBg className="particles-bg-canvas-self" type="cobweb" bg={true} color="#DADADA" height={'100%'}/>
+    </div>
+    <div style={{ padding: '1%' }}>
+    <Container>
+      <FocoNavbar goesBack={true} backPage={'/select_game'} hasLoginBtn={true} cookies={cookies} setCookie={setCookie}/>
+    </Container>
+      <Container style={{marginBottom:'2%'}}>
         <Row>
-          <Col>
-            <Link to="/select_game">
-              <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '10%', marginLeft: '2%' }} />
-            </Link>
-          </Col>
           <Col>
             <Title title="Commentator" subtitle="Edit Your Video"></Title>
           </Col>
-          <Col style={{ display: 'flex', justifyContent: 'right' }}>
-            {cookies.logged_user !== '' ?
-              <Button variant="light" style={{ height: '40px', marginTop: '5%' }} onClick={() => {
-                setCookie('logged_user', '', { path: '/' })
-                setCookie('token', '', {path: '/'})
-                window.location.href = '../select_game'
-              }}>Logout</Button>
-              :
-              <></>
-            }
-          </Col>
         </Row>
       </Container>
-      <Container>
+      <Container style={{marginBottom:'5%'}}>
         <Row>
           <Col xs={3} />
           <Col xs={6}>
+            <Container className = "logUpload">
             <Row>
+              <Col  style={{backgroundColor:"#212428"}}>
               <Form>
                 <Form.Group className="mb-3">
                   <Form.Label>Title</Form.Label>
@@ -61,7 +57,7 @@ function EditVideoPage() {
                 </Form.Group>
 
 
-                <Form.Group>
+                <Form.Group className="mb-3">
                   <Form.Label>Video Privacy</Form.Label>
                   <FloatingLabel>
                     <Form.Select style={{ paddingTop: '0px', paddingBottom: '0px' }}>
@@ -72,26 +68,48 @@ function EditVideoPage() {
                   </FloatingLabel>
                 </Form.Group>
 
+                <Form.Group className="mb-3">
+                  <Form.Label>League</Form.Label>
+                  <Form.Control type="text" placeholder="Enter league" />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Year</Form.Label>
+                  <Form.Control type="text" placeholder="Enter year" />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Round</Form.Label>
+                  <Form.Control type="text" placeholder="Enter round" />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Match Group</Form.Label>
+                  <Form.Control type="text" placeholder="Enter match group" />
+                </Form.Group>
+
               </Form>
+              </Col>
             </Row>
-            <Row style={{ marginTop: '5%' }}>
+            <Row style={{ marginTop: '5%' , marginBottom:'3%'}}>
               <Col style={{ textAlign: 'center' }}>
-                <Button variant="success" type="submit">
+                <Button className="editVideoButtonSave"variant="success" type="submit">
                   Save
                 </Button>
               </Col>
               <Col style={{ textAlign: 'center' }}>
-                <Button variant="danger" type="submit">
+                <Button className="editVideoButtonCancel"variant="danger" type="submit">
                   Delete Video
                 </Button>
               </Col>
             </Row>
+            </Container>
           </Col>
           <Col xs={3} />
         </Row>
       </Container>
 
-
+    </div>
     </>
   )
 }

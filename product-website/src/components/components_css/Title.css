@@ -175,3 +175,51 @@
     text-justify: inter-word;
     padding-top: 7%;
 }
+
+.editVideoButtonSave {
+    border: 0 solid;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0);
+    outline: 1px solid;
+    /* outline-color: rgba(255, 255, 255, 0.5); */
+    outline-color: rgb(52, 112, 41);
+    outline-offset: 0px;
+    text-shadow: none;
+    transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
+    background-color: rgb(52, 112, 41);
+    color: whitesmoke;
+    width: 50%;
+  }
+  
+  .editVideoButtonSave:hover {
+    border: 1px solid;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.2);
+    outline-color: rgba(255, 255, 255, 0);
+    outline-offset: 15px;
+    text-shadow: 1px 1px 2px #427388;
+    background-color: rgb(52, 112, 41);
+    color: whitesmoke;
+  }
+
+  .editVideoButtonCancel {
+    border: 0 solid;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0);
+    outline: 1px solid;
+    /* outline-color: rgba(255, 255, 255, 0.5); */
+    outline-color: rgb(149, 43, 43);
+    outline-offset: 0px;
+    text-shadow: none;
+    transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
+    background-color: rgb(149, 43, 43);
+    color: whitesmoke;
+    width: 50%;
+  }
+  
+  .editVideoButtonCancel:hover {
+    border: 1px solid;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.2);
+    outline-color: rgba(255, 255, 255, 0);
+    outline-offset: 15px;
+    text-shadow: 1px 1px 2px #427388;
+    background-color: rgb(149, 43, 43);;
+    color: whitesmoke;
+  }
