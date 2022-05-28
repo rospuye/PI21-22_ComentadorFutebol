@@ -54,7 +54,7 @@ function YourGamesPage() {
                         <SearchBox login={true} />
                     </Col>
                     <Col xs={9}>
-                        <VideoGrid login={true} yourGames={true}/>
+                        <VideoGrid games={null}/>
                         {/* Grid with videos and pages */}
                     </Col>
                 </Row>

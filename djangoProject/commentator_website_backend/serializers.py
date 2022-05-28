@@ -4,6 +4,8 @@ from djangoProject.permissions import IsOwnerOrIsAdmin
 from .models import Game, Preset
 from django.contrib.auth.models import User
 from rest_framework.response import Response
+from rest_framework import pagination
+from django.conf import settings
 
 
 class GameSerializer(serializers.ModelSerializer):
@@ -106,3 +108,17 @@ class PresetViewSet(viewsets.ModelViewSet):
         serializer = PresetSerializer(preset)
 
         return Response(serializer.data)
+
+
+class YourPagination(pagination.PageNumberPagination):
+
+    def get_paginated_response(self, data):
+        return Response({
+            'links': {
+               'next': self.get_next_link(),
+               'previous': self.get_previous_link()
+            },
+            'count': self.page.paginator.count,
+            'total_pages': self.page.paginator.num_pages,
+            'results': data
+        })
