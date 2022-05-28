@@ -90,24 +90,30 @@ function commentaryToSSML(text, mood, diction, gender) {
 
 function GameViewingPage() {
 
-    const [synthetiser, setSynthetiser] = useState()
+    // const [synthetiser, setSynthetiser] = useState()
     const [mood, setMood] = useState("friendly")
     const [diction, setDiction] = useState(1)
     const [script, setScript] = useState([])
+    const [phraseHistory, setPhraseHistory] = useState([])
+
     const startPhrase = "Let's start the convertion."
 
-    let { id, gender, energy, aggressiveness, bias } = useParams();
     const [cookies, setCookie] = useCookies(['logged_user'])
 
-    console.log("game_id", id)
-    console.log("gender: " + gender)
-    console.log("energy: " + energy)
-    console.log("aggressiveness: " + aggressiveness)
-    console.log("bias: " + bias)
+    let { id, gender, energy, aggressiveness, bias } = useParams();
+    // const speechConfig = sdk.SpeechConfig.fromSubscription("dfb5fa14bd85423db7a60da4b0ac369f", "westeurope");
+    // const audioConfig = sdk.AudioConfig.fromDefaultSpeakerOutput();
+    // let synthetiser =
+
+    // console.log("game_id", id)
+    // console.log("gender: " + gender)
+    // console.log("energy: " + energy)
+    // console.log("aggressiveness: " + aggressiveness)
+    // console.log("bias: " + bias)
 
     let gameTime = document.getElementsByClassName("game_time_lbl")
     let iframe = document.getElementById("video-game-iframe")
-    console.log("time", gameTime)
+    // console.log("time", gameTime)
 
     const convertTime = (time="") => {
         // Convert time to float value, instead of MM:SS.ss
@@ -118,27 +124,58 @@ function GameViewingPage() {
     }
 
     const getPhraseByTimestamp = (time, errorMargin=0.05) => {
-        let test = script.filter((line) => {
-            return Math.abs(line.start - time) < errorMargin
+        let phrases = script.filter((line) => {
+            return Math.abs(line.timestamp - time) < errorMargin
         })
-        console.log("test", test, time)
+
+        if (phrases.length === 0) {
+            return null
+        }
+
+        // If multiple, filter by those parameters
+        // By priority
+        let sortedPhrases = phrases.sort((a, b) => a.priority - b.priority)
+        let minimumPhrase = sortedPhrases[0]
+        let isValid = true
+
+        for (let i = 1; i < sortedPhrases.length; i++) {
+            if (sortedPhrases[i].priority === minimumPhrase.priority) {
+                isValid = false
+            }
+        }
+
+        return minimumPhrase
     }
 
     const onGameTimeChange = (mutations, observer) => {
+        const chatHistory = phraseHistory
+        console.log("script", script)
+        // let synthe
         gameTime = mutations[0].target.innerText
         gameTime = convertTime(gameTime)
         // TODO do stuff with gameTime
         const phrase = getPhraseByTimestamp(gameTime)
+        console.log(gameTime, phrase)
+        if (phrase != null) {
+            console.log("it spoke", phrase.text)
+            chatHistory.push(phrase)
+            speak(phrase.text)
+            setPhraseHistory(chatHistory)
+        }
     }
 
     const observer = new MutationObserver(onGameTimeChange)
 
-    const initializeScript = () => {
+    const initializeSynthetiser = () => {
         const speechConfig = sdk.SpeechConfig.fromSubscription("dfb5fa14bd85423db7a60da4b0ac369f", "westeurope");
         const audioConfig = sdk.AudioConfig.fromDefaultSpeakerOutput();
-        let synth = new sdk.SpeechSynthesizer(speechConfig, audioConfig)
-        setSynthetiser(synth)
+        return new sdk.SpeechSynthesizer(speechConfig, audioConfig)
+    }
 
+    const initializeScript = () => {
+
+        // setSynthetiser(synth)
+        let synthetiser = initializeSynthetiser()
         iframe = document.getElementById("video-game-iframe")
         gameTime = iframe.contentWindow.document.getElementsByClassName("game_time_lbl")
         if (gameTime.length !== 0) {
@@ -147,11 +184,14 @@ function GameViewingPage() {
 
         const ssml = commentaryToSSML(startPhrase, mood, diction, gender)
         console.log(ssml)
-        speakSsml(ssml, synth)
+        speakSsml(ssml, synthetiser)
     }
 
     const speak = (text) => {
+        let synthetiser = initializeSynthetiser()
+
         const ssml = commentaryToSSML(text, mood, diction, gender)
+        console.log("speak synthetiser", synthetiser)
         speakSsml(ssml, synthetiser)
     }
 
@@ -190,6 +230,7 @@ function GameViewingPage() {
         axios.get(url, config)
         .then(res => {
             console.log(res)
+            setScript(res.data)
             // setGames(res.data)
         })
     }
@@ -203,6 +244,7 @@ function GameViewingPage() {
     useEffect(() => {
         requestGame()
     }, [])
+
 
 
     return (
@@ -230,10 +272,17 @@ function GameViewingPage() {
                         <ToastContainer style={{ marginTop: '2%', width: '100%' }}>
                             <Toast style={{ width: '80%', height: '300px', overflowY: 'scroll' }}>
                                 <Toast.Body>
-                                    00:00 - Lorem Ipsum<br />
-                                    00:23 - Ball ball ball<br />
-                                    00:32 - AAAAAAAAA<br />
-                                    01:01 - MAMA MIA<br />
+                                    {phraseHistory.map(phrase => {
+                                        return (
+                                            <>
+                                                <p>{phrase.text}</p><br/>
+                                            </>
+                                        )
+                                    })}
+                                    {/*00:00 - Lorem Ipsum<br />*/}
+                                    {/*00:23 - Ball ball ball<br />*/}
+                                    {/*00:32 - AAAAAAAAA<br />*/}
+                                    {/*01:01 - MAMA MIA<br />*/}
                                 </Toast.Body>
                             </Toast>
                         </ToastContainer>

@@ -628,7 +628,6 @@ def get_stats(timestamp : float, stats : dict):
     # print(f"get_stats {stats = }")
 
     if timestamp < float(timestamps[0]):
-        print("returning None")
         return None
 
     last = timestamps[0]
