@@ -24,15 +24,33 @@ def process_log(log, skip=1, skip_flg=False):
 
     fieldParams = {}
     goalParams = {}
+    replayParams = {}
     entities = []
     events_dict = {}
     formation_counts = {}
     timestamp = 0
     left = ""
     right = ""
+    play_modes = []
+    curr_playmode = 0
+
+    replayfile = open("replayfile.replay", "w")
+
     # ((FieldLength 30)(FieldWidth 20)(FieldHeight 40)(GoalWidth 2.1)(GoalDepth 0.6)(GoalHeight 0.8)
     for line in log:
         line = line.decode()
+
+        if not play_modes and "play_modes" in line:
+            modes = re.findall("\(play_modes .*?\)", line)[0]
+            play_modes = [mode for mode in modes.rstrip(")").split(" ")[1:]]
+
+        if "play_mode" in line:
+            mode = re.findall("\(play_mode \d+\)", line)[0]
+            curr_playmode = int(mode.rstrip(")").split(" ")[1])
+
+        timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
+
+
         if not ("FieldLength" in line and "FieldWidth" in line):
             continue
         tmp = re.split('\s|\)', line)
@@ -40,13 +58,40 @@ def process_log(log, skip=1, skip_flg=False):
         print("Length:", fieldParams["length"])
         fieldParams["width"] = float(tmp[3])
         print("Width:", fieldParams["width"])
+        fieldParams["height"] = float(tmp[5])
+        print("Height:", fieldParams["height"])
         goalParams["width"] = float(tmp[7])
         print("Goal Width:", goalParams["width"])
         goalParams["depth"] = float(tmp[9])
         print("Goal Depth:", goalParams["depth"])
         goalParams["height"] = float(tmp[11])
         print("Goal Height:", goalParams["height"])
+        replayParams["BorderSize"] = tmp[13]
+        replayParams["FreeKickDistance"] = tmp[15]
+        replayParams["WaitBeforeKickOff"] = tmp[17]
+        replayParams["AgentRadius"] = tmp[19]
+        replayParams["BallRadius"] = tmp[21]
+        replayParams["BallMass"] = tmp[23]
+        replayParams["RuleGoalPauseTime"] = tmp[25]
+        replayParams["RuleKickInPauseTime"] = tmp[27]
+        replayParams["RuleHalfTime"] = tmp[29]
+        replayParams["half"] = tmp[31]
+        replayParams["score_left"] = tmp[33]
+        replayParams["score_right"] = tmp[35]
         break
+
+    replayfile.write("RPL 3D 1\n")
+    replayfile.write(
+        f'EP {{"log_step": 40,"FieldLength": {fieldParams["length"]},"FieldWidth": {fieldParams["width"]},"FieldHeight": {fieldParams["height"]},' +
+        f'"GoalWidth": {goalParams["width"]},"GoalDepth": {goalParams["depth"]},"GoalHeight": {goalParams["height"]},' +
+        f'"BorderSize": {replayParams["BorderSize"]},"FreeKickDistance": {replayParams["FreeKickDistance"]},' + 
+        f'"WaitBeforeKickOff": {replayParams["WaitBeforeKickOff"]},"AgentRadius": {replayParams["AgentRadius"]},' + 
+        f'"BallRadius": {replayParams["BallRadius"]},"BallMass": {replayParams["BallMass"]},"RuleGoalPauseTime": {replayParams["RuleGoalPauseTime"]},' + 
+        f'"RuleKickInPauseTime": {replayParams["RuleKickInPauseTime"]},"RuleHalfTime": {replayParams["RuleHalfTime"]},'+
+        f'"play_modes": {play_modes},"half": {replayParams["half"]} }}")\n'
+    )
+
+
     for line in log:
         line = line.decode()
         tmp = re.findall("\(team_left .*?\)", line)
@@ -57,6 +102,9 @@ def process_log(log, skip=1, skip_flg=False):
             right = tmp2[0].split(" ")[1].rstrip(")")
         if left and right:
             break
+
+    replayfile.write(f"T {left} {right}  #0000ff #ff0000\n")
+
     c = 0
     for line in log:
         line = line.decode()
@@ -111,6 +159,10 @@ def process_log(log, skip=1, skip_flg=False):
             messages, form, form_players = process(entities, fieldParams, goalParams, timestamp, events_dict, formation_counts)
             events += messages
 
+            replayfile.write(f"S {timestamp} {play_modes[curr_playmode]} 0 0\n")
+            for ent in entities:
+                replayfile.write(ent.to_replay())
+
             break
 
     for line in log:
@@ -147,6 +199,66 @@ def process_log(log, skip=1, skip_flg=False):
                     rIndex = entity.rfootIndex
                     lIndex = entity.lfootIndex
 
+                    headIndex = entity.headIndex
+                    rupperarmIndex = entity.rupperarmIndex
+                    rlowerarmIndex = entity.rlowerarmIndex
+                    lupperarmIndex = entity.lupperarmIndex
+                    llowerarmIndex = entity.llowerarmIndex
+                    rthighIndex = entity.rthighIndex
+                    rshankIndex = entity.rshankIndex
+                    lthighIndex = entity.lthighIndex
+                    lshankIndex = entity.lshankIndex
+                    
+                    rfootIndex = entity.rfootIndex
+                    lfootIndex = entity.lfootIndex
+
+                    if tmp[headIndex]:
+                        had_changes[idx] = True
+                        entity.head_pos = position_to_array(tmp[headIndex].strip())
+                        entity.add_joint("head")
+                    if tmp[rupperarmIndex]:
+                        had_changes[idx] = True
+                        entity.rupperarm = position_to_array(tmp[rupperarmIndex].strip())
+                        entity.add_joint("rupperarm")
+                    if tmp[rlowerarmIndex]:
+                        had_changes[idx] = True
+                        entity.rlowerarm = position_to_array(tmp[rlowerarmIndex].strip())
+                        entity.add_joint("rlowerarm")
+                    if tmp[lupperarmIndex]:
+                        had_changes[idx] = True
+                        entity.lupperarm = position_to_array(tmp[lupperarmIndex].strip())
+                        entity.add_joint("lupperarm")
+                    if tmp[llowerarmIndex]:
+                        had_changes[idx] = True
+                        entity.llowerarm = position_to_array(tmp[llowerarmIndex].strip())
+                        entity.add_joint("llowerarm")
+                    if tmp[rthighIndex]:
+                        had_changes[idx] = True
+                        entity.rthigh = position_to_array(tmp[rthighIndex].strip())
+                        entity.add_joint("rthigh")
+                    if tmp[rshankIndex]:
+                        had_changes[idx] = True
+                        entity.rshank = position_to_array(tmp[rshankIndex].strip())
+                        entity.add_joint("rshank")
+                    if tmp[rfootIndex]:
+                        had_changes[idx] = True
+                        entity.rshank = position_to_array(tmp[rfootIndex].strip())
+                        entity.add_joint("rfoot")
+                    if tmp[lthighIndex]:
+                        had_changes[idx] = True
+                        entity.lthigh = position_to_array(tmp[lthighIndex].strip())
+                        entity.add_joint("lthigh")
+                    if tmp[lshankIndex]:
+                        had_changes[idx] = True
+                        entity.lshank = position_to_array(tmp[lshankIndex].strip())
+                        entity.add_joint("lshank")
+                    if tmp[lfootIndex]:
+                        had_changes[idx] = True
+                        entity.rshank = position_to_array(tmp[lfootIndex].strip())
+                        entity.add_joint("lfoot")
+
+
+
                     if tmp[rIndex]:
                         had_changes[idx] = True
                         new_pos = Position(position=position_to_array(tmp[rIndex].strip()), timestamp=timestamp)
@@ -177,11 +289,16 @@ def process_log(log, skip=1, skip_flg=False):
 
             messages, form, form_players = process(entities, fieldParams, goalParams, timestamp, events_dict, formation_counts)
             events += messages
+
+            replayfile.write(f"S {timestamp} {play_modes[curr_playmode]} 0 0\n")
+            for ent in entities:
+                replayfile.write(ent.to_replay())
         count += 1
 
         if count == 5000:  # 1000 ~= 40 seg
             break
 
+    replayfile.close()
     tok = time.time()
     elapsed = tok - tik
     print("Event detection in:", elapsed)
