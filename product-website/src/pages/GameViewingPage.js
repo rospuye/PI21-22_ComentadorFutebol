@@ -25,7 +25,13 @@ import * as sdk from "microsoft-cognitiveservices-speech-sdk"
 
 // Others
 import axios from "axios"
-import {commentaryToSSML, convertTime, predictNumberOfSyllabs, predictPhraseEnd} from "../components/Utils";
+import {
+    commentaryToSSML,
+    convertTimeToFloat,
+    convertTimeToText,
+    predictNumberOfSyllabs,
+    predictPhraseEnd
+} from "../components/Utils";
 
 
 
@@ -70,15 +76,12 @@ function GameViewingPage() {
     }
 
     const onGameTimeChange = (mutations, observer) => {
-        const chatHistory = phraseHistory
-        // console.log("script", script)
         gameTime = mutations[0].target.innerText
-        gameTime = convertTime(gameTime)
-        // console.log("expected end", phraseTimeEnd)
+        gameTime = convertTimeToFloat(gameTime)
         if (gameTime < phraseTimeEnd)  // if should be a narration happening right now, it doesn't matter
             return
         const phrase = getPhraseByTimestamp(gameTime)
-        console.log(gameTime, phrase)
+        // console.log(gameTime, phrase)
 
         if (phrase != null) {
             const phraseEnd = predictPhraseEnd(phrase.text, phrase.timestamp)
@@ -86,12 +89,14 @@ function GameViewingPage() {
 
             // get the best phrase in the estimated time that the commentator would be saying
             const bestPhrase = getPhraseByTimestamp(phrase.timestamp + timeDifference/2, timeDifference/2)
-            console.log("gameTime", gameTime, "bestPhrase", bestPhrase, "phrase", phrase)
+            // console.log("gameTime", gameTime, "bestPhrase", bestPhrase, "phrase", phrase)
 
             if (phrase.priority <= bestPhrase.priority) {
                 phraseTimeEnd = phraseEnd
-                console.log("expected end", phraseTimeEnd)
-                console.log("it spoke", phrase.text)
+                // console.log("expected end", phraseTimeEnd)
+                // console.log("it spoke", phrase.text)
+                const chatHistory = [...phraseHistory]
+                console.log("chatHistory", chatHistory)
                 chatHistory.push(phrase)
                 speak(phrase.text)
                 setPhraseHistory(chatHistory)
@@ -149,35 +154,46 @@ function GameViewingPage() {
     }
 
     const requestGame = () => {
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data',
-                'Authorization': `Token ${cookies.token}`
-                // 'Access-Control-Allow-Origin': 'http://localhost:3001'
-            },
-        };
+        let config = {}
+        if (cookies.token != null && cookies.token !== "") {
+            config = {
+                headers: {
+                    'content-type': 'multipart/form-data',
+                    'Authorization': `Token ${cookies.token}`
+                }
+            }
+        }
+        else {
+            config = {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            }
+        }
+
+        console.log("config", config)
+
 
         let url = `${process.env.REACT_APP_API_URL}generate_script/${id}?en_calm_mod=${energy}&agr_frnd_mod=${aggressiveness}&bias=${bias}`
 
         console.log("Get request")
 
         axios.get(url, config)
-        .then(res => {
-            console.log(res)
-            setScript(res.data)
-            // setGames(res.data)
-        })
+            .then(res => {
+                console.log(res)
+                setScript(res.data)
+            })
     }
-
-    // useEffect(() => {
-    //     setScript(testScript)
-    // }, [])
-
-    
 
     useEffect(() => {
         requestGame()
     }, [])
+
+    useEffect(() => {
+        console.log("history", phraseHistory)
+        const chatHistory = [...phraseHistory]
+        console.log("chatHistory 2", chatHistory)
+    }, [phraseHistory])
 
 
 
@@ -207,9 +223,10 @@ function GameViewingPage() {
                             <Toast style={{ width: '80%', height: '300px', overflowY: 'scroll' }}>
                                 <Toast.Body>
                                     {phraseHistory.map(phrase => {
+                                        console.log("phraseHistory 3 - on map", phraseHistory)
                                         return (
                                             <>
-                                                <p>{phrase.text}</p><br/>
+                                                {convertTimeToText(phrase.timestamp)} - {phrase.text}<br/>
                                             </>
                                         )
                                     })}

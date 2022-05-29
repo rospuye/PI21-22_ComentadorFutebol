@@ -50,12 +50,18 @@ export const predictPhraseEnd = (phrase="", startingTime=0) => {
     return startingTime + numberOfSyllabs * 0.25
 }
 
-export const convertTime = (time="") => {
+export const convertTimeToFloat = (time="") => {
     // Convert time to float value, instead of MM:SS.ss
     const timeSplit = time.split(":")
     const timeMin = timeSplit[0]/1 // str convertion lmao
     const timeSeg = timeSplit[1]/1
     return timeMin * 60 + timeSeg
+}
+
+export const convertTimeToText = (time=0) => {
+    const minutes = time/60
+    const seconds = time%60
+    return `${Math.round(minutes)}:${Math.round(seconds * 100)/100}`
 }
 
 export const commentaryToSSML = (text, mood, diction, gender) => {
