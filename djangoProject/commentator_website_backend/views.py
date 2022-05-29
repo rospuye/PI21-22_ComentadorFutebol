@@ -87,7 +87,7 @@ def game_generate_script(request, i):
 def file_upload(request):
     print("File uploaded.")
     log_file = request.FILES['logFile']
-    replay_file = request.FILES['replayFile']
+    #replay_file = request.FILES['replayFile']
     data = request.data
     title = data["title"]
     description = data["description"]
@@ -110,7 +110,7 @@ def file_upload(request):
         return JsonResponse({"error": "Reached number of games by given user."})
 
     try:
-        events, analytics, form, form_players, teams = process_log(log_file)
+        events, analytics, form, form_players, teams, replay_file = process_log(log_file)
     except AssertionError:
         return JsonResponse({"error": "Processing Failed"})
 
