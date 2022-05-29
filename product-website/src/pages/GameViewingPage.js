@@ -19,6 +19,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHouse } from '@fortawesome/free-solid-svg-icons'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
+import ParticlesBg from 'particles-bg';
+import FocoNavbar from '../components/FocoNavbar';
+
 import axios from 'axios';
 
 function GameViewingPage() {
@@ -46,10 +49,10 @@ function GameViewingPage() {
         console.log("Get request")
 
         axios.get(url, config)
-        .then(res => {
-            console.log(res)
-            // setGames(res.data)
-        })
+            .then(res => {
+                console.log(res)
+                // setGames(res.data)
+            })
     }
 
     useEffect(() => {
@@ -57,43 +60,53 @@ function GameViewingPage() {
     })
 
     return (
-        <div>
+        <>
+            <div className='particlesBG'>
+                <ParticlesBg className="particles-bg-canvas-self" type="cobweb" bg={true} color="#DADADA" height={'100%'} />
+            </div>
+            <div style={{ padding: '1%' }}>
+                <Container>
+                    <FocoNavbar goesBack={false} hasLoginBtn={true} cookies={cookies} setCookie={setCookie} />
+                </Container>
 
-            <Container fluid >
-                <Row>
-                    <Col>
-                        <Link to="/">
-                            <FontAwesomeIcon icon={faHouse} style={{ color: 'white', fontSize: '30px', marginTop: '40px', marginLeft: '40px' }} />
-                        </Link>
-                    </Col>
-                    <Col style={{ display: 'flex', justifyContent: 'right' }}>
-                        <Link to="/statistics">
-                            <FontAwesomeIcon icon={faArrowRight} style={{ color: 'white', fontSize: '30px', marginTop: '40px', marginRight: '40px' }} />
-                        </Link>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col style={{ marginLeft: '5%', marginTop: '5%' }}>
-                        <JasminPlayer />
-                    </Col>
-                    <Col>
-                        <ThreeJSCanvas />
-                        <ToastContainer style={{ marginTop: '2%', width: '100%' }}>
-                            <Toast style={{ width: '80%', height: '300px', overflowY: 'scroll' }}>
-                                <Toast.Body>
-                                    00:00 - Lorem Ipsum<br />
-                                    00:23 - Ball ball ball<br />
-                                    00:32 - AAAAAAAAA<br />
-                                    01:01 - MAMA MIA<br />
-                                </Toast.Body>
-                            </Toast>
-                        </ToastContainer>
-                    </Col>
-                </Row>
-            </Container>
+                <Container>
+                    <Row style={{marginTop:'2%'}}>
+                        <Col>
+                            <h3 className='gameViewTitle'>Game Viewing</h3>
+                        </Col>
+                        <Col style={{ display: 'flex', justifyContent: 'right' }}>
+                            <Link to="/statistics">
+                                <button className="learn-more">
+                                    <span className="circle" aria-hidden="true">
+                                        <span className="icon arrow"></span>
+                                    </span>
+                                    <span className="button-text">Skip to End</span>
+                                </button>
+                            </Link>
+                        </Col>
+                    </Row>
+                    <Row style={{marginTop: '3%' }}>
+                        <Col>
+                            <JasminPlayer />
+                        </Col>
+                        <Col>
+                            <ThreeJSCanvas />
+                            <ToastContainer style={{ marginTop: '2%', width: '100%' }}>
+                                <Toast style={{ width: '100%', height: '300px', overflowY: 'scroll' }}>
+                                    <Toast.Body>
+                                        00:00 - Lorem Ipsum<br />
+                                        00:23 - Ball ball ball<br />
+                                        00:32 - AAAAAAAAA<br />
+                                        01:01 - MAMA MIA<br />
+                                    </Toast.Body>
+                                </Toast>
+                            </ToastContainer>
+                        </Col>
+                    </Row>
+                </Container>
 
-
-        </div>)
+            </div>
+        </>)
 }
 
 export default GameViewingPage;
