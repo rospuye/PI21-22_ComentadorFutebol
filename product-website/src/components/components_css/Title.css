@@ -43,6 +43,20 @@
     line-height: 32px;
 }
 
+.gameViewTitle {
+  color: whitesmoke;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 35px;
+  font-weight: bold;
+  letter-spacing: -1px;
+  /* line-height: 1; */
+  text-align: left;
+  /* margin-top: 5%; */
+  text-shadow: 2px 2px #424242;
+  margin-bottom: 0px;
+  margin-top: 1%;
+}
+
 /* p {
     color: #685206;
     font-family: 'Helvetica Neue', sans-serif;
