@@ -325,7 +325,8 @@ def process_log(log, skip=1, skip_flg=False):
     elapsed2 = tok - tik
     print("Analytics gathered in:", elapsed2)
     print("Total processing time:", elapsed+elapsed2)
-    return events, analytics_log, form, form_players, [left, right]
+    
+    return events, analytics_log, form, form_players, [left, right], replayfile
 
 
 if __name__ == "__main__":

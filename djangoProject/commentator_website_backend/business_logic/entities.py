@@ -78,7 +78,7 @@ def get_quaternion(arr):
     V2 = rotation_from_matrix(V1)
     #print(V2)
     q = mda.lib.transformations.quaternion_about_axis(V2[0], V2[1])
-    return q
+    return [-q[0], -q[2], q[1], -q[3]]
 
 def get_euler_angles(pos, pos_r):
 
@@ -298,7 +298,7 @@ class Player(Entity):
 
     def to_replay(self):
         team = "r" if self.isTeamRight else "l"
-        joints = "(j "+" ".join([str(x) for x in self.joints]) + ")\n"
+        joints = " (j "+" ".join([str(x) for x in self.joints]) + ")\n"
         tmp_id = [x for x in self.id if x.isdigit()]
         id = "".join(str(x) for x in tmp_id)
 
