@@ -4,72 +4,22 @@ import VideoThumbnail from './VideoThumbnail'
 import Img from '../images/videoThumbnail.png'
 import { Link } from "react-router-dom";
 
-function VideoGrid({ login, yourGames }) {
+function VideoGrid({ games }) {
+
     return (
         <>
-        {yourGames ?
-        <>
-            <Row>
-            <Col>
-                    <VideoThumbnail login={login} Img={Img} title={"Video 1"} date={"22/03/2022"} />
-            </Col>
-            <Col>
-                    <VideoThumbnail login={login} Img={Img} title={"Video 2"} date={"22/03/2022"} />
-            </Col>
-            <Col>
-                    <VideoThumbnail login={login} Img={Img} title={"Video 3"} date={"21/03/2022"} />
-            </Col>
-        </Row>
-        <Row>
-            <Col>
-                    <VideoThumbnail login={login} Img={Img} title={"Video 4"} date={"21/03/2022"} />
-            </Col>
-            <Col>
-                    <VideoThumbnail login={login} Img={Img} title={"Video 5"} date={"20/03/2022"} />
-            </Col>
-            <Col>
-                    <VideoThumbnail login={login} Img={Img} title={"Video 6"} date={"20/03/2022"} />
-            </Col>
-        </Row>
-        </>
-        :
-        <>
-            <Row>
-                <Col>
-                    <Link to="/personality" style={{ textDecoration: 'none' }}>
-                        <VideoThumbnail login={login} Img={Img} title={"Video 1"} date={"22/03/2022"} />
-                    </Link>
+
+            {games.map((callbackfn, idx) => (
+
+                <Col key={games[idx].id}>
+                    <div style={{ height: '25vh', width: '17vw', marginBottom: '30%' }}>
+                        <Link to={"/personality/" + games[idx].id} style={{ textDecoration: 'none' }}>
+                            <VideoThumbnail game={games[idx]} img={Img} />
+                        </Link>
+                    </div>
                 </Col>
-                <Col>
-                    <Link to="/personality" style={{ textDecoration: 'none' }}>
-                        <VideoThumbnail login={login} Img={Img} title={"Video 2"} date={"22/03/2022"} />
-                    </Link>
-                </Col>
-                <Col>
-                    <Link to="/personality" style={{ textDecoration: 'none' }}>
-                        <VideoThumbnail login={login} Img={Img} title={"Video 3"} date={"21/03/2022"} />
-                    </Link>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Link to="/personality" style={{ textDecoration: 'none' }}>
-                        <VideoThumbnail login={login} Img={Img} title={"Video 4"} date={"21/03/2022"} />
-                    </Link>
-                </Col>
-                <Col>
-                    <Link to="/personality" style={{ textDecoration: 'none' }}>
-                        <VideoThumbnail login={login} Img={Img} title={"Video 5"} date={"20/03/2022"} />
-                    </Link>
-                </Col>
-                <Col>
-                    <Link to="/personality" style={{ textDecoration: 'none' }}>
-                        <VideoThumbnail login={login} Img={Img} title={"Video 6"} date={"20/03/2022"} />
-                    </Link>
-                </Col>
-            </Row>
-            </>
-        }
+
+            ))}
         </>
     )
 }

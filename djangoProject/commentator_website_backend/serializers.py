@@ -4,7 +4,7 @@ from djangoProject.permissions import IsOwnerOrIsAdmin
 from .models import Game, Preset
 from django.contrib.auth.models import User
 from rest_framework.response import Response
-
+from django.conf import settings
 
 class GameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -106,3 +106,5 @@ class PresetViewSet(viewsets.ModelViewSet):
         serializer = PresetSerializer(preset)
 
         return Response(serializer.data)
+
+
