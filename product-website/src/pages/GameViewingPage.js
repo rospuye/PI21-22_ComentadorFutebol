@@ -47,7 +47,7 @@ function GameViewingPage() {
 
     const getPhraseByTimestamp = (time, errorMargin=0.05, sortFunc=(a, b) => a.priority - b.priority) => {
         let phrases = script.filter((line) => {
-            return Math.abs(line.timestamp - time) < errorMargin
+            return Math.abs(line.timestamp - time) <= errorMargin
         })
 
         if (phrases.length === 0) {
@@ -88,7 +88,7 @@ function GameViewingPage() {
             const bestPhrase = getPhraseByTimestamp(phrase.timestamp + timeDifference/2, timeDifference/2)
             console.log("gameTime", gameTime, "bestPhrase", bestPhrase, "phrase", phrase)
 
-            if (bestPhrase == null || phrase.priority <= bestPhrase.priority) {
+            if (phrase.priority <= bestPhrase.priority) {
                 phraseTimeEnd = phraseEnd
                 console.log("expected end", phraseTimeEnd)
                 console.log("it spoke", phrase.text)

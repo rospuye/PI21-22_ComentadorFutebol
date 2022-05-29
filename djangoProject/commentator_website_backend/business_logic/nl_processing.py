@@ -553,7 +553,7 @@ lines = {
     },
     "goal_shot": {
         "function": goal_shot_lines,
-        "priority": 1
+        "priority": 2
     },
     "goal": {
         "function": goal_lines,
@@ -561,7 +561,7 @@ lines = {
     },
     "defense": {
         "function": defense_lines,
-        "priority": 1
+        "priority": 2
     },
     "intersect": {
         "function": intersect_lines,
@@ -569,7 +569,7 @@ lines = {
     },
     "aggression": {
         "function": aggression_lines,
-        "priority": 5
+        "priority": 1
     }
 }
 

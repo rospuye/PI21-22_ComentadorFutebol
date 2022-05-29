@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Row, Col, Button, Pagination } from 'react-bootstrap'
+import {Container, Row, Col, Button, Pagination, Spinner} from 'react-bootstrap'
 import SearchBox from '../components/SearchBox'
 import SortInput from '../components/SortInput'
 import Title from '../components/Title'
@@ -14,7 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 import FocoNavbar from '../components/FocoNavbar';
-import MyPagination from '../components/Pagination';
+import MyPagination from '../components/MyPagination';
 import ParticlesBg from 'particles-bg';
 
 import { useCookies } from 'react-cookie';
@@ -33,6 +33,8 @@ function SelectGamePage() {
     const [selectedGroup, setSelectedGroup] = useState("")
     const [selectedTitle, setSelectedTitle] = useState("")
     const [selectedPage, setSelectedPage] = useState(1)
+    const [numberOfPages, setNumberOfPages] = useState(0)
+    const [isLoaded, setIsLoaded] = useState(false)
 
 
     const [games, setGames] = useState([])
@@ -69,7 +71,10 @@ function SelectGamePage() {
         axios.get(url)
             .then(res => {
                 // console.log(res.data)
+                console.log(res)
                 setGames(res.data.results)
+                setNumberOfPages(res.data.total_pages)
+                setIsLoaded(true)
             })
     }
 
@@ -80,7 +85,7 @@ function SelectGamePage() {
 
     useEffect(() => {
         requestGame()
-    }, [])
+    }, [selectedPage])
 
 
     return (
@@ -99,88 +104,75 @@ function SelectGamePage() {
 
                 <Container>
                     <Row>
-                        {/* <Col>
-                        <Link to="/">
-                            <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '5%', marginLeft: '2%' }} />
-                        </Link>
-                    </Col> */}
                         <Col>
                             <Title title="FoCo" subtitle="Select Your Game"></Title>
                         </Col>
-                        {/* <Col style={{ display: 'flex', justifyContent: 'right' }}>
-                        {login ?
-                            <Button variant="light" style={{ height: '40px', marginTop: '5%' }} onClick={() => {
-                                setCookie('logged_user', '', { path: '/' })
-                                setCookie('token', '', { path: '/' })
-                                setLogin(cookies.logged_user !== '')
-                                window.location.reload()
-                            }}>Logout</Button>
-                            :
-                            <></>
-                        }
-                    </Col> */}
                     </Row>
                 </Container>
 
-                <Container>
-                    <Row style={{ marginTop: '3%' }}>
-                        <Col xs={3}>
-                            {/* Filters and Buttons */}
-                            <SearchBox
-                                login={login}
-                                selectedLeague={selectedLeague}
-                                setSelectedLeague={setSelectedLeague}
-                                selectedUser={selectedUser}
-                                setSelectedUser={setSelectedUser}
-                                selectedYear={selectedYear}
-                                setSelectedYear={setSelectedYear}
-                                selectedRound={selectedRound}
-                                setSelectedRound={setSelectedRound}
-                                selectedGroup={selectedGroup}
-                                setSelectedGroup={setSelectedGroup}
-                                selectedTitle={selectedTitle}
-                                setSelectedTitle={setSelectedTitle}
-                                requestGame={requestGame}
-                            />
-                            {login ?
-                                <div className='searchBoxDiv'>
-                                    <Link to="/your_games">
-                                        <Button variant="primary" type="submit" size="lg" className='formBtn searchBoxDivInput'>Your Games</Button>
-                                    </Link>
-                                    <Link to="/upload">
-                                        <Button variant="primary" type="submit" size="lg" className='formBtn searchBoxDivInput'>Upload Your Game</Button>
-                                    </Link>
-                                    <Link to="/simulator">
-                                        <Button variant="primary" type="submit" size="lg" className='formBtn searchBoxDivInput'>Connect to Simulator</Button>
-                                    </Link>
-                                </div>
-                                : <></>}
-                        </Col>
-                        <Col xs={9}>
-                            <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'right', marginBottom: '3%' }}>
-                                <Container style={{ width: '60%', marginLeft: '30%' }}>
-                                    <SortInput />
-                                </Container>
-                            </Row>
-                            <Row style={{ marginTop: '20px' }}>
-                                <VideoGrid games={games} />
-                            </Row>
-                            <Row style={{ marginTop: '-20%' }}>
-                                <MyPagination no_pages={6} />
-                                {/* <div class="pagination" style={{display: "flex", justifyContent: "center"}}>
-                                    <a>&laquo;</a>
-                                    <a onClick={() => { setSelectedPage(1); requestGame(); }}>1</a>
-                                    <a class="active" onClick={() => { setSelectedPage(2); requestGame(); }}>2</a>
-                                    <a onClick={() => { setSelectedPage(3); requestGame(); }}>3</a>
-                                    <a onClick={() => { setSelectedPage(4); requestGame(); }}>4</a>
-                                    <a onClick={() => { setSelectedPage(5); requestGame(); }}>5</a>
-                                    <a onClick={() => { setSelectedPage(6); requestGame(); }}>6</a>
-                                    <a>&raquo;</a>
-                                </div> */}
-                            </Row>
-                        </Col>
-                    </Row>
-                </Container>
+                {isLoaded ?
+                    <Container>
+                        <Row style={{ marginTop: '3%' }}>
+                            <Col xs={3}>
+                                {/* Filters and Buttons */}
+                                <SearchBox
+                                    login={login}
+                                    selectedLeague={selectedLeague}
+                                    setSelectedLeague={setSelectedLeague}
+                                    selectedUser={selectedUser}
+                                    setSelectedUser={setSelectedUser}
+                                    selectedYear={selectedYear}
+                                    setSelectedYear={setSelectedYear}
+                                    selectedRound={selectedRound}
+                                    setSelectedRound={setSelectedRound}
+                                    selectedGroup={selectedGroup}
+                                    setSelectedGroup={setSelectedGroup}
+                                    selectedTitle={selectedTitle}
+                                    setSelectedTitle={setSelectedTitle}
+                                    requestGame={requestGame}
+                                />
+                                {login ?
+                                    <div className='searchBoxDiv'>
+                                        <Link to="/your_games">
+                                            <Button variant="primary" type="submit" size="lg" className='formBtn searchBoxDivInput'>Your Games</Button>
+                                        </Link>
+                                        <Link to="/upload">
+                                            <Button variant="primary" type="submit" size="lg" className='formBtn searchBoxDivInput'>Upload Your Game</Button>
+                                        </Link>
+                                        <Link to="/simulator">
+                                            <Button variant="primary" type="submit" size="lg" className='formBtn searchBoxDivInput'>Connect to Simulator</Button>
+                                        </Link>
+                                    </div>
+                                    : <></>}
+                            </Col>
+                            <Col xs={9}>
+                                <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'right', marginBottom: '3%' }}>
+                                    <Container style={{ width: '60%', marginLeft: '30%' }}>
+                                        <SortInput />
+                                    </Container>
+                                </Row>
+                                <Row style={{ marginTop: '20px' }}>
+                                    <VideoGrid games={games} />
+                                </Row>
+                                <Row style={{ marginTop: '-20%' }}>
+                                    <MyPagination
+                                        n_pages={numberOfPages}
+                                        selPage={selectedPage}
+                                        setSelPage={setSelectedPage}
+                                    />
+                                </Row>
+                            </Col>
+                        </Row>
+                    </Container>
+                :
+                    <div style={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: "10em"}}>
+                        <Spinner animation={"border"} variant={"primary"} />
+                    </div>
+                }
+
+
+
+
             </div>
         </>
     )
