@@ -16,36 +16,6 @@ def position_to_array(position, flg=False):
     # assert len(pos) == 16
     return pos
 
-
-def order_by_distance_to_ball(entities):
-    "Given the entities, returns their position relative to the Ball entity"
-
-    ball = entities[0]
-    players = entities[1:]
-
-    teamLeft = []
-    teamRight = []
-
-    for player in players:
-        player.x -= ball.x
-        player.y -= ball.y
-        player.z -= ball.z
-        player.distance_to_ball = math.sqrt(player.x ** 2 + player.y ** 2 + player.z ** 2)
-
-        teamLeft.append(player) if "Left" in player.id else teamRight.append(player)
-
-    teamLeft.sort(key=lambda p: p.distance_to_ball)
-    teamRight.sort(key=lambda p: p.distance_to_ball)
-
-    return [ball] + teamLeft + teamRight
-
-
-def write_to_file(timestamp, entities, output):
-    output_str = f"{timestamp}," + "".join([entity.to_csv() for entity in entities]).rstrip(",")
-
-    output.write(output_str + "\n")
-
-
 def process_log(log, skip=1, skip_flg=False):
     tik = time.time()
     count = 0
