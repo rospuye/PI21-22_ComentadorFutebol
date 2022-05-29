@@ -75,8 +75,24 @@ export const commentaryToSSML = (text, mood, diction, gender) => {
         style = "friendly"
     }
 
-    let pitch = "medium"
     let rate = 1
+    let pitch = "medium"
+    if(diction >= 7) {
+        pitch = "x-high"
+        rate = 1.6
+    }
+    else if(diction < 7 && diction > 1) {
+        pitch = "high"
+        rate = 1.3
+    }
+    else if(diction < -1 && diction > -7) {
+        pitch = "low"
+        rate = 0.8
+    }
+    else if(diction <= -7) {
+        pitch = "x-low"
+        rate = 0.6
+    }
 
     let inner = ""
     if (style) {
