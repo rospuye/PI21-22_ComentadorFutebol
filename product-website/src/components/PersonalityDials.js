@@ -17,73 +17,102 @@ import RangeSlider from 'react-bootstrap-range-slider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 
-function PersonalityDials({gender, setGender, energy, setEnergy, aggressiveness,
-    setAggressiveness, bias, setBias, createPreset, game_id}) {
-              
+function PersonalityDials({ gender, setGender, energy, setEnergy, aggressiveness,
+    setAggressiveness, bias, setBias, createPreset, game_id }) {
+
     const navigate = useNavigate();
     let { id } = useParams();
 
     function goToGameViewing() {
         console.log(id)
         navigate('/game_viewing/' + id + '/' + gender + '/' + energy + '/' + aggressiveness + '/' + bias,
-            { state: {
-                game_id: id,
-                gender: gender,
-                energy: energy,
-                aggressiveness: aggressiveness,
-                bias: bias
-            },
-            test: 'amogus' });
+            {
+                state: {
+                    game_id: id,
+                    gender: gender,
+                    energy: energy,
+                    aggressiveness: aggressiveness,
+                    bias: bias
+                },
+                test: 'amogus'
+            });
     }
 
-    return <Container className="text-center" style={{ marginTop: '10%' }}>
-        <Row className="dialRow">
-            <Form.Label>Gender</Form.Label>
-            <Col>
-                <ButtonGroup aria-label="Basic example">
-                    {/* className="genderChoiceSelected" */}
-                    <Button variant={gender == "Male" ? "primary" : "light"} onClick={() => { setGender("Male") }}>Male</Button>
-                    <Button variant={gender == "Female" ? "primary" : "light"} onClick={() => { setGender("Female") }}>Female</Button>
-                </ButtonGroup>
+    return <Container className="text-center">
+        <Row >
+            <Col style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <p className='sectionSubtitle'>Gender</p>
             </Col>
         </Row>
         <Row className="dialRow">
-            <Col><Form.Label>Energetic</Form.Label></Col>
-            {/* <Col><Form.Range /></Col> */}
-            <RangeSlider
-                value={energy}
-                onChange={e => setEnergy(e.target.value)}
-                min={-50}
-                max={50}
-            />
+            <Col>
+                <ButtonGroup aria-label="Basic example" style={{width:'30%'}}>
+                    {/* className="genderChoiceSelected" */}
+                    <Button className="genderSelector"variant={gender == "Male" ? "primary" : "light"} onClick={() => { setGender("Male") }}>Male</Button>
+                    <Button className="genderSelector" variant={gender == "Female" ? "primary" : "light"} onClick={() => { setGender("Female") }}>Female</Button>
+                </ButtonGroup>
+            </Col>
+        </Row>
+        <Row>
+            <p className='sectionSubtitle'>Personality</p>
+        </Row>
+        <Row className="dialRow">
+            <Col>
+                <Form.Label>Energetic</Form.Label>
+            </Col>
+            <Col>
+                <RangeSlider
+                    value={energy}
+                    onChange={e => setEnergy(e.target.value)}
+                    min={-50}
+                    max={50}
+                />
+            </Col>
             <Col><Form.Label>Calm</Form.Label></Col>
         </Row>
         <Row className="dialRow">
-            <Col><Form.Label>Aggressive</Form.Label></Col>
-            <RangeSlider
-                value={aggressiveness}
-                onChange={e => setAggressiveness(e.target.value)}
-                min={-50}
-                max={50}
-            />
-            <Col><Form.Label>Friendly</Form.Label></Col>
+            <Col>
+                <Form.Label>Aggressive</Form.Label>
+            </Col>
+            <Col>
+                <RangeSlider
+                    value={aggressiveness}
+                    onChange={e => setAggressiveness(e.target.value)}
+                    min={-50}
+                    max={50}
+                />
+            </Col>
+            <Col>
+                <Form.Label>Friendly</Form.Label>
+            </Col>
+        </Row>
+        <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}>
+            <p className='sectionSubtitle'>Bias</p>
         </Row>
         <Row className="dialRow">
-            <Form.Label>Bias</Form.Label>
-            <Col><Form.Label>Team A</Form.Label></Col>
-            <RangeSlider
-                value={bias}
-                onChange={e => setBias(e.target.value)}
-                min={-1}
-                max={1}
-            />
-            <Col><Form.Label>Team B</Form.Label></Col>
+            <Col>
+                <Form.Label>Team A</Form.Label>
+            </Col>
+            <Col>
+                <RangeSlider
+                    value={bias}
+                    onChange={e => setBias(e.target.value)}
+                    min={-1}
+                    max={1}
+                />
+            </Col>
+            <Col>
+                <Form.Label>Team B</Form.Label>
+            </Col>
         </Row>
-        <Row className="dialRow">
-            <Button variant="success" size="lg" onClick={goToGameViewing}>Start <FontAwesomeIcon icon={faPlay} /></Button>
+        <Row className="dialRow" style={{marginBottom:'5%'}}>
+            <Col>
+                <Button className='btnUpload' size="lg" onClick={() => createPreset()}>Save Preset</Button>
+            </Col>
+            <Col>
+                <Button className='btnUpload' size="lg" onClick={goToGameViewing}>Start Game</Button>
+            </Col>
         </Row>
-
-        <Button variant="success" size="lg" onClick={() => createPreset()}>Create <FontAwesomeIcon icon={faPlay} /></Button>
     </Container>;
 }
 
