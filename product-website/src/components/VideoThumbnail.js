@@ -27,7 +27,7 @@ function VideoThumbnail({title,Img,date,login}) {
         <Col style={{display:'flex',justifyContent:'right'}}>
         {login ?
             <Link to="/edit_video">
-            <Button style={{height:'65%',width:'70%'}} variant="primary" type="submit" size="lg" className='formBtn'>
+            <Button style={{height:'70%'}} variant="primary" type="submit" size="lg" className='formBtn'>
                 <FontAwesomeIcon icon={faPen}/>
             </Button>
             </Link>

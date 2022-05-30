@@ -13,6 +13,9 @@ import { faHouse } from '@fortawesome/free-solid-svg-icons'
 
 import { useCookies } from 'react-cookie';
 
+import FocoNavbar from '../components/FocoNavbar';
+import ParticlesBg from 'particles-bg'
+
 function GameStatistics() {
 
   const nameA = "Tigers"
@@ -25,31 +28,25 @@ function GameStatistics() {
 
   return (
     <>
+    <div className='particlesBG'>
+      <ParticlesBg className="particles-bg-canvas-self" type="cobweb" bg={true} color="#DADADA" height={'100%'}/>
+    </div>
+    <div style={{ padding: '1%' }}>
+    <Container>
+      <FocoNavbar goesBack={true} backPage={'/'} hasLoginBtn={true} cookies={cookies} setCookie={setCookie}/>
+    </Container>
       <Container>
         <Row>
           <Col>
-            <Link to="/">
-              <FontAwesomeIcon icon={faHouse} style={{ color: 'white', fontSize: '30px', marginTop: '5%', marginLeft: '2%' }} />
-            </Link>
-          </Col>
-          <Col>
             <Title title="FoCo" subtitle="Game Statistics"></Title>
-          </Col>
-          <Col style={{ display: 'flex', justifyContent: 'right' }}>
           </Col>
         </Row>
       </Container>
 
-      <Container>
-        {/* <div style={{ marginBottom: "5%" }}>
-        <Link to="/">
-          <FontAwesomeIcon icon={faHouse} style={{ color: 'white', fontSize: '30px', marginTop: '20px', marginLeft: '20px' }} />
-        </Link>
-        <Title title="FoCo" subtitle="Game Statistics" />
-      </div> */}
+      <Container style={{marginTop:'5%', marginBottom:'5%'}}>
         <Row>
           <Col style={{ textAlign: "center" }}>
-            <h4 className="titleH4">Team Formation</h4>
+            <h4 style={{marginBottom:'2%'}} className="statisticsH4">Team Formation</h4>
             <img
               alt='Field'
               src={Img}
@@ -61,6 +58,7 @@ function GameStatistics() {
           </Col>
         </Row>
       </Container>
+      </div>
     </>
   )
 }
