@@ -41,6 +41,7 @@ function GameViewingPage() {
     const [diction, setDiction] = useState(1)
     const [script, setScript] = useState([])
     const [phraseHistory, setPhraseHistory] = useState([])
+    const truePhraseHistory = []
 
     const [cookies, setCookie] = useCookies(['logged_user'])
 
@@ -81,7 +82,6 @@ function GameViewingPage() {
         if (gameTime < phraseTimeEnd)  // if should be a narration happening right now, it doesn't matter
             return
         const phrase = getPhraseByTimestamp(gameTime)
-        // console.log(gameTime, phrase)
 
         if (phrase != null) {
             const phraseEnd = predictPhraseEnd(phrase.text, phrase.timestamp)
@@ -89,17 +89,12 @@ function GameViewingPage() {
 
             // get the best phrase in the estimated time that the commentator would be saying
             const bestPhrase = getPhraseByTimestamp(phrase.timestamp + timeDifference/2, timeDifference/2)
-            // console.log("gameTime", gameTime, "bestPhrase", bestPhrase, "phrase", phrase)
 
             if (phrase.priority <= bestPhrase.priority) {
                 phraseTimeEnd = phraseEnd
-                // console.log("expected end", phraseTimeEnd)
-                // console.log("it spoke", phrase.text)
-                const chatHistory = [...phraseHistory]
-                console.log("chatHistory", chatHistory)
-                chatHistory.push(phrase)
+                truePhraseHistory.push(phrase)
                 speak(phrase.text)
-                setPhraseHistory(chatHistory)
+                setPhraseHistory([...truePhraseHistory])
             }
         }
     }
@@ -114,7 +109,6 @@ function GameViewingPage() {
 
     const initializeScript = () => {
 
-        // setSynthetiser(synth)
         let synthetiser = initializeSynthetiser()
         iframe = document.getElementById("video-game-iframe")
         gameTime = iframe.contentWindow.document.getElementsByClassName("game_time_lbl")
@@ -123,7 +117,6 @@ function GameViewingPage() {
         }
 
         const ssml = commentaryToSSML(startPhrase, mood, diction, gender)
-        // console.log(ssml)
         speakSsml(ssml, synthetiser)
     }
 
@@ -171,12 +164,7 @@ function GameViewingPage() {
             }
         }
 
-        console.log("config", config)
-
-
         let url = `${process.env.REACT_APP_API_URL}generate_script/${id}?en_calm_mod=${energy}&agr_frnd_mod=${aggressiveness}&bias=${bias}`
-
-        console.log("Get request")
 
         axios.get(url, config)
             .then(res => {
@@ -189,11 +177,9 @@ function GameViewingPage() {
         requestGame()
     }, [])
 
-    useEffect(() => {
-        console.log("history", phraseHistory)
-        const chatHistory = [...phraseHistory]
-        console.log("chatHistory 2", chatHistory)
-    }, [phraseHistory])
+    // useEffect(() => {
+    //     const chatHistory = [...phraseHistory]
+    // }, [phraseHistory])
 
 
 
@@ -223,7 +209,6 @@ function GameViewingPage() {
                             <Toast style={{ width: '80%', height: '300px', overflowY: 'scroll' }}>
                                 <Toast.Body>
                                     {phraseHistory.map(phrase => {
-                                        console.log("phraseHistory 3 - on map", phraseHistory)
                                         return (
                                             <>
                                                 {convertTimeToText(phrase.timestamp)} - {phrase.text}<br/>
