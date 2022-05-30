@@ -15,6 +15,9 @@ import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import Button from 'react-bootstrap/Button'
 
+// CSS
+import "./GameViewingPage.css"
+
 // Fontawesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHouse } from '@fortawesome/free-solid-svg-icons'
@@ -45,12 +48,60 @@ function GameViewingPage() {
 
     const [cookies, setCookie] = useCookies(['logged_user'])
 
+
     const startPhrase = "Let's start the convertion."
     let phraseTimeEnd = 0
 
     let { id, gender, energy, aggressiveness, bias } = useParams();
+
+    // Iframe variables
+    const [isGameLoaded, setIsGameLoaded] = useState(false)
+
     let gameTime = document.getElementsByClassName("game_time_lbl")
     let iframe = document.getElementById("video-game-iframe")
+    let playerBar = undefined
+    let previousTotalTime = 0
+
+
+    const isStillLoading = (waitTime=2000, bottomLimit=20, maxVerificationCount=3, verificationCount=0) => {
+        let totalTime = iframe.contentWindow.document.getElementsByClassName("total-time")
+        let convertedTotalTime = totalTime[0].innerText
+        convertedTotalTime = convertTimeToFloat(convertedTotalTime)
+        console.log(convertedTotalTime, previousTotalTime, verificationCount, maxVerificationCount)
+        if (convertedTotalTime === previousTotalTime) {
+            if (verificationCount < maxVerificationCount) {
+                console.log("failed")
+                setTimeout(() => {isStillLoading(waitTime, bottomLimit, maxVerificationCount, verificationCount+1)}, waitTime)
+                return
+            }
+            console.log("Game Loaded")
+            setIsGameLoaded(true)
+            return
+        }
+        previousTotalTime = convertedTotalTime
+        console.log("not loaded yet", convertedTotalTime)
+        setTimeout(() => {isStillLoading(waitTime, bottomLimit, maxVerificationCount, 0)}, waitTime)
+    }
+
+    const verifyIframe = (waitTime=1000) => {
+        iframe = document.getElementById("video-game-iframe")
+        if (iframe !== null) {
+            playerBar = iframe.contentWindow.document.getElementsByClassName("jsm-player-bar")
+            if (playerBar.length !== 0) {
+                playerBar = playerBar[0]
+                console.log("playerBar", playerBar)
+                playerBar.style.display = "none"
+                isStillLoading()
+                return
+            }
+        }
+
+        setTimeout(() => {
+            verifyIframe()
+        }, waitTime)
+    }
+
+    verifyIframe()
 
     const getPhraseByTimestamp = (time, errorMargin=0.05, sortFunc=(a, b) => a.priority - b.priority) => {
         let phrases = script.filter((line) => {
@@ -175,7 +226,9 @@ function GameViewingPage() {
 
     useEffect(() => {
         requestGame()
+        verifyIframe()
     }, [])
+
 
     // useEffect(() => {
     //     const chatHistory = [...phraseHistory]
@@ -185,7 +238,9 @@ function GameViewingPage() {
 
     return (
         <div>
-            <Button onClick={() => {initializeScript()}}></Button>
+            {isGameLoaded &&
+                <Button onClick={() => {initializeScript()}}></Button>
+            }
             <Container fluid >
                 <Row>
                     <Col>
@@ -215,10 +270,6 @@ function GameViewingPage() {
                                             </>
                                         )
                                     })}
-                                    {/*00:00 - Lorem Ipsum<br />*/}
-                                    {/*00:23 - Ball ball ball<br />*/}
-                                    {/*00:32 - AAAAAAAAA<br />*/}
-                                    {/*01:01 - MAMA MIA<br />*/}
                                 </Toast.Body>
                             </Toast>
                         </ToastContainer>
