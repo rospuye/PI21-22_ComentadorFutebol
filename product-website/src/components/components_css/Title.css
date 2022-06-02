@@ -115,6 +115,32 @@
     color: whitesmoke !important;
   }
 
+  .generalCanvas {
+      width: 80% !important;
+      height: 300px !important;
+      margin-top: 13% !important;
+  }
+
+  .meetFocoCanvas {
+    width: 80% !important;
+    height: 300px !important;
+    margin-top: 7% !important;
+  }
+
+  .meetFocoP {
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 30px;
+    text-align: justify;
+  }
+
+  .meetFocoDescription {
+      background-color: #212428;
+      border-radius: 5px;
+      padding: 2%;
+  }
   /* SEARCHBOX */
 
   .input-wrapper-searchBox {

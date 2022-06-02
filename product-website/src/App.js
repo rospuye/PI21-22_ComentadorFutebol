@@ -22,6 +22,7 @@ import GameViewingPage from './pages/GameViewingPage';
 import YourGamesPage from './pages/YourGamesPage';
 import EditVideoPage from './pages/EditVideoPage';
 import TTSTest from './pages/TTSTest';
+import MeetFoco from './pages/MeetFoco';
 
 export default function App() {
     return (
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="/your_games" element={<YourGamesPage/>}/>
           <Route path="/edit_video" element={<EditVideoPage/>}/>
           <Route path="/test_tts" element={<TTSTest/>}/>
+          <Route path="/meet_foco" element={<MeetFoco/>}/>
 
         </Routes>
       </BrowserRouter>
