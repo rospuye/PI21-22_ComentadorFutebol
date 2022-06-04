@@ -65,7 +65,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class PresetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Preset
-        fields = ['id', 'user', 'gender', 'aggressive_val', 'energetic_val', 'bias']
+        fields = ['id', 'user', 'name', 'gender', 'aggressive_val', 'energetic_val', 'bias']
 
 
 class PresetViewSet(viewsets.ModelViewSet):
@@ -76,6 +76,10 @@ class PresetViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data
         missing_fields = []
+
+        if "name" not in data:
+            missing_fields.append("name")
+
         if "gender" not in data:
             missing_fields.append("gender")
 
@@ -99,7 +103,7 @@ class PresetViewSet(viewsets.ModelViewSet):
         if user.is_anonymous:
             return Response({"message": "Not authenticated user."})
 
-        preset = Preset(gender=data["gender"], aggressive_val=data["aggressive_val"],
+        preset = Preset(name=data["name"], gender=data["gender"], aggressive_val=data["aggressive_val"],
                         energetic_val=data["energetic_val"], bias=data["bias"], user=user)
         preset.save()
         serializer = PresetSerializer(preset)

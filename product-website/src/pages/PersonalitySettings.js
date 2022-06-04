@@ -40,6 +40,7 @@ function PersonalitySettings() {
   ];
 
   const [login, setLogin] = useState(true)
+  const [presetName, setPresetName] = useState("")
   const [gender, setGender] = useState("Male")
   const [energy, setEnergy] = useState(0)
   const [aggressiveness, setAggressiveness] = useState(0)
@@ -63,6 +64,7 @@ function PersonalitySettings() {
     };
 
     const formData = new FormData()
+    formData.append("name", presetName)
     formData.append("gender", gender)
     formData.append("aggressive_val", aggressiveness)    
     formData.append("energetic_val", energy)
@@ -71,14 +73,14 @@ function PersonalitySettings() {
     axios.post(url, formData, config).then((response) => {
       console.log("preset create response", response)
 
-      document.getElementById('confirmBtn').disabled = false;
+      document.getElementById('saveBtn').disabled = false;
       // setLoading(false)
     });
   }
 
   return (
 
-    cookies.logged_user !== '' ?
+    (cookies.logged_user !== '' && cookies.logged_user !== null) ?
 
     <>
     <div className='particlesBG'>
@@ -130,6 +132,9 @@ function PersonalitySettings() {
               bias={team}
               setBias={setTeam}
               createPreset={createPreset}
+              hasCreate
+              presetName={presetName}
+              setPresetName={setPresetName}
             /></Col>
 
             <Col>
@@ -153,73 +158,59 @@ function PersonalitySettings() {
       </>
 
       :
+     
+      <>
+        <div className='particlesBG'>
+          <ParticlesBg className="particles-bg-canvas-self" type="cobweb" bg={true} color="#DADADA" />
+        </div>
+        <div style={{ padding: '1%' }}>
+          <Container>
+            <FocoNavbar goesBack={true} backPage="/select_game" hasLoginBtn={true} cookies={cookies} setCookie={setCookie} />
+          </Container>
 
+          <Container>
+            <Row>
+              <Col>
+                <Title title="FoCo" subtitle="Personality Settings"></Title>
+              </Col>
+            </Row>
+          </Container>
 
-        // {/* <Container>
-        //   <Row>
-        //     <Col>
-        //       <Link to="/select_game">
-        //         <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '10%', marginLeft: '2%' }} />
-        //       </Link>
-        //     </Col>
-        //     <Col>
-        //       <Title title="FoCo" subtitle="Personality Settings"></Title>
-        //     </Col>
-        //     <Col style={{ display: 'flex', justifyContent: 'right' }}></Col>
-        //   </Row>
-        // </Container> */}
-<>
-      <div className='particlesBG'>
-        <ParticlesBg className="particles-bg-canvas-self" type="cobweb" bg={true} color="#DADADA" />
-      </div>
-      <div style={{ padding: '1%' }}>
-        <Container>
-          <FocoNavbar goesBack={true} backPage="/select_game" hasLoginBtn={true} cookies={cookies} setCookie={setCookie} />
-        </Container>
+          <Container>
+            <Row style={{marginTop:'5%'}}>
+              <Col className="text-center">
+                {/* {
+                  dummyRobots.map(details => {
+                    return <Avatar avatar={details} />
+                  })
+                } */}
+              </Col>
 
-        <Container>
-          <Row>
-            <Col>
-              <Title title="FoCo" subtitle="Personality Settings"></Title>
-            </Col>
-          </Row>
-        </Container>
+              <Col xs={6}><PersonalityDials
+                game_id={game_id}
+                gender={gender}
+                setGender={setGender}
+                energy={energy}
+                setEnergy={setEnergy}
+                aggressiveness={aggressiveness}
+                setAggressiveness={setAggressiveness}
+                bias={team}
+                setBias={setTeam}
+                createPreset={createPreset}
+              /></Col>
 
-        <Container>
-          <Row style={{marginTop:'5%'}}>
-            <Col className="text-center">
-              {
-                dummyRobots.map(details => {
-                  return <Avatar avatar={details} />
-                })
-              }
-            </Col>
+              <Col className="text-center">
+                {
+                  dummyRobots.map(details => {
+                    return <Avatar avatar={details} />
+                  })
+                }
+              </Col>
 
-            <Col xs={6}><PersonalityDials
-              game_id={game_id}
-              gender={gender}
-              setGender={setGender}
-              energy={energy}
-              setEnergy={setEnergy}
-              aggressiveness={aggressiveness}
-              setAggressiveness={setAggressiveness}
-              bias={team}
-              setBias={setTeam}
-              createPreset={createPreset}
-            /></Col>
+            </Row>
+          </Container>
 
-            <Col className="text-center">
-              {
-                dummyRobots.map(details => {
-                  return <Avatar avatar={details} />
-                })
-              }
-            </Col>
-
-          </Row>
-        </Container>
-
-      </div>
+        </div>
       </>
 
   );
