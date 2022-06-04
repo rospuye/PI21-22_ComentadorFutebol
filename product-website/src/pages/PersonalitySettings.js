@@ -28,16 +28,57 @@ import FocoNavbar from '../components/FocoNavbar';
 
 function PersonalitySettings() {
 
-  const dummyRobots = [
-    { alt: "Robot Model 1", src: { Img } },
-    { alt: "Robot Model 2", src: { Img } },
-    { alt: "Robot Model 3", src: { Img } }
-  ];
+    const defaultRobots = [
+        // { alt: "Robot Model 1", src: { Img } },
+        {
+            name: "Kind",
+            gender: "Female",
+            aggressive_val: -45,
+            energetic_val: -45,
+            bias: 0
+        },
+        {
+            name: "Pissed",
+            gender: "Child",
+            aggressive_val: 35,
+            energetic_val: 50,
+            bias: 1
+        },
+        {
+            name: "Neutral",
+            gender: "Male",
+            aggressive_val: 0,
+            energetic_val: 0,
+            bias: 0
+        },
+        {
+            name: "Aggressive",
+            gender: "Female",
+            aggressive_val: 50,
+            energetic_val: 10,
+            bias: 0
+        },
+        {
+            name: "Friendly",
+            gender: "Child",
+            aggressive_val: -50,
+            energetic_val: -10,
+            bias: 0
+        },
+        {
+            name: "Passive-Aggressive",
+            gender: "Male",
+            aggressive_val: 50,
+            energetic_val: -50,
+            bias: -1
+        },
+   
+    ];
 
-  const dummyRobots2 = [
-    { alt: "Robot Model 1", src: { Img } },
-    { alt: "Robot Model 2", src: { Img2 } }
-  ];
+  // const dummyRobots2 = [
+  //   { alt: "Robot Model 1", src: { Img } },
+  //   { alt: "Robot Model 2", src: { Img2 } }
+  // ];
 
   const [login, setLogin] = useState(true)
   const [presetName, setPresetName] = useState("")
@@ -108,17 +149,19 @@ function PersonalitySettings() {
           <Row>
             <Col>
               {
-                dummyRobots.map(details => {
-                  return <Avatar avatar={details} />
+                defaultRobots.map(details => {
+                    return <Avatar 
+                        avatar={details} 
+                        src={Img} 
+                        setEnergy={setEnergy}
+                        setTeam={setTeam}
+                        setAggressiveness={setAggressiveness}
+                        setGender={setGender}
+                    />
                 })
               }
             </Col>
             <Col>
-              {
-                dummyRobots.map(details => {
-                  return <Avatar avatar={details} />
-                })
-              }
             </Col>
 
             <Col xs={6}><PersonalityDials
@@ -138,18 +181,25 @@ function PersonalitySettings() {
             /></Col>
 
             <Col>
-              {
-                dummyRobots.map(details => {
-                  return <Avatar avatar={details} />
-                })
-              }
+                {
+                    defaultRobots.map(details => {
+                    return <Avatar 
+                        avatar={details} 
+                        src={Img} 
+                        setEnergy={setEnergy}
+                        setTeam={setTeam}
+                        setAggressiveness={setAggressiveness}
+                        setGender={setGender}
+                    />
+                    })
+                }
             </Col>
             <Col>
-              {
+              {/* {
                 dummyRobots2.map(details => {
                   return <Avatar avatar={details} />
                 })
-              }
+              } */}
             </Col>
 
           </Row>
@@ -201,9 +251,16 @@ function PersonalitySettings() {
 
               <Col className="text-center">
                 {
-                  dummyRobots.map(details => {
-                    return <Avatar avatar={details} />
-                  })
+                    defaultRobots.map(details => {
+                        return <Avatar 
+                            avatar={details} 
+                            src={Img} 
+                            setEnergy={setEnergy}
+                            setTeam={setTeam}
+                            setAggressiveness={setAggressiveness}
+                            setGender={setGender}
+                        />
+                    })
                 }
               </Col>
 

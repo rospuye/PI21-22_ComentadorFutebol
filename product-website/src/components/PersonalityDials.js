@@ -57,6 +57,8 @@ function PersonalityDials({ gender, setGender, energy, setEnergy, aggressiveness
                         {/* className="genderChoiceSelected" */}
                         <Button className="genderSelector"variant={gender == "Male" ? "primary" : "light"} onClick={() => { setGender("Male") }}>Male</Button>
                         <Button className="genderSelector" variant={gender == "Female" ? "primary" : "light"} onClick={() => { setGender("Female") }}>Female</Button>
+                        <Button className="genderSelector" variant={gender == "Child" ? "primary" : "light"} onClick={() => { setGender("Child") }}>Child</Button>
+
                     </ButtonGroup>
                 </Col>
             </Row>
