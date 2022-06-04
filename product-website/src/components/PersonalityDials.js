@@ -19,30 +19,13 @@ import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import { Modal } from 'react-bootstrap';
 
 function PersonalityDials({ gender, setGender, energy, setEnergy, aggressiveness,
-    setAggressiveness, bias, setBias, createPreset, game_id, hasCreate,
-    presetName, setPresetName}) {
+    setAggressiveness, bias, setBias, createPreset, hasCreate,
+    presetName, setPresetName, goToGameViewing}) {
 
-    const navigate = useNavigate();
-    let { id } = useParams();
 
     // Modal
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false);
-
-    function goToGameViewing() {
-        console.log(id)
-        navigate('/game_viewing/' + id + '/' + gender + '/' + energy + '/' + aggressiveness + '/' + bias,
-            {
-                state: {
-                    game_id: id,
-                    gender: gender,
-                    energy: energy,
-                    aggressiveness: aggressiveness,
-                    bias: bias
-                },
-                test: 'amogus'
-            });
-    }
 
     return <>
         <Container className="text-center">
@@ -152,7 +135,7 @@ function PersonalityDials({ gender, setGender, energy, setEnergy, aggressiveness
                     </Button>
                     <Button variant="primary" onClick={() => {
                         handleClose()
-                        createPreset()
+                        createPreset(true)
                     }} id="saveBtn">
                         Save Changes
                     </Button>

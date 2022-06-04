@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from rest_framework.response import Response
 from django.conf import settings
 
+
 class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
@@ -72,6 +73,15 @@ class PresetViewSet(viewsets.ModelViewSet):
     queryset = Preset.objects.all()
     serializer_class = PresetSerializer
     permission_classes = [IsOwnerOrIsAdmin]
+    pagination_class = None
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_anonymous:
+            return []
+
+        queryset = Preset.objects.filter(user=user)
+        return queryset
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -109,5 +119,3 @@ class PresetViewSet(viewsets.ModelViewSet):
         serializer = PresetSerializer(preset)
 
         return Response(serializer.data)
-
-

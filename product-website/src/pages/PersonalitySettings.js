@@ -1,6 +1,6 @@
 // React
-import React, { useState } from 'react';
-import { Link, useParams } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 // Components
 import Title from '../components/Title';
@@ -89,10 +89,45 @@ function PersonalitySettings() {
 
   const [cookies, setCookie] = useCookies(['logged_user'])
 
-  let { game_id } = useParams();
+  const [userPresets, setUserPresets] = useState([])
 
+  const navigate = useNavigate();
 
-  const createPreset = () => {
+  let { id } = useParams();
+
+  const getCustomPreset = () => {
+    const url = process.env.REACT_APP_API_URL + 'presets/';
+
+    const config = {
+        headers: {
+            'content-type': 'multipart/form-data',
+            'Authorization': `Token ${cookies.token}`
+        },
+    };
+
+    axios.get(url, config).then((response) => {
+        console.log("preset user response", response)
+        setUserPresets(response.data)
+    });
+
+  }
+
+  const goToGameViewing = () => {
+    console.log(id)
+    navigate('/game_viewing/' + id + '/' + gender + '/' + energy + '/' + aggressiveness + '/' + team,
+        {
+            state: {
+                game_id: id,
+                gender: gender,
+                energy: energy,
+                aggressiveness: aggressiveness,
+                bias: team
+            },
+            test: 'amogus'
+        });
+}
+
+  const createPreset = (changePage=false) => {
 
     const url = process.env.REACT_APP_API_URL + 'presets/';
 
@@ -115,11 +150,19 @@ function PersonalitySettings() {
       console.log("preset create response", response)
 
       document.getElementById('saveBtn').disabled = false;
+      if (changePage) {
+        goToGameViewing()
+      }
       // setLoading(false)
     });
   }
 
-  return (
+    useEffect(() => {
+      if (cookies.logged_user !== '' && cookies.logged_user !== null)
+        getCustomPreset()
+    }, [])
+
+    return (
 
     (cookies.logged_user !== '' && cookies.logged_user !== null) ?
 
@@ -165,7 +208,6 @@ function PersonalitySettings() {
             </Col>
 
             <Col xs={6}><PersonalityDials
-              game_id={game_id}
               gender={gender}
               setGender={setGender}
               energy={energy}
@@ -178,11 +220,12 @@ function PersonalitySettings() {
               hasCreate
               presetName={presetName}
               setPresetName={setPresetName}
+              goToGameViewing={goToGameViewing}
             /></Col>
 
             <Col>
                 {
-                    defaultRobots.map(details => {
+                    userPresets.map(details => {
                     return <Avatar 
                         avatar={details} 
                         src={Img} 
@@ -237,7 +280,6 @@ function PersonalitySettings() {
               </Col>
 
               <Col xs={6}><PersonalityDials
-                game_id={game_id}
                 gender={gender}
                 setGender={setGender}
                 energy={energy}
@@ -247,6 +289,8 @@ function PersonalitySettings() {
                 bias={team}
                 setBias={setTeam}
                 createPreset={createPreset}
+                goToGameViewing={goToGameViewing}
+
               /></Col>
 
               <Col className="text-center">
