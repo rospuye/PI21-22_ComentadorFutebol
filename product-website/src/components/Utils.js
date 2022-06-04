@@ -44,10 +44,10 @@ export const predictNumberOfSyllabs = (phrase="") => {
 // among us
 // rain
 
-export const predictPhraseEnd = (phrase="", startingTime=0) => {
+export const predictPhraseEnd = (phrase="", startingTime=0, syllabWeight=0.25) => {
     let numberOfSyllabs = predictNumberOfSyllabs(phrase)
 
-    return startingTime + numberOfSyllabs * 0.25
+    return startingTime + numberOfSyllabs * syllabWeight
 }
 
 export const convertTimeToFloat = (time="") => {

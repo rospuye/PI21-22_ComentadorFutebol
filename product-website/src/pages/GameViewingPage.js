@@ -48,6 +48,7 @@ function GameViewingPage() {
 
     const [cookies, setCookie] = useCookies(['logged_user'])
 
+    // TTS variables
 
     const startPhrase = "Let's start the convertion."
     let phraseTimeEnd = 0
@@ -55,31 +56,14 @@ function GameViewingPage() {
     let { id, gender, energy, aggressiveness, bias } = useParams();
 
     // Iframe variables
-    const [isGameLoaded, setIsGameLoaded] = useState(false)
 
+    const [isGameLoaded, setIsGameLoaded] = useState(false)
     let gameTime = document.getElementsByClassName("game_time_lbl")
+    let previousTime = 0
     let iframe = document.getElementById("video-game-iframe")
     let playerBar = undefined
 
-    // const isStillLoading = (waitTime=2000, bottomLimit=20, maxVerificationCount=3, verificationCount=0) => {
-    //     let totalTime = iframe.contentWindow.document.getElementsByClassName("total-time")
-    //     let convertedTotalTime = totalTime[0].innerText
-    //     convertedTotalTime = convertTimeToFloat(convertedTotalTime)
-    //     console.log(convertedTotalTime, previousTotalTime, verificationCount, maxVerificationCount)
-    //     if (convertedTotalTime === previousTotalTime) {
-    //         if (verificationCount < maxVerificationCount) {
-    //             console.log("failed")
-    //             setTimeout(() => {isStillLoading(waitTime, bottomLimit, maxVerificationCount, verificationCount+1)}, waitTime)
-    //             return
-    //         }
-    //         console.log("Game Loaded")
-    //         setIsGameLoaded(true)
-    //         return
-    //     }
-    //     previousTotalTime = convertedTotalTime
-    //     console.log("not loaded yet", convertedTotalTime)
-    //     setTimeout(() => {isStillLoading(waitTime, bottomLimit, maxVerificationCount, 0)}, waitTime)
-    // }
+    const MAX_TIME_DIFFERENCE = 0.2 // if time difference pass this value --> it's considered an user input
 
     const verifyIframe = (waitTime=1000) => {
         iframe = document.getElementById("video-game-iframe")
@@ -106,8 +90,6 @@ function GameViewingPage() {
         }
     }, [isGameLoaded])
 
-    // verifyIframe()
-
     const getPhraseByTimestamp = (time, errorMargin=0.05, sortFunc=(a, b) => a.priority - b.priority) => {
         let phrases = script.filter((line) => {
             return Math.abs(line.timestamp - time) <= errorMargin
@@ -121,13 +103,6 @@ function GameViewingPage() {
         // By priority
         let sortedPhrases = phrases.sort(sortFunc)
         let minimumPhrase = sortedPhrases[0]
-        let isValid = true
-
-        for (let i = 1; i < sortedPhrases.length; i++) {
-            if (sortedPhrases[i].priority === minimumPhrase.priority) {
-                isValid = false
-            }
-        }
 
         return minimumPhrase
     }
@@ -135,7 +110,21 @@ function GameViewingPage() {
     const onGameTimeChange = (mutations, observer) => {
         gameTime = mutations[0].target.innerText
         gameTime = convertTimeToFloat(gameTime)
-        if (gameTime < phraseTimeEnd)  // if should be a narration happening right now, it doesn't matter
+        // TODO if user change time
+        if (Math.abs(gameTime - previousTime) > MAX_TIME_DIFFERENCE) {
+            const changePhrase = {}
+            changePhrase.text = `CHANGED TIME TO ${gameTime}`
+            changePhrase.timestamp = previousTime
+            phraseTimeEnd = 0
+            truePhraseHistory.push(changePhrase)
+            setPhraseHistory([...truePhraseHistory])
+            previousTime = gameTime
+
+            return
+        }
+        
+        previousTime = gameTime
+        if (gameTime < phraseTimeEnd)  // if should be a narration happening right now, it doesn't process anything
             return
         const phrase = getPhraseByTimestamp(gameTime)
 
