@@ -120,6 +120,8 @@ function YourGamesPage() {
                         <Row style={{ marginTop: '20px' }}>
                         <VideoGrid login={true} yourGames={true}/>
                         </Row>
+                        {/* <VideoGrid games={null}/>
+                        Grid with videos and pages */}
                     </Col>
                 </Row>
             </Container>

@@ -4,7 +4,7 @@ from djangoProject.permissions import IsOwnerOrIsAdmin
 from .models import Game, Preset
 from django.contrib.auth.models import User
 from rest_framework.response import Response
-
+from django.conf import settings
 
 class GameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,7 +18,6 @@ class GameViewSet(viewsets.ModelViewSet):
     serializer_class = GameSerializer
 
     def get_queryset(self):
-        print(f"get_queryset")
         queryset = Game.objects.all()
         query_params = self.request.query_params
         username = query_params.get('username')
@@ -106,3 +105,5 @@ class PresetViewSet(viewsets.ModelViewSet):
         serializer = PresetSerializer(preset)
 
         return Response(serializer.data)
+
+
