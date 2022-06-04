@@ -32,11 +32,13 @@ import {
     commentaryToSSML,
     convertTimeToFloat,
     convertTimeToText,
-    predictNumberOfSyllabs,
     predictPhraseEnd
 } from "../components/Utils";
 
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
+import ParticlesBg from 'particles-bg';
+import FocoNavbar from '../components/FocoNavbar';
+
 
 function GameViewingPage() {
 
@@ -58,12 +60,13 @@ function GameViewingPage() {
     // Iframe variables
 
     const [isGameLoaded, setIsGameLoaded] = useState(false)
+    const [isButtonClicked, setIsButtonClicked] = useState(false)
     let gameTime = document.getElementsByClassName("game_time_lbl")
     let previousTime = 0
     let iframe = document.getElementById("video-game-iframe")
     let playerBar = undefined
 
-    const MAX_TIME_DIFFERENCE = 0.2 // if time difference pass this value --> it's considered an user input
+    const MAX_TIME_DIFFERENCE = 0.5 // if time difference pass this value --> it's considered an user input
 
     const verifyIframe = (waitTime=1000) => {
         iframe = document.getElementById("video-game-iframe")
@@ -113,7 +116,7 @@ function GameViewingPage() {
         // TODO if user change time
         if (Math.abs(gameTime - previousTime) > MAX_TIME_DIFFERENCE) {
             const changePhrase = {}
-            changePhrase.text = `CHANGED TIME TO ${gameTime}`
+            changePhrase.text = `CHANGED TIME TO ${convertTimeToText(gameTime)}`
             changePhrase.timestamp = previousTime
             phraseTimeEnd = 0
             truePhraseHistory.push(changePhrase)
@@ -170,6 +173,7 @@ function GameViewingPage() {
 
         const ssml = commentaryToSSML(startPhrase, mood, diction, gender)
         speakSsml(ssml, synthetiser)
+        setIsButtonClicked(true)
     }
 
     const speak = (text) => {
@@ -238,29 +242,48 @@ function GameViewingPage() {
 
 
     return (
-        <div>
-            <Container fluid >
-                <Row>
-                    <Col>
-                        <Link to="/">
-                            <FontAwesomeIcon icon={faHouse} style={{ color: 'white', fontSize: '30px', marginTop: '40px', marginLeft: '40px' }} />
-                        </Link>
-                    </Col>
-                    <Col style={{ display: 'flex', justifyContent: 'right' }}>
-                        <Link to="/statistics">
-                            <FontAwesomeIcon icon={faArrowRight} style={{ color: 'white', fontSize: '30px', marginTop: '40px', marginRight: '40px' }} />
-                        </Link>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col style={{ marginLeft: '5%', marginTop: '5%' }}>
-                        <JasminPlayer />
-                    </Col>
-                    <Col>
-                        <ThreeJSCanvas />
-                        <ToastContainer style={{ marginTop: '2%', width: '100%' }}>
-                            <Toast style={{ width: '80%', height: '300px', overflowY: 'scroll' }}>
-                                <Toast.Body>
+        <>
+            <div className='particlesBG'>
+                <ParticlesBg className="particles-bg-canvas-self" type="cobweb" bg={true} color="#DADADA" height={'100%'} />
+            </div>
+            <div style={{ padding: '1%' }}>
+                <Container>
+                    <FocoNavbar goesBack={false} hasLoginBtn={true} cookies={cookies} setCookie={setCookie} />
+                </Container>
+
+                <Container>
+                    <Row style={{marginTop:'2%'}}>
+                        <Col>
+                            <h3 className='gameViewTitle'>Game Viewing</h3>
+                        </Col>
+                        <Col style={{ display: 'flex', justifyContent: 'right' }}>
+                            <Link to="/statistics">
+                                <button className="learn-more">
+                                    <span className="circle" aria-hidden="true">
+                                        <span className="icon arrow"></span>
+                                    </span>
+                                    <span className="button-text">Skip to End</span>
+                                </button>
+                            </Link>
+                        </Col>
+                    </Row>
+                    <Row style={{marginTop: '3%' }}>
+                        <Col>
+                            <JasminPlayer />
+                        </Col>
+                        <Col>
+                        {isGameLoaded && !isButtonClicked &&
+                            <>
+                                <br/>
+                                <Button variant={"success"} size={"lg"} onClick={() => {initializeScript()}}>I agree to play <FontAwesomeIcon icon={faPlay} /></Button>
+                                <br/>
+                                <br/>
+                            </>
+                        }
+                            <ThreeJSCanvas />
+                            <ToastContainer style={{ marginTop: '2%', width: '100%' }}>
+                                <Toast style={{ width: '100%', height: '300px', overflowY: 'scroll' }}>
+                                    <Toast.Body>
                                     {phraseHistory.map(phrase => {
                                         return (
                                             <>
@@ -268,18 +291,16 @@ function GameViewingPage() {
                                             </>
                                         )
                                     })}
-                                </Toast.Body>
-                            </Toast>
-                        </ToastContainer>
-                    </Col>
-                </Row>
-                {isGameLoaded &&
-                    <Button variant={"success"} size={"lg"} onClick={() => {initializeScript()}}>I agree to play <FontAwesomeIcon icon={faPlay} /></Button>
-                }
-            </Container>
+                                    </Toast.Body>
+                                </Toast>
+                            </ToastContainer>
+                        </Col>
+                    </Row>
+                    
+                </Container>
 
-
-        </div>)
+            </div>
+        </>)
 }
 
 export default GameViewingPage;

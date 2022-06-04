@@ -23,6 +23,9 @@ import Img2 from '../images/plus.PNG'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
 
+import ParticlesBg from 'particles-bg'
+import FocoNavbar from '../components/FocoNavbar';
+
 function PersonalitySettings() {
 
   const dummyRobots = [
@@ -77,26 +80,22 @@ function PersonalitySettings() {
 
     cookies.logged_user !== '' ?
 
-      <div>
+    <>
+    <div className='particlesBG'>
+      <ParticlesBg className="particles-bg-canvas-self" type="cobweb" bg={true} color="#DADADA" />
+    </div>
+    <div style={{ padding: '1%' }}>
+      <Container>
+        <FocoNavbar goesBack={true} backPage="/select_game" hasLoginBtn={true} cookies={cookies} setCookie={setCookie} />
+      </Container>
 
-        <Container>
-          <Row>
-            <Col>
-              <Link to="/select_game">
-                <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '5%', marginLeft: '2%' }} />
-              </Link>
-            </Col>
-            <Col>
-              <Title title="FoCo" subtitle="Personality Settings"></Title>
-            </Col>
-            <Col style={{ display: 'flex', justifyContent: 'right' }}>
-              <Button variant="light" style={{ height: '40px', marginTop: '5%' }} onClick={() => {
-                setCookie('logged_user', '', { path: '/' })
-                setCookie('token', '', {path: '/'})
-              }}>Logout</Button>
-            </Col>
-          </Row>
-        </Container>
+      <Container>
+        <Row>
+          <Col>
+            <Title title="FoCo" subtitle="Personality Settings"></Title>
+          </Col>
+        </Row>
+      </Container>
 
         <Container>
           <Row>
@@ -151,28 +150,44 @@ function PersonalitySettings() {
           </Row>
         </Container>
       </div>
+      </>
 
       :
 
-      <div>
 
+        // {/* <Container>
+        //   <Row>
+        //     <Col>
+        //       <Link to="/select_game">
+        //         <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '10%', marginLeft: '2%' }} />
+        //       </Link>
+        //     </Col>
+        //     <Col>
+        //       <Title title="FoCo" subtitle="Personality Settings"></Title>
+        //     </Col>
+        //     <Col style={{ display: 'flex', justifyContent: 'right' }}></Col>
+        //   </Row>
+        // </Container> */}
+<>
+      <div className='particlesBG'>
+        <ParticlesBg className="particles-bg-canvas-self" type="cobweb" bg={true} color="#DADADA" />
+      </div>
+      <div style={{ padding: '1%' }}>
         <Container>
-          <Row>
-            <Col>
-              <Link to="/select_game">
-                <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white', fontSize: '30px', marginTop: '10%', marginLeft: '2%' }} />
-              </Link>
-            </Col>
-            <Col>
-              <Title title="FoCo" subtitle="Personality Settings"></Title>
-            </Col>
-            <Col style={{ display: 'flex', justifyContent: 'right' }}></Col>
-          </Row>
+          <FocoNavbar goesBack={true} backPage="/select_game" hasLoginBtn={true} cookies={cookies} setCookie={setCookie} />
         </Container>
 
         <Container>
           <Row>
-            <Col className="text-center mt-4 mb-4">
+            <Col>
+              <Title title="FoCo" subtitle="Personality Settings"></Title>
+            </Col>
+          </Row>
+        </Container>
+
+        <Container>
+          <Row style={{marginTop:'5%'}}>
+            <Col className="text-center">
               {
                 dummyRobots.map(details => {
                   return <Avatar avatar={details} />
@@ -193,7 +208,7 @@ function PersonalitySettings() {
               createPreset={createPreset}
             /></Col>
 
-            <Col className="text-center mt-4 mb-4">
+            <Col className="text-center">
               {
                 dummyRobots.map(details => {
                   return <Avatar avatar={details} />
@@ -205,6 +220,7 @@ function PersonalitySettings() {
         </Container>
 
       </div>
+      </>
 
   );
 
