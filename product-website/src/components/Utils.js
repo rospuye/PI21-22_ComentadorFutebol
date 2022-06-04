@@ -59,17 +59,19 @@ export const convertTimeToFloat = (time="") => {
 }
 
 export const convertTimeToText = (time=0) => {
-    const minutes = time/60
-    const seconds = time%60
-    return `${Math.round(minutes)}:${Math.round(seconds * 100)/100}`
+    let minutes = Math.round(time/60)
+    let seconds = Math.round(time%60 * 100)/100
+    minutes = minutes < 10 ? `0${minutes}` : minutes
+    seconds = seconds < 10 ? `0${seconds}` : seconds
+    return `${minutes}:${seconds}`
 }
 
 export const commentaryToSSML = (text, mood, diction, gender) => {
     let voice = "en-US-AnaNeural"
-    if (gender == "female") {
+    if (gender.toLowerCase() == "female") {
         voice = "en-US-JennyNeural"
     }
-    else if (gender == "male") {
+    else if (gender.toLowerCase() == "male") {
         voice = "en-US-BrandonNeural"
     }
 

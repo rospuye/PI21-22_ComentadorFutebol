@@ -36,7 +36,7 @@ import {
     predictPhraseEnd
 } from "../components/Utils";
 
-
+import { faPlay } from '@fortawesome/free-solid-svg-icons'
 
 function GameViewingPage() {
 
@@ -60,28 +60,26 @@ function GameViewingPage() {
     let gameTime = document.getElementsByClassName("game_time_lbl")
     let iframe = document.getElementById("video-game-iframe")
     let playerBar = undefined
-    let previousTotalTime = 0
 
-
-    const isStillLoading = (waitTime=2000, bottomLimit=20, maxVerificationCount=3, verificationCount=0) => {
-        let totalTime = iframe.contentWindow.document.getElementsByClassName("total-time")
-        let convertedTotalTime = totalTime[0].innerText
-        convertedTotalTime = convertTimeToFloat(convertedTotalTime)
-        console.log(convertedTotalTime, previousTotalTime, verificationCount, maxVerificationCount)
-        if (convertedTotalTime === previousTotalTime) {
-            if (verificationCount < maxVerificationCount) {
-                console.log("failed")
-                setTimeout(() => {isStillLoading(waitTime, bottomLimit, maxVerificationCount, verificationCount+1)}, waitTime)
-                return
-            }
-            console.log("Game Loaded")
-            setIsGameLoaded(true)
-            return
-        }
-        previousTotalTime = convertedTotalTime
-        console.log("not loaded yet", convertedTotalTime)
-        setTimeout(() => {isStillLoading(waitTime, bottomLimit, maxVerificationCount, 0)}, waitTime)
-    }
+    // const isStillLoading = (waitTime=2000, bottomLimit=20, maxVerificationCount=3, verificationCount=0) => {
+    //     let totalTime = iframe.contentWindow.document.getElementsByClassName("total-time")
+    //     let convertedTotalTime = totalTime[0].innerText
+    //     convertedTotalTime = convertTimeToFloat(convertedTotalTime)
+    //     console.log(convertedTotalTime, previousTotalTime, verificationCount, maxVerificationCount)
+    //     if (convertedTotalTime === previousTotalTime) {
+    //         if (verificationCount < maxVerificationCount) {
+    //             console.log("failed")
+    //             setTimeout(() => {isStillLoading(waitTime, bottomLimit, maxVerificationCount, verificationCount+1)}, waitTime)
+    //             return
+    //         }
+    //         console.log("Game Loaded")
+    //         setIsGameLoaded(true)
+    //         return
+    //     }
+    //     previousTotalTime = convertedTotalTime
+    //     console.log("not loaded yet", convertedTotalTime)
+    //     setTimeout(() => {isStillLoading(waitTime, bottomLimit, maxVerificationCount, 0)}, waitTime)
+    // }
 
     const verifyIframe = (waitTime=1000) => {
         iframe = document.getElementById("video-game-iframe")
@@ -91,7 +89,8 @@ function GameViewingPage() {
                 playerBar = playerBar[0]
                 console.log("playerBar", playerBar)
                 playerBar.style.display = "none"
-                isStillLoading()
+                // isStillLoading()
+                setIsGameLoaded(true)
                 return
             }
         }
@@ -101,7 +100,13 @@ function GameViewingPage() {
         }, waitTime)
     }
 
-    verifyIframe()
+    useEffect(() => {
+        if (!isGameLoaded) {
+            verifyIframe()
+        }
+    }, [isGameLoaded])
+
+    // verifyIframe()
 
     const getPhraseByTimestamp = (time, errorMargin=0.05, sortFunc=(a, b) => a.priority - b.priority) => {
         let phrases = script.filter((line) => {
@@ -165,6 +170,13 @@ function GameViewingPage() {
         gameTime = iframe.contentWindow.document.getElementsByClassName("game_time_lbl")
         if (gameTime.length !== 0) {
             observer.observe(gameTime[0], {characterData: false, childList: true, attributes: false})
+        }
+
+        playerBar = iframe.contentWindow.document.getElementsByClassName("jsm-player-bar")
+        if (playerBar.length !== 0) {
+            playerBar = playerBar[0]
+            console.log("playerBar", playerBar)
+            playerBar.style.display = ""
         }
 
         const ssml = commentaryToSSML(startPhrase, mood, diction, gender)
@@ -238,9 +250,6 @@ function GameViewingPage() {
 
     return (
         <div>
-            {isGameLoaded &&
-                <Button onClick={() => {initializeScript()}}></Button>
-            }
             <Container fluid >
                 <Row>
                     <Col>
@@ -275,6 +284,9 @@ function GameViewingPage() {
                         </ToastContainer>
                     </Col>
                 </Row>
+                {isGameLoaded &&
+                    <Button variant={"success"} size={"lg"} onClick={() => {initializeScript()}}>I agree to play <FontAwesomeIcon icon={faPlay} /></Button>
+                }
             </Container>
 
 
