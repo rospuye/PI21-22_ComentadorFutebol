@@ -34,6 +34,9 @@ def process(entities: list, field: dict, goal: dict, curr_timestamp: float, even
             for i in range(3):
                 formation_count[player][i] = 0
 
+    formation = []
+    formation_players = dict()
+
     # Event detection
     messages += detect_kick_off(ball, teamA, teamB, curr_timestamp, events)
     messages += detect_corner_shot(ball, teamA, teamB, curr_timestamp, events)
@@ -46,7 +49,7 @@ def process(entities: list, field: dict, goal: dict, curr_timestamp: float, even
         messages += detect_pass_or_dribble(ball, entities[1:], curr_timestamp, events)
         messages += detect_defense(ball, teamA, teamB, curr_timestamp, events)
 
-    formation, formation_players = update_formation(ball, teamA, teamB, field, formation_count)
+        formation, formation_players = update_formation(ball, teamA, teamB, field, formation_count)
 
     return messages, formation, formation_players
 
@@ -447,17 +450,19 @@ def update_formation(ball: Ball, teamA: list, teamB: list, field: dict, formatio
     # 0 - defender
     # 1 - midfielder
     # 2 - forwards
-    if not abs(ball.positions[-1].x) > field["length"] / 2 - field["length"] * 0.15:
-        left = get_areas(ball, False, field)
-        right = get_areas(ball, True, field)
+    #if not abs(ball.positions[-1].x) > field["length"] / 2 - field["length"] * 0.15:
+    left, areaL = get_areas(ball, False, field)
+    right, areaR = get_areas(ball, True, field)
 
-        # Team A (left)
+    # Team A (left)
+    if areaL > field["length"]*0.10:
         for player in teamA:
             for i in range(len(left)):
                 if left[i][0] < player.positions[-1].x < left[i][1]:
                     formation_count[player][i] += 1
                     break
 
+    if areaR > field["length"]*0.10:                
         for player in teamB:
             for i in range(len(right)):
                 if left[i][0] < player.positions[-1].x < left[i][1]:
@@ -492,6 +497,6 @@ def get_areas(ball: Ball, isRight: bool, field: dict):
     rangeFriendly = abs(goal_line - ball_line)
     start_forward = ball_line - FORWARD_OFFSET * rangeEnemy if isRight else ball_line + FORWARD_OFFSET * rangeEnemy
     end_mid = start_forward + MID_SIZE * rangeFriendly if isRight else start_forward - MID_SIZE * rangeFriendly
-    return [[end_mid, goal_line], [start_forward, end_mid], [-goal_line, start_forward]] if isRight \
-        else [[goal_line, end_mid], [end_mid, start_forward], [start_forward, -goal_line]]
+    return ([[end_mid, goal_line], [start_forward, end_mid], [-goal_line, start_forward]], rangeFriendly) if isRight \
+        else ([[goal_line, end_mid], [end_mid, start_forward], [start_forward, -goal_line]], rangeFriendly)
 
