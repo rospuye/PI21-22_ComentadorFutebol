@@ -19,6 +19,9 @@ from django.urls import path, include
 from commentator_website_backend import views, serializers
 from rest_framework import routers
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 router = routers.DefaultRouter()
 router.register(r'games', serializers.GameViewSet, basename='Game')
 router.register(r'presets', serializers.PresetViewSet, basename='Preset')
@@ -33,3 +36,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

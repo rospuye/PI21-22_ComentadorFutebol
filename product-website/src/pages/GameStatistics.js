@@ -4,7 +4,6 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Title from '../components/Title'
 import Statistics from '../components/Statistics'
-import Img from '../images/Field.png'
 import Button from 'react-bootstrap/Button'
 
 import {Spinner} from 'react-bootstrap'
@@ -19,6 +18,7 @@ import FocoNavbar from '../components/FocoNavbar';
 import ParticlesBg from 'particles-bg'
 
 import axios from "axios"
+import GameFormation from '../components/GameFormation'
 
 function GameStatistics() {
 
@@ -95,10 +95,9 @@ function GameStatistics() {
                 <Row>
                   <Col style={{ textAlign: "center" }}>
                     <h4 style={{marginBottom:'2%'}} className="statisticsH4">Team Formation</h4>
-                    <img
-                      alt='Field'
-                      src={Img}
-                      className='img-thumbnail'
+                    <GameFormation
+                      formationA={game.processed_data.form[0]}
+                      formationB={game.processed_data.form[1]}
                     />
                   </Col>
                   <Col>

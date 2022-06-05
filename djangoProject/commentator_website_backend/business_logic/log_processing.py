@@ -220,8 +220,8 @@ def process_log(log, skip=1, skip_flg=False):
     # print("Formation for teamB:", form[1])
     # print("Players and their spot in the formation:")
     translate = {0: "defender", 1: "midfielder", 2: "forward"}
-    for player in form_players:
-        print(player.id, translate[form_players[player]])
+    # for player in form_players:
+    #     print(player.id, translate[form_players[player]])
     tik = time.time()
     analytics_log = get_analytics(events, entities)
     # Analytics debug prints
