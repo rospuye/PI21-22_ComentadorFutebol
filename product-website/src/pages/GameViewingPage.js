@@ -46,6 +46,7 @@ function GameViewingPage() {
     const [diction, setDiction] = useState(1)
     const [script, setScript] = useState([])
     const [phraseHistory, setPhraseHistory] = useState([])
+    const [game, setGame] = useState({})
     const truePhraseHistory = []
 
     const [cookies, setCookie] = useCookies(['logged_user'])
@@ -227,6 +228,14 @@ function GameViewingPage() {
                 console.log(res)
                 setScript(res.data)
             })
+        
+        url = `${process.env.REACT_APP_API_URL}games/${id}`
+
+        axios.get(url, config)
+            .then(res => {
+                setGame(res.data)
+            })
+
     }
 
     useEffect(() => {
@@ -269,7 +278,11 @@ function GameViewingPage() {
                     </Row>
                     <Row style={{marginTop: '3%' }}>
                         <Col>
-                            <JasminPlayer />
+                            {Object.keys(game).length !== 0 &&
+                                <JasminPlayer 
+                                    replayUrl={game.replay_file}
+                                />
+                            }
                         </Col>
                         <Col>
                         {isGameLoaded && !isButtonClicked &&
