@@ -24,7 +24,7 @@ import axios from 'axios'
 function SelectGamePage() {
 
     const [cookies, setCookie] = useCookies(['logged_user'])
-    const [login, setLogin] = useState(cookies.logged_user !== '');
+    const [login, setLogin] = useState(cookies.logged_user !== '' && cookies.logged_user !== null);
 
     const [selectedLeague, setSelectedLeague] = useState("")
     const [selectedUser, setSelectedUser] = useState("")
