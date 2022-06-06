@@ -219,7 +219,7 @@ def process_log(log, skip=1, skip_flg=False):
     # print("Formation for teamA:", form[0])
     # print("Formation for teamB:", form[1])
     # print("Players and their spot in the formation:")
-    # translate = {0: "defender", 1: "midfielder", 2: "forward"}
+    translate = {0: "defender", 1: "midfielder", 2: "forward"}
     # for player in form_players:
     #     print(player.id, translate[form_players[player]])
     tik = time.time()
