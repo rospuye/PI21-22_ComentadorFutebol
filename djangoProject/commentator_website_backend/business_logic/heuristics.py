@@ -1,7 +1,7 @@
 import math
 
-from commentator_website_backend.business_logic.entities import Ball, Position
-from commentator_website_backend.business_logic.message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble, \
+from entities import Ball, Position
+from message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble, \
     Defense, Goal_Shot, Intersect
 
 KICK_OFF_CONTACT_DISTANCE = 0.13  # Distance to be considered contact between entities
@@ -297,7 +297,7 @@ def detect_aggressions(teamA: list, teamB: list, ball: Ball, events, distance_ma
 
             for i in range(len(positions1)):
                 pos1: Position = positions1[i]
-
+                
                 positions2: list = entity2.get_recent_positions()
                 pos2: Position = positions2[i]
 

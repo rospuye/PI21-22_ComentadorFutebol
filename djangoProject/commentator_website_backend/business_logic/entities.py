@@ -6,7 +6,6 @@ POSITIONS_SIZE = 2 # TODO random choice ()
 
 def rotation_from_matrix(matrix):
     """Return rotation angle and axis from rotation matrix.
-
     >>> angle = (random.random() - 0.5) * (2*math.pi)
     >>> direc = np.random.random(3) - 0.5
     >>> point = np.random.random(3) - 0.5
@@ -15,7 +14,6 @@ def rotation_from_matrix(matrix):
     >>> R1 = rotation_matrix(angle, direc, point)
     >>> is_same_transform(R0, R1)
     True
-
     """
     R = np.array(matrix, dtype=np.float64, copy=False)
     R33 = R[:3, :3]
@@ -136,6 +134,8 @@ class Entity():
     def add_position(self, position):
         # if len(self.positions) >= self.number_of_positions:
         #     self.positions = self.positions[1:]
+        #print(self.id)
+        
         self.positions.append(position)
         self.cur_pos = position.position
         self.quartenion = get_quaternion(self.cur_pos)
@@ -166,7 +166,11 @@ class Entity():
         return {"id": self.id, "position": self.position}
     
     def to_replay(self):
-        return f"{np.round(self.quartenion[0],3)} {np.round(self.quartenion[1],3)} {np.round(self.quartenion[2],3)} {np.round(self.quartenion[3],3)}"
+        x = self.cur_pos[-4]
+        y = self.cur_pos[-3]
+        z = self.cur_pos[-2]
+
+        return f"{x} {y} {z} {np.round(self.quartenion[0],3)} {np.round(self.quartenion[1],3)} {np.round(self.quartenion[2],3)} {np.round(self.quartenion[3],3)}"
 
 class Ball(Entity):
     def __init__(self, id, index, offset):
@@ -214,6 +218,8 @@ class Player(Entity):
         super().__init__(id, index, offset)
         self.isTeamRight = team
 
+        self.has_extra_foot = False
+
         self.headIndex = 0
         self.rupperarmIndex = 0
         self.rlowerarmIndex = 0
@@ -252,39 +258,44 @@ class Player(Entity):
             self.joints[3] = np.around(e[1]*180/np.pi,2)
         elif name == "rlowerarm":
             e = get_euler_angles(self.rlowerarm_pos, self.rupperarm_pos)
-            self.joints[4] = np.around(e[1]*180/np.pi,2)
-            self.joints[5] = np.around(e[1]*180/np.pi,2)
+            self.joints[4] = np.around(-e[1]*180/np.pi,2)
+            self.joints[5] = np.around(-e[2]*180/np.pi,2)
         elif name == "lupperarm":
             e = get_euler_angles(self.lupperarm_pos, self.cur_pos)
             self.joints[6] = np.around(e[0]*180/np.pi,2)
             self.joints[7] = np.around(e[1]*180/np.pi,2)
         elif name == "llowerarm":
             e = get_euler_angles(self.rlowerarm_pos, self.rupperarm_pos)
-            self.joints[8] = np.around(e[1]*180/np.pi,2)
-            self.joints[9] = np.around(e[1]*180/np.pi,2)
+            self.joints[8] = np.around(-e[1]*180/np.pi,2)
+            self.joints[9] = np.around(-e[2]*180/np.pi,2)
         elif name == "rthigh":
             e = get_euler_angles(self.rthigh_pos, self.cur_pos)
             self.joints[10] = np.around(e[2]*180/np.pi,2)
-            self.joints[11] = np.around(e[1]*180/np.pi,2)
             self.joints[12] = np.around(e[0]*180/np.pi,2)
         elif name == "rshank":
+            e = get_euler_angles(self.rshank_pos, self.cur_pos)
+            self.joints[11] = np.around(e[1]*180/np.pi,2)
             e = get_euler_angles(self.rshank_pos, self.rthigh_pos)
+            self.joints[11] = np.around(e[1]*180/np.pi,2)
             self.joints[13] = np.around(e[0]*180/np.pi,2)
         elif name == "rfoot":
             e = get_euler_angles(self.rfoot_pos, self.rshank_pos)
             self.joints[14] = np.around(e[0]*180/np.pi,2)
+            e = get_euler_angles(self.rfoot_pos, self.rthigh_pos)
             self.joints[15] = np.around(e[1]*180/np.pi,2)
         elif name == "lthigh":
             e = get_euler_angles(self.lthigh_pos, self.cur_pos)
             self.joints[16] = np.around(e[2]*180/np.pi,2)
-            self.joints[17] = np.around(e[1]*180/np.pi,2)
             self.joints[18] = np.around(e[0]*180/np.pi,2)
         elif name == "lshank":
+            e = get_euler_angles(self.lshank_pos, self.cur_pos)
+            self.joints[17] = np.around(e[1]*180/np.pi,2)
             e = get_euler_angles(self.lshank_pos, self.lthigh_pos)
             self.joints[19] = np.around(e[0]*180/np.pi,2)
         elif name == "lfoot":
             e = get_euler_angles(self.lfoot_pos, self.lshank_pos)
             self.joints[20] = np.around(e[0]*180/np.pi,2)
+            e = get_euler_angles(self.lfoot_pos, self.lthigh_pos)
             self.joints[21] = np.around(e[1]*180/np.pi,2)
 
     def add_position_rfoot(self, position):
@@ -298,7 +309,17 @@ class Player(Entity):
 
     def to_replay(self):
         team = "r" if self.isTeamRight else "l"
-        joints = " (j "+" ".join([str(x) for x in self.joints]) + ")\n"
+        joints = " (j"
+
+        for i in range(len(self.joints)):
+            if self.has_extra_foot and i == 16:
+                joints += " 0"
+            joints += f" {self.joints[i]}"
+
+        if self.has_extra_foot:
+            joints += " 0"
+        joints += ")\n"
+
         tmp_id = [x for x in self.id if x.isdigit()]
         id = "".join(str(x) for x in tmp_id)
 

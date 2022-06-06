@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Dropdown from 'react-dropdown';
 import { Container, Row, Col } from 'react-bootstrap'
-import Select from 'react-select'
+//import Select from 'react-select'
 import 'react-dropdown/style.css';
 import './components_css/SortInput.css';
 import '../components/components_css/test.css';
