@@ -1,7 +1,7 @@
 import math
 
 from commentator_website_backend.business_logic.entities import Ball, Position
-from commentator_website_backend.business_logic.message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble, \
+from commentator_website_backend.business_logic.message import Corner_Shot, GoalKeeper_Out_Shot, Message, Aggresion, Goal, Kick_Off, Out_Shot, Pass, Dribble, \
     Defense, Goal_Shot, Intersect
 
 KICK_OFF_CONTACT_DISTANCE = 0.13  # Distance to be considered contact between entities
@@ -143,21 +143,21 @@ def detect_out_goal(ball: Ball, teamA, teamB, field, goal, timestamp, events):
             if (teamRight == ball.owner.isTeamRight):
                 # Verify if is the same corner event
                 if "corner" not in events:
-                    message = Message(event="corner", start=ball_pos.timestamp, end=ball_pos.timestamp)
+                    message = Corner_Shot(event="corner", start=ball_pos.timestamp, end=ball_pos.timestamp, player=ball.owner)
                     events["corner"] = message
                     # print("Corner made it")
                     return [message]
             else:
                 # Goal Keeper kickoff
                 if "goalkeeper_out" not in events:
-                    message = Message(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp)
+                    message = GoalKeeper_Out_Shot(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp, player=ball.owner)
                     events["goalkeeper_out"] = message
                     # print("Out made it")
                     return [message]
 
         else:  # It's an out
             if "out" not in events:
-                message = Message(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp)
+                message = Out_Shot(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp, player=ball.owner)
                 events["out"] = message
                 # print(f"{timestamp}: Out made it")
                 return [message]
