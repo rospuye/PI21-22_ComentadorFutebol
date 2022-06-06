@@ -52,7 +52,7 @@ class Bounded_Queue():
             return self.queue.pop(0)
         else: return None
 
-lines_repeated = Bounded_Queue(10)
+lines_repeated = Bounded_Queue(60)
 
 def dice_roll(mod, bias : bool, supporting):
     """Returns the type of the next line based on the given modifier and bias."""
@@ -70,8 +70,6 @@ def dice_roll(mod, bias : bool, supporting):
         return "neutral"
 
 def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams, priority=5):
-    global stats_counter 
-    stats_counter += 1
 
     timestamp = event["start"]
     statistic = get_stats(timestamp, stats)
