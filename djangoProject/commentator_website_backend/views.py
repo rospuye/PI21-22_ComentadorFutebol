@@ -15,7 +15,7 @@ from rest_framework.authtoken.models import Token
 from .models import Game
 from .serializers import GameSerializer, UserSerializer
 
-NUMBER_OF_GAMES_BY_USER = 10
+NUMBER_OF_GAMES_BY_USER = 19
 
 
 @csrf_exempt

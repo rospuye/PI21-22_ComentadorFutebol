@@ -494,8 +494,8 @@ def get_areas(ball: Ball, isRight: bool, field: dict):
     goal_line = field["length"] / 2 if isRight else -field["length"] / 2
     ball_line = ball.positions[-1].x
     rangeEnemy = abs(-goal_line - ball_line)
-    rangeFriendly = abs(goal_line - ball_line)
     start_forward = ball_line - FORWARD_OFFSET * rangeEnemy if isRight else ball_line + FORWARD_OFFSET * rangeEnemy
+    rangeFriendly = abs(goal_line - start_forward)
     end_mid = start_forward + MID_SIZE * rangeFriendly if isRight else start_forward - MID_SIZE * rangeFriendly
     return ([[end_mid, goal_line], [start_forward, end_mid], [-goal_line, start_forward]], rangeFriendly) if isRight \
         else ([[goal_line, end_mid], [end_mid, start_forward], [start_forward, -goal_line]], rangeFriendly)

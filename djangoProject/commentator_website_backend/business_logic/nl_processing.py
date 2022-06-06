@@ -70,19 +70,23 @@ def dice_roll(mod, bias : bool, supporting):
         return "neutral"
 
 def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams, priority=5):
+    global stats_counter 
+    stats_counter += 1
+
     timestamp = event["start"]
     statistic = get_stats(timestamp, stats)
     p1 = None
-    if event.event in ["short_pass", "long_pass"]:
+    if event["event"] in ["short_pass", "long_pass"]:
         p1 = event["args"]["from"]
-    elif event.event in ["dribble", "kick_off", "defense", "intersect"]:
+    elif event["event"] in ["dribble", "kick_off", "defense", "intersect"]:
         p1 = event["args"]["player"]
-    elif event.event in ["aggression"]:
+    elif event["event"] in ["aggression"]:
         p1 = event["args"]["player_1"]
 
-    supporting = True if p1["team"] == (bias > 0) else False
-
-    if p1['id'] in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+    supporting = True
+    if p1:
+        supporting = True if p1["team"] == (bias > 0) else False
+        if p1['id'] in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
 
     lines = { 
         "neutral": 
@@ -109,13 +113,23 @@ STATS_TIMES = []
 
 def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams, priority):
 
-    for t in STATS_TIMES:
-        if event["start"] < t < event["end"]:
-            return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
+    # for t in STATS_TIMES:
+    #     if event["start"] < t < event["end"]:
+    #         return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
 
     args = event["args"]
     p1 = args["from"]
     p2 = args["to"]
+    success = p1["team"] == p2["team"]
+    if success:
+        statistic_prob = 40
+    else:
+        statistic_prob = 0
+    
+    roll = random.randint(0,100)
+    if statistic_prob > roll:
+        return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams)
+
     team = teams[1] if p1["team"] else teams[1]
     supporting = True if p1["team"] == (bias > 0) else False
 
@@ -195,9 +209,14 @@ def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, t
 
 def dribble_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams, priority):
 
-    for t in STATS_TIMES:
-        if event["start"] < t < event["end"]:
-            return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
+    # for t in STATS_TIMES:
+    #     if event["start"] < t < event["end"]:
+    #         return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
+
+    statistic_prob = 50
+    roll = random.randint(0,100)
+    if statistic_prob > roll:
+        return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams)
 
     args = event["args"]
     p1 = args["player"]
@@ -238,9 +257,14 @@ def dribble_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map
 
 def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams, priority):
 
-    for t in STATS_TIMES:
-        if event["start"] < t < event["end"]:
-            return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
+    # for t in STATS_TIMES:
+    #     if event["start"] < t < event["end"]:
+    #         return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
+
+    # statistic_prob = 50
+    # roll = random.randint(0,100)
+    # if statistic_prob > roll:
+    #     return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
 
     args = event["args"]
     p1 = args.get("player")
@@ -364,11 +388,16 @@ def goal_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, t
     return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type], priority)
 
 
-def aggression_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, team, priority):
+def aggression_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams, priority):
 
-    for t in STATS_TIMES:
-        if event["start"] < t < event["end"]:
-            return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
+    # for t in STATS_TIMES:
+    #     if event["start"] < t < event["end"]:
+    #         return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
+
+    statistic_prob = 30
+    roll = random.randint(0,100)
+    if statistic_prob > roll:
+        return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams)
 
     args = event["args"]
     p1 = args["player_1"]
@@ -403,9 +432,9 @@ def aggression_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_
 
 def defense_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, team, priority):
 
-    for t in STATS_TIMES:
-        if event["start"] < t < event["end"]:
-            return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
+    # for t in STATS_TIMES:
+    #     if event["start"] < t < event["end"]:
+    #         return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
 
     args = event["args"]
     team = team[1] if args["player"]["team"] else team[0]
@@ -444,9 +473,10 @@ def defense_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map
 
 
 def intersect_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, team, priority):
-    for t in STATS_TIMES:
-        if event["start"] < t < event["end"]:
-            return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
+
+    # for t in STATS_TIMES:
+    #     if event["start"] < t < event["end"]:
+    #         return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
 
     args = event["args"]
     p1 = args["player"]
@@ -484,6 +514,99 @@ def intersect_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
     }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
+    return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type], priority)
+
+def corner_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams, priority):
+
+    statistic_prob = 50
+    roll = random.randint(0,100)
+    if statistic_prob > roll:
+        return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams)
+
+    # args = event["args"]
+    # team = team[1] if args["player"]["team"] else team[0]
+    # supporting = True if (team == "Right") == (bias > 0) else False
+
+    lines = { 
+        "neutral": 
+            []
+        ,
+        "aggressive": 
+            []
+        , 
+        "friendly": 
+            [] 
+        ,
+        "biased_supporting": 
+            []
+        ,
+        "biased_opposing": 
+            []
+    }
+
+    line_type = dice_roll(agr_frnd_mod, bias != 0, True)
+    return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type], priority)
+
+def out_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams, priority):
+
+    statistic_prob = 50
+    roll = random.randint(0,100)
+    if statistic_prob > roll:
+        return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams)
+
+    # args = event["args"]
+    # team = team[1] if args["player"]["team"] else team[0]
+    # supporting = True if (team == "Right") == (bias > 0) else False
+
+    lines = { 
+        "neutral": 
+            []
+        ,
+        "aggressive": 
+            []
+        , 
+        "friendly": 
+            [] 
+        ,
+        "biased_supporting": 
+            []
+        ,
+        "biased_opposing": 
+            []
+    }
+
+    line_type = dice_roll(agr_frnd_mod, bias != 0, True)
+    return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type], priority)
+
+def goalkeeper_out_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams, priority):
+
+    statistic_prob = 50
+    roll = random.randint(0,100)
+    if statistic_prob > roll:
+        return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams)
+
+    # args = event["args"]
+    # team = team[1] if args["player"]["team"] else team[0]
+    # supporting = True if (team == "Right") == (bias > 0) else False
+
+    lines = { 
+        "neutral": 
+            []
+        ,
+        "aggressive": 
+            []
+        , 
+        "friendly": 
+            [] 
+        ,
+        "biased_supporting": 
+            []
+        ,
+        "biased_opposing": 
+            []
+    }
+
+    line_type = dice_roll(agr_frnd_mod, bias != 0, True)
     return event_to_text(event, line_type, stats, en_calm_mod, bias, lines[line_type], priority)
 
 def event_to_text(event, type, stats, en_calm_mod, bias, lines=None, priority=10):
@@ -570,6 +693,18 @@ lines = {
     "aggression": {
         "function": aggression_lines,
         "priority": 1
+    },
+    "corner_shot": {
+        "function": corner_lines,
+        "priority": 1
+    },
+    "out_shot": {
+        "function": out_lines,
+        "priority": 1
+    },
+    "goalkeeper_out_shot": {
+        "function": goalkeeper_out_lines,
+        "priority": 1
     }
 }
 
@@ -593,10 +728,7 @@ def generate_script(events, stats, agr_frnd_mod, en_calm_mod, bias, teams):
     #               # lambda x: f"({event['start']}, {event['end']}) \'{event['event']}\' Not implemented yet :)")(event)
     #     for event in events
     # ]
-
     return commentary
-
-
 
 def whos_winning(stats):
     """Returns the team that's winning, plus how bad they are winning"""
