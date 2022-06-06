@@ -52,7 +52,7 @@ function Statistics({nameOfTeamA, nameOfTeamB, stats}) {
             />
             <StatisticLine
                 paramA={Math.round(teams.A.ball_pos * 100)/100}
-                condition={"% Ball"}
+                condition={"Ball Possession (%)"}
                 paramB={Math.round(teams.B.ball_pos * 100)/100}
             />
             

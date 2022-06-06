@@ -266,7 +266,7 @@ function GameViewingPage() {
                             <h3 className='gameViewTitle'>Game Viewing</h3>
                         </Col>
                         <Col style={{ display: 'flex', justifyContent: 'right' }}>
-                            <Link to="/statistics">
+                            <Link to={`/statistics/${id}`}>
                                 <button className="learn-more">
                                     <span className="circle" aria-hidden="true">
                                         <span className="icon arrow"></span>
