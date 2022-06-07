@@ -2,6 +2,11 @@
     display: inline-block;
 }
 
+/* .pagination a {
+    color:white;
+    text-decoration: underline;
+} */
+
 .pagination a:not([href]) {
     color: white;
     float: left;

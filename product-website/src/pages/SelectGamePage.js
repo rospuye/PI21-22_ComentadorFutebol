@@ -154,12 +154,15 @@ function SelectGamePage() {
                                 <Row style={{ marginTop: '20px' }}>
                                     <VideoGrid games={games} />
                                 </Row>
-                                <Row style={{ marginTop: '-20%' }}>
+                                <Row>
+                                    {games.length !== 0 ?
                                     <MyPagination
                                         n_pages={numberOfPages}
                                         selPage={selectedPage}
                                         setSelPage={setSelectedPage}
                                     />
+                                    :
+                                    <></>}
                                 </Row>
                             </Col>
                         </Row>

@@ -8,18 +8,25 @@ function VideoGrid({ games }) {
 
     return (
         <>
+        {(games.length !== 0) ? 
+            games.map((callbackfn, idx) => (
 
-            {games.map((callbackfn, idx) => (
-
-                <Col key={games[idx].id}>
-                    <div style={{ height: '25vh', width: '17vw', marginBottom: '30%' }}>
+                <Col xs={4} key={games[idx].id}>
+                    <div style={{width: '17vw', marginBottom: '10%' }}>
                         <Link to={"/personality/" + games[idx].id} style={{ textDecoration: 'none' }}>
                             <VideoThumbnail game={games[idx]} img={Img} />
                         </Link>
                     </div>
                 </Col>
 
-            ))}
+            ))
+        : 
+        <Col>
+            <div style={{ height: '60%', width: '100%', marginBottom: '30%' }}>
+                <h1 className='gridTitle'>No Games To Show</h1>
+            </div>
+        </Col>
+        }
         </>
     )
 }
