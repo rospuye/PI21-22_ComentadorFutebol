@@ -190,7 +190,8 @@ function PersonalitySettings() {
             <Col><h4 className='titleH4'>Your presets</h4></Col>
           </Row>
           <Row>
-            <Col>
+            <Col xs={3}>
+            <Row>
               {
                 defaultRobots.map(details => {
                     return <Avatar 
@@ -203,8 +204,7 @@ function PersonalitySettings() {
                     />
                 })
               }
-            </Col>
-            <Col>
+              </Row>
             </Col>
 
             <Col xs={6}><PersonalityDials
@@ -223,7 +223,8 @@ function PersonalitySettings() {
               goToGameViewing={goToGameViewing}
             /></Col>
 
-            <Col>
+            <Col xs={3}>
+            <Row>
                 {
                     userPresets.map(details => {
                     return <Avatar 
@@ -236,6 +237,7 @@ function PersonalitySettings() {
                     />
                     })
                 }
+              </Row>
             </Col>
             <Col>
               {/* {
