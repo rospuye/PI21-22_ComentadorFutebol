@@ -263,3 +263,9 @@
     background-color: rgb(149, 43, 43);;
     color: whitesmoke;
   }
+
+  .gridTitle {
+    color:white;
+    text-align: center;
+    font-size: 30px;
+  }
