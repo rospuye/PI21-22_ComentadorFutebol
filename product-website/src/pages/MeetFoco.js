@@ -54,25 +54,25 @@ function MeetFoco() {
                 </Row>
                 <Row style={{marginTop:'5%',width:'100%',textAlign:'center',paddingLeft:'5%',paddingRight:'5%'}}>
                     <Col style={{marginBottom:'5%'}}>
-                        <Button onClick={() => {setCstate("calm")}}>Calm</Button>
+                        <Button className="meetFocoButton focoButton1" onClick={() => {setCstate("calm")}}>Calm</Button>
                     </Col>
                     <Col style={{marginBottom:'5%'}}>
-                        <Button onClick={() => {setCstate("c_neutral")}}>Neutral</Button>
+                        <Button className="meetFocoButton focoButton2" onClick={() => {setCstate("c_neutral")}}>Neutral</Button>
                     </Col>
                     <Col style={{marginBottom:'5%'}}>
-                        <Button onClick={() => {setCstate("energetic")}}>Energetic</Button>
+                        <Button className="meetFocoButton focoButton3" onClick={() => {setCstate("energetic")}}>Energetic</Button>
                     </Col>
                 </Row>
 
                 <Row style={{marginTop:'5%',width:'100%',textAlign:'center',paddingLeft:'5%',paddingRight:'5%'}}>
                     <Col style={{marginBottom:'5%'}}>
-                        <Button onClick={() => {setFstate("aggressive")}}>Agressive</Button>
+                        <Button className="meetFocoButton focoButton4" onClick={() => {setFstate("aggressive")}}>Agressive</Button>
                     </Col>
                     <Col style={{marginBottom:'5%'}}>
-                        <Button onClick={() => {setFstate("f_neutral")}}>Neutral</Button>
+                        <Button className="meetFocoButton focoButton2" onClick={() => {setFstate("f_neutral")}}>Neutral</Button>
                     </Col>
                     <Col style={{marginBottom:'5%'}}>
-                        <Button onClick={() => {setFstate("friendly")}}>Friendly</Button>
+                        <Button className="meetFocoButton focoButton6" onClick={() => {setFstate("friendly")}}>Friendly</Button>
                     </Col>
                 </Row>
             </Col>
