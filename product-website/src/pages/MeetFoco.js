@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Link } from "react-router-dom";
 
 // Components
@@ -26,8 +26,12 @@ import FocoNavbar from '../components/FocoNavbar';
 import ThreeJSCanvas from '../components/ThreeJSCanvas';
 
 function MeetFoco() {
+
     const [cookies, setCookie] = useCookies(['logged_user'])
-    console.log("cookies: " + cookies.logged_user)
+
+    const [fstate, setFstate] = useState("f_neutral");
+    const [cstate, setCstate] = useState("c_neutral");
+
   return (
     <>
     <div className='particlesBG'>
@@ -45,21 +49,30 @@ function MeetFoco() {
             <Col>
                 <Row>
                     <Col style={{paddingLeft:'5%',paddingRight:'5%'}}>
-                        <ThreeJSCanvas/>
+                        <ThreeJSCanvas fstate={fstate} cstate={cstate} />
                     </Col>
                 </Row>
                 <Row style={{marginTop:'5%',width:'100%',textAlign:'center',paddingLeft:'5%',paddingRight:'5%'}}>
                     <Col style={{marginBottom:'5%'}}>
-                        <Button>Calm</Button>
+                        <Button onClick={() => {setCstate("calm")}}>Calm</Button>
                     </Col>
                     <Col style={{marginBottom:'5%'}}>
-                        <Button>Energetic</Button>
+                        <Button onClick={() => {setCstate("c_neutral")}}>Neutral</Button>
                     </Col>
                     <Col style={{marginBottom:'5%'}}>
-                        <Button>Agressive</Button>
+                        <Button onClick={() => {setCstate("energetic")}}>Energetic</Button>
+                    </Col>
+                </Row>
+
+                <Row style={{marginTop:'5%',width:'100%',textAlign:'center',paddingLeft:'5%',paddingRight:'5%'}}>
+                    <Col style={{marginBottom:'5%'}}>
+                        <Button onClick={() => {setFstate("aggressive")}}>Agressive</Button>
                     </Col>
                     <Col style={{marginBottom:'5%'}}>
-                        <Button>Friendly</Button>
+                        <Button onClick={() => {setFstate("f_neutral")}}>Neutral</Button>
+                    </Col>
+                    <Col style={{marginBottom:'5%'}}>
+                        <Button onClick={() => {setFstate("friendly")}}>Friendly</Button>
                     </Col>
                 </Row>
             </Col>

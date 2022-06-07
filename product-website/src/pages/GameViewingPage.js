@@ -58,6 +58,25 @@ function GameViewingPage() {
 
     let { id, gender, energy, aggressiveness, bias } = useParams();
 
+    // const [fstate, setFstate] = useState("f_neutral");
+    // const [cstate,setCstate] = useState("c_neutral");
+    let fstate = "f_neutral"
+    let cstate = "c_neutral"
+
+    if (energy<0) {
+        cstate = "calm"
+    }
+    else {
+        cstate = "energetic"
+    }
+
+    if (aggressiveness<0) {
+        fstate="friendly"
+    }
+    else {
+        fstate="aggressive"
+    }
+
     // Iframe variables
 
     const [isGameLoaded, setIsGameLoaded] = useState(false)
@@ -295,7 +314,7 @@ function GameViewingPage() {
                             </>
                         }
                             <Row>
-                            <ThreeJSCanvas />
+                            <ThreeJSCanvas fstate={fstate} cstate={cstate}/>
                             <ToastContainer style={{ marginTop: '2%', width: '100%' }}>
                                 <Toast style={{ width: '100%', height: '300px', overflowY: 'scroll' }}>
                                     <Toast.Body>
