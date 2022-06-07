@@ -306,12 +306,14 @@ function GameViewingPage() {
                         <Col>
                         {isGameLoaded && !isButtonClicked &&
                             <>
-                                <br/>
-                                <Button variant={"success"} size={"lg"} onClick={() => {initializeScript()}}>I agree to play <FontAwesomeIcon icon={faPlay} /></Button>
-                                <br/>
-                                <br/>
+                            <Row>
+                                <Col style={{textAlign:'center',marginTop:'5%',marginBottom:'5%'}}>
+                                    <Button className="btnUpload" size={"lg"} onClick={() => {initializeScript()}}>Start Commentary</Button>
+                                </Col>
+                            </Row>
                             </>
                         }
+                            <Row>
                             <ThreeJSCanvas fstate={fstate} cstate={cstate}/>
                             <ToastContainer style={{ marginTop: '2%', width: '100%' }}>
                                 <Toast style={{ width: '100%', height: '300px', overflowY: 'scroll' }}>
@@ -326,6 +328,7 @@ function GameViewingPage() {
                                     </Toast.Body>
                                 </Toast>
                             </ToastContainer>
+                            </Row>
                         </Col>
                     </Row>
                     

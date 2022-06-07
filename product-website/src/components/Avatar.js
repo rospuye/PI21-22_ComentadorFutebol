@@ -3,6 +3,7 @@ import './components_css/Title.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 function Avatar({avatar, src, setGender, setEnergy, setAggressiveness, 
     setTeam}) {
@@ -15,17 +16,15 @@ function Avatar({avatar, src, setGender, setEnergy, setAggressiveness,
     }
 
     return (
-        <Row>
-            <div style={{ width: '100%' }} onClick={handleClick}>
-                <p style={{color: "white"}}>{avatar.name}</p>
+            <Col xs={6} onClick={handleClick} style={{textAlign:'center',marginBottom:'5%',marginTop:'5%'}}>
                 <img
                     alt={avatar.name}
                     src={src}
                     className='img-thumbnail'
                     style={{ maxWidth: '8rem', marginBottom: '3%' }}
                 />
-            </div>
-        </Row>
+                <p style={{color: "white",textAlign:'center'}}>{avatar.name}</p>
+            </Col>
     )
 }
 

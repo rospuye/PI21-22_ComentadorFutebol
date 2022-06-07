@@ -50,7 +50,7 @@ function PersonalityDials({ gender, setGender, energy, setEnergy, aggressiveness
             </Row>
             <Row className="dialRow">
                 <Col>
-                    <Form.Label>Energetic</Form.Label>
+                    <Form.Label>Calm</Form.Label>
                 </Col>
                 <Col>
                     <RangeSlider
@@ -60,11 +60,11 @@ function PersonalityDials({ gender, setGender, energy, setEnergy, aggressiveness
                         max={50}
                     />
                 </Col>
-                <Col><Form.Label>Calm</Form.Label></Col>
+                <Col><Form.Label>Energetic</Form.Label></Col>
             </Row>
             <Row className="dialRow">
                 <Col>
-                    <Form.Label>Aggressive</Form.Label>
+                    <Form.Label>Friendly</Form.Label>
                 </Col>
                 <Col>
                     <RangeSlider
@@ -75,7 +75,7 @@ function PersonalityDials({ gender, setGender, energy, setEnergy, aggressiveness
                     />
                 </Col>
                 <Col>
-                    <Form.Label>Friendly</Form.Label>
+                    <Form.Label>Aggressive</Form.Label>
                 </Col>
             </Row>
             <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}>
