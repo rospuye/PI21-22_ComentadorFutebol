@@ -66,12 +66,18 @@ function GameViewingPage() {
     if (energy<0) {
         cstate = "calm"
     }
+    else if (energy==0) {
+        cstate = "c_neutral"
+    }
     else {
         cstate = "energetic"
     }
 
     if (aggressiveness<0) {
         fstate="friendly"
+    }
+    else if (aggressiveness==0) {
+        fstate="f_neutral"
     }
     else {
         fstate="aggressive"
