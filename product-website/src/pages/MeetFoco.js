@@ -54,35 +54,38 @@ function MeetFoco() {
                 </Row>
                 <Row style={{marginTop:'5%',width:'100%',textAlign:'center',paddingLeft:'5%',paddingRight:'5%'}}>
                     <Col style={{marginBottom:'5%'}}>
-                        <Button onClick={() => {setCstate("calm")}}>Calm</Button>
+                        <Button className="meetFocoButton focoButton1" onClick={() => {setCstate("calm")}}>Calm</Button>
                     </Col>
                     <Col style={{marginBottom:'5%'}}>
-                        <Button onClick={() => {setCstate("c_neutral")}}>Neutral</Button>
+                        <Button className="meetFocoButton focoButton2" onClick={() => {setCstate("c_neutral")}}>Neutral</Button>
                     </Col>
                     <Col style={{marginBottom:'5%'}}>
-                        <Button onClick={() => {setCstate("energetic")}}>Energetic</Button>
+                        <Button className="meetFocoButton focoButton3" onClick={() => {setCstate("energetic")}}>Energetic</Button>
                     </Col>
                 </Row>
 
                 <Row style={{marginTop:'5%',width:'100%',textAlign:'center',paddingLeft:'5%',paddingRight:'5%'}}>
                     <Col style={{marginBottom:'5%'}}>
-                        <Button onClick={() => {setFstate("aggressive")}}>Agressive</Button>
+                        <Button className="meetFocoButton focoButton4" onClick={() => {setFstate("aggressive")}}>Agressive</Button>
                     </Col>
                     <Col style={{marginBottom:'5%'}}>
-                        <Button onClick={() => {setFstate("f_neutral")}}>Neutral</Button>
+                        <Button className="meetFocoButton focoButton2" onClick={() => {setFstate("f_neutral")}}>Neutral</Button>
                     </Col>
                     <Col style={{marginBottom:'5%'}}>
-                        <Button onClick={() => {setFstate("friendly")}}>Friendly</Button>
+                        <Button className="meetFocoButton focoButton6" onClick={() => {setFstate("friendly")}}>Friendly</Button>
                     </Col>
                 </Row>
             </Col>
-            <Col className='meetFocoDescription' style={{marginLeft:'5%',marginRight:'5%'}}>
+            <Col className='meetFocoDescription' style={{marginLeft:'5%',marginRight:'5%',height:'50%'}}>
                 <Row>
                 <p className='meetFocoP'>
-                    Hi! I'm Foco, the Football Commentator Mascot.
+                    Hi! I'm Foco, the Football Commentator mascot.
                     <br/>I was created to comment my friends' games to you.
-                    You can play with my emotions with the buttons below me.
-                    <br/>Don't overuse it tho, because even though I'm a robot I still have feelings :(
+                    <br/>
+                    I can be Calm, Energetic or just Neutral, it depends of the day (and of your decision).
+                    <br/>I can also be Aggressive, Neutral or Friendly.
+                    <br/>Try to mix those settings with the buttons below and see how my mood changes!
+                    <br/>Don't overuse it though, because even though I'm a robot I still have feelings &#128516;
                 </p>
                 </Row>
             </Col>
