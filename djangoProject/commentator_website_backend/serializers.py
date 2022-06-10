@@ -29,13 +29,7 @@ class GameViewSet(viewsets.ModelViewSet):
         roud = query_params.get('round', '')
         sort_field = query_params.get('sort')
 
-        if username is not None:
-            queryset = queryset.filter(user__username=username)
-            if not self.request.user.is_superuser and username != self.request.user.username:
-                queryset = queryset.filter(is_public=True)
-
-        elif not self.request.user.is_superuser:
-            queryset = queryset.filter(is_public=True)
+        user = self.request.user
 
         queryset = queryset.filter(round__contains=roud)
         queryset = queryset.filter(title__contains=title)
@@ -46,6 +40,14 @@ class GameViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(year=year)
         if sort_field is not None:
             queryset = queryset.order_by(sort_field)
+        if username is not None:
+            queryset = queryset.filter(user__username=username)
+
+        if user.is_anonymous:
+            queryset = queryset.filter(is_public=True)
+
+        elif not user.is_superuser:
+            queryset = queryset.filter(user=user) | queryset.filter(is_public=True)
 
         return queryset
 

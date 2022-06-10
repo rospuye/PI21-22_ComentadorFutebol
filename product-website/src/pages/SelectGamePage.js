@@ -42,6 +42,22 @@ function SelectGamePage() {
     const [games, setGames] = useState([])
 
     const requestGame = () => {
+        let config = {}
+        if (cookies.token != null && cookies.token !== "") {
+            config = {
+                headers: {
+                    'content-type': 'multipart/form-data',
+                    'Authorization': `Token ${cookies.token}`
+                }
+            }
+        }
+        else {
+            config = {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            }
+        }
         let url = process.env.REACT_APP_API_URL + `games?page=` + selectedPage + `&`
 
         console.log("sort", sort)
@@ -75,7 +91,7 @@ function SelectGamePage() {
 
         console.log("URL: ", url);
 
-        axios.get(url)
+        axios.get(url, config)
             .then(res => {
                 // console.log(res.data)
                 console.log(res)
@@ -182,9 +198,6 @@ function SelectGamePage() {
                         <Spinner animation={"border"} variant={"primary"} />
                     </div>
                 }
-
-
-
 
             </div>
         </>

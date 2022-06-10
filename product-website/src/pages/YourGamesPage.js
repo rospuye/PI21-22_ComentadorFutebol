@@ -42,6 +42,22 @@ function YourGamesPage() {
 
 
     const requestGame = () => {
+        let config = {}
+        if (cookies.token != null && cookies.token !== "") {
+            config = {
+                headers: {
+                    'content-type': 'multipart/form-data',
+                    'Authorization': `Token ${cookies.token}`
+                }
+            }
+        }
+        else {
+            config = {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            }
+        }
         let url = process.env.REACT_APP_API_URL + `games?page=` + selectedPage + `&`
 
         if (selectedTitle != "") {
@@ -72,7 +88,7 @@ function YourGamesPage() {
 
         // console.log("url", url)
 
-        axios.get(url)
+        axios.get(url, config)
         .then(res => {
             console.log(res.data)
             setGames(res.data.results)
