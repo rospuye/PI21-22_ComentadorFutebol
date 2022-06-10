@@ -1,6 +1,7 @@
 import math
 import numpy as np
 import MDAnalysis as mda
+from body2thig import get_thighs
 
 POSITIONS_SIZE = 2 # TODO random choice ()
 
@@ -270,13 +271,14 @@ class Player(Entity):
             self.joints[9] = np.around(-e[2]*180/np.pi,2)
         elif name == "rthigh":
             e = get_euler_angles(self.rthigh_pos, self.cur_pos)
-            self.joints[10] = np.around(e[2]*180/np.pi,2)
-            self.joints[12] = np.around(e[0]*180/np.pi,2)
+            new_e = get_thighs(e)
+            self.joints[10] = np.around(new_e[0]*180/np.pi,2)
+            self.joints[11] = np.around(new_e[1]*180/np.pi,2)
+            self.joints[12] = np.around(new_e[2]*180/np.pi,2)
         elif name == "rshank":
-            e = get_euler_angles(self.rshank_pos, self.cur_pos)
-            self.joints[11] = np.around(e[1]*180/np.pi,2)
+            #e = get_euler_angles(self.rshank_pos, self.cur_pos)
+            #self.joints[11] = np.around(e[1]*180/np.pi,2)
             e = get_euler_angles(self.rshank_pos, self.rthigh_pos)
-            self.joints[11] = np.around(e[1]*180/np.pi,2)
             self.joints[13] = np.around(e[0]*180/np.pi,2)
         elif name == "rfoot":
             e = get_euler_angles(self.rfoot_pos, self.rshank_pos)
@@ -285,11 +287,13 @@ class Player(Entity):
             self.joints[15] = np.around(e[1]*180/np.pi,2)
         elif name == "lthigh":
             e = get_euler_angles(self.lthigh_pos, self.cur_pos)
-            self.joints[16] = np.around(e[2]*180/np.pi,2)
-            self.joints[18] = np.around(e[0]*180/np.pi,2)
+            new_e = get_thighs(e)
+            self.joints[16] = np.around(new_e[0]*180/np.pi,2)
+            self.joints[17] = np.around(new_e[1]*180/np.pi,2)
+            self.joints[18] = np.around(new_e[2]*180/np.pi,2)
         elif name == "lshank":
-            e = get_euler_angles(self.lshank_pos, self.cur_pos)
-            self.joints[17] = np.around(e[1]*180/np.pi,2)
+            #e = get_euler_angles(self.lshank_pos, self.cur_pos)
+            #self.joints[17] = np.around(e[1]*180/np.pi,2)
             e = get_euler_angles(self.lshank_pos, self.lthigh_pos)
             self.joints[19] = np.around(e[0]*180/np.pi,2)
         elif name == "lfoot":

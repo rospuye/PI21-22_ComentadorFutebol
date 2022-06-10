@@ -244,6 +244,7 @@ def process_log(log, skip=1, skip_flg=False):
         if new_timestamp==timestamp:
             continue
         timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
+        print(timestamp)
         if old_timestamp == timestamp:
             break
         old_timestamp = timestamp
@@ -363,7 +364,7 @@ def process_log(log, skip=1, skip_flg=False):
     replayfile.write("".join(output))
     replayfile.close()
     tok1 = time.time()
-    print("Wreiting time:", tok1 - tik1)
+    print("Writing time:", tok1 - tik1)
 
     #replayfile.close()
     tok = time.time()
