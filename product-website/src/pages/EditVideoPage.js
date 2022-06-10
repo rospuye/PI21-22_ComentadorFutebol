@@ -44,6 +44,15 @@ function EditVideoPage() {
 
     let url = `${process.env.REACT_APP_API_URL}games/${id}/`
 
+    const deleteGame = () => {
+        console.log("deleting game")
+        axios.delete(url, config)
+            .then(response => {
+                console.log("response", response)
+                navigate("/your_games/")
+            })
+    }
+
 
     const makeUpdate = () => {
         const formData = new FormData()
@@ -220,7 +229,12 @@ function EditVideoPage() {
                             </Button>
                         </Col>
                         <Col style={{ textAlign: 'center' }}>
-                            <Button className="editVideoButtonCancel"variant="danger" type="submit">
+                            <Button 
+                                className="editVideoButtonCancel"
+                                variant="danger" 
+                                type="submit"
+                                onClick={() => deleteGame()}
+                            >
                             Delete Video
                             </Button>
                         </Col>
