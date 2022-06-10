@@ -4,7 +4,9 @@ import VideoThumbnail from './VideoThumbnail'
 import Img from '../images/videoThumbnail.png'
 import { Link } from "react-router-dom";
 
-function VideoGrid({ games }) {
+function VideoGrid({ games, isEditable=false }) {
+
+    const url = isEditable ? "/edit_video/" : "/personality/"
 
     return (
         <>
@@ -13,7 +15,7 @@ function VideoGrid({ games }) {
 
                 <Col xs={4} key={games[idx].id}>
                     <div style={{width: '17vw', marginBottom: '10%' }}>
-                        <Link to={"/personality/" + games[idx].id} style={{ textDecoration: 'none' }}>
+                        <Link to={url + games[idx].id} style={{ textDecoration: 'none' }}>
                             <VideoThumbnail game={games[idx]} img={Img} />
                         </Link>
                     </div>

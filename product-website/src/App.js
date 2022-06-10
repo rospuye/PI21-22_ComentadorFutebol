@@ -38,7 +38,7 @@ export default function App() {
           <Route path="/select_game" element={<SelectGamePage/>}/>
           <Route path="/game_viewing/:id/:gender/:energy/:aggressiveness/:bias" element={<GameViewingPage/>}/>
           <Route path="/your_games" element={<YourGamesPage/>}/>
-          <Route path="/edit_video" element={<EditVideoPage/>}/>
+          <Route path="/edit_video/:id" element={<EditVideoPage/>}/>
           <Route path="/test_tts" element={<TTSTest/>}/>
           <Route path="/meet_foco" element={<MeetFoco/>}/>
 

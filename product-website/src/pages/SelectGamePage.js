@@ -36,12 +36,15 @@ function SelectGamePage() {
     const [numberOfPages, setNumberOfPages] = useState(0)
     const [isLoaded, setIsLoaded] = useState(false)
 
+    const [sort, setSort] = useState("")
+
 
     const [games, setGames] = useState([])
 
     const requestGame = () => {
         let url = process.env.REACT_APP_API_URL + `games?page=` + selectedPage + `&`
 
+        console.log("sort", sort)
         if (selectedTitle != "") {
             url += `title=${selectedTitle}&`
         }
@@ -63,7 +66,11 @@ function SelectGamePage() {
         }
 
         if (selectedGroup != "") {
-            url += `matchGroup=${selectedGroup}`
+            url += `matchGroup=${selectedGroup}&`
+        }
+
+        if (sort != "") {
+            url += `sort=${sort.toLowerCase()}`
         }
 
         console.log("URL: ", url);
@@ -85,7 +92,7 @@ function SelectGamePage() {
 
     useEffect(() => {
         requestGame()
-    }, [selectedPage])
+    }, [selectedPage, sort])
 
 
     return (
@@ -148,7 +155,10 @@ function SelectGamePage() {
                             <Col xs={9}>
                                 <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'right', marginBottom: '3%' }}>
                                     <Container style={{ width: '60%', marginLeft: '30%' }}>
-                                        <SortInput />
+                                        <SortInput 
+                                            sort={sort}
+                                            setSort={setSort}
+                                        />
                                     </Container>
                                 </Row>
                                 <Row style={{ marginTop: '20px' }}>
