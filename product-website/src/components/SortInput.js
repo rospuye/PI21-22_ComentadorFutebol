@@ -6,15 +6,14 @@ import 'react-dropdown/style.css';
 import './components_css/SortInput.css';
 import '../components/components_css/test.css';
 
-function SortInput() {
+function SortInput({sort, setSort}) {
   const options = [
-    'Name ASC', 'Name DESC', 'Date ASC', 'Date DESC'
+    'Title', 'Year', 'League', 'Round', 'Match_Group'
   ];
 
-  const [selected, setSelected] = useState("Sort");
 
   const _onSelect = (option) => {
-      setSelected(option);
+      setSort(option.value);
   }
 
   return (
@@ -24,7 +23,12 @@ function SortInput() {
         <p id='sortP'>Sort By:</p>
       </Col>
       <Col xs={4} style={{alignItems:'center',justifyContent:'right',marginBottom:'3%',justifyContent:'right',paddingLeft:'0%!important',paddingRight:'0%!important',paddingTop:'4%'}}>
-        <Dropdown className='inputDropdown' options={options} onChange={_onSelect} value={selected} placeholder="Select an option" />;
+        <Dropdown 
+          className='inputDropdown' 
+          options={options} 
+          onChange={_onSelect} 
+          value={sort} 
+          placeholder="-----" />;
       </Col>
     </Row>
   )
