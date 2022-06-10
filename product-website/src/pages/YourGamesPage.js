@@ -17,6 +17,7 @@ import FocoNavbar from '../components/FocoNavbar';
 import { useCookies } from 'react-cookie'
 
 import axios from 'axios'
+import MyPagination from '../components/MyPagination'
 
 function YourGamesPage() {
 
@@ -33,6 +34,7 @@ function YourGamesPage() {
     const [numberOfPages, setNumberOfPages] = useState(0)
     const [isLoaded, setIsLoaded] = useState(false)
 
+    const [sort, setSort] = useState("")
 
     const [games, setGames] = useState([])
 
@@ -40,7 +42,7 @@ function YourGamesPage() {
 
 
     const requestGame = () => {
-        let url = process.env.REACT_APP_API_URL + `games?`
+        let url = process.env.REACT_APP_API_URL + `games?page=` + selectedPage + `&`
 
         if (selectedTitle != "") {
             url += `title=${selectedTitle}&`
@@ -64,7 +66,11 @@ function YourGamesPage() {
             url += `matchGroup=${selectedGroup}`
         }
 
-        console.log("url", url)
+        if (sort != "") {
+            url += `sort=${sort.toLowerCase()}`
+        }
+
+        // console.log("url", url)
 
         axios.get(url)
         .then(res => {
@@ -86,7 +92,7 @@ function YourGamesPage() {
             return
         }
         requestGame()
-    }, [])
+    }, [selectedPage, sort])
 
     return (
         <>
@@ -130,7 +136,10 @@ function YourGamesPage() {
                         <Col xs={9}>
                             <Row style={{display:'flex',alignItems:'center',justifyContent:'right',marginBottom:'3%'}}>
                                 <Container style={{width:'60%',marginLeft:'30%'}}>
-                                    <SortInput />
+                                    <SortInput 
+                                        sort={sort}
+                                        setSort={setSort}
+                                    />
                                 </Container>
                             </Row>
                             <Row style={{ marginTop: '20px' }}>
@@ -140,6 +149,16 @@ function YourGamesPage() {
                                     games={games}
                                     isEditable
                                 />
+                            </Row>
+                            <Row>
+                                {games.length !== 0 ?
+                                <MyPagination
+                                    n_pages={numberOfPages}
+                                    selPage={selectedPage}
+                                    setSelPage={setSelectedPage}
+                                />
+                                :
+                                <></>}
                             </Row>
                             {/* <VideoGrid games={null}/>
                             Grid with videos and pages */}
