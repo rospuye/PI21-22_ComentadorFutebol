@@ -51,6 +51,7 @@ def new_register(request):
     except django.db.utils.IntegrityError:
         return JsonResponse({"message": "username_already_in_use"})
 
+
 class UserList(generics.ListAPIView):
     # Access only to the admin
     permission_classes = [permissions.IsAdminUser]
@@ -93,7 +94,6 @@ def game_generate_script(request, i):
 def file_upload(request):
     print("File uploaded.")
     log_file = request.FILES['logFile']
-    replay_file = request.FILES['replayFile']
     data = request.data
     title = data["title"]
     description = data["description"]
@@ -105,6 +105,13 @@ def file_upload(request):
         return JsonResponse({"message": "Year invalid"})
     roud = data["round"]
     match_group = data["matchGroup"]
+
+    print(f"{data['has_replay'] = }")
+    try:
+        has_replay = True if data["has_replay"] == "true" else False
+    except:
+        return JsonResponse({"message": "has_replay invalid"})
+    print(f"{has_replay = }")
 
     user = request.user
     if user.is_anonymous:
@@ -135,6 +142,12 @@ def file_upload(request):
             analytics[timestamp]["players"][player] = analytics[timestamp]["players"][player].to_json()
     json_response["stats"] = analytics
 
+    if has_replay:
+        replay_file = request.FILES['replayFile']
+    else:
+        # TODO replay_file = epicFunction()
+        replay_file = None
+
     game = Game(replay_file=replay_file, title=title, description=description, user=user,
                 is_public=is_public, league=league, year=year, round=roud, match_group=match_group,
                 processed_data=json_response)
@@ -144,4 +157,3 @@ def file_upload(request):
     serializer = GameSerializer(game)
     print(serializer.data['id'])
     return Response({'game_id': serializer.data['id']})
-
