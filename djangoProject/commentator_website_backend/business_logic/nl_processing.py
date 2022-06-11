@@ -545,40 +545,96 @@ def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_ma
     lines_without_player = {
         "neutral": 
             [
-                "and the games goes on"
+                "And the game goes on.",
+                "The game starts off.",
+                "And here we go.",
+                "On to the game.",
+                "Game time."
             ]
         ,
         "aggressive": 
-            []
+            [
+                "Come on, let's go!",
+                "No time to waste, come on.",
+                "Better get going!",
+                "Finally, let's move!",
+                "Game time, everyone shut up."
+            ]
         , 
         "friendly": 
-            [] 
+            [
+                "Sit tight, everyone.",
+                "Let's enjoy the game together!",
+                "Lovely game, let's go!",
+                "Get ready for a good game.",
+                "Fun time!"
+            ] 
         ,
         "biased_supporting": 
-            []
+            [
+                "A great team here, let's go!",
+                "We have a chance to win, let's start!",
+                "So much potential, let's go!",
+                "Winning time!",
+                "How exciting!"
+            ]
         ,
         "biased_opposing": 
-            []
+            [
+                "Let's get this over with.",
+                "Wasting my time, move.",
+                "Taking too long, come on!",
+                "Come on...",
+                "Let's hurry!"
+            ]
     }
 
     if p1 is not None:
         lines_with_player = {
             "neutral": 
                 [
-                    f"{p1['id']} starts the game"
+                    f"{p1['id']} starts the game.",
+                    f"{p1['id']} kicks off!",
+                    f"A kick off by {p1['id']}.",
+                    f"{p1['id']} up for the kick off.",
+                    f"And there goes {p1['id']}."
                 ]
             ,
             "aggressive": 
-                []
+                [
+                    f"{p1['id']} finally starts!",
+                    f"About time {p1['id']} kicked off...",
+                    f"{p1['id']} starts, let's go!",
+                    f"{p1['id']}, about time!",
+                    f"{p1['id']} come on!"
+                ]
             , 
             "friendly": 
-                [] 
+                [
+                    f"Great kick off, {p1['id']}!",
+                    f"{p1['id']} starting nicely.",
+                    f"{p1['id']} with a good kick.",
+                    f"Nice kick off, {p1['id']}.",
+                    f"{p1['id']} rocks kick offs!"
+                ] 
             ,
             "biased_supporting": 
-                []
+                [
+                    f"Amazing kick by {p1['id']}!",
+                    f"{p1['id']} doing his team justice.",
+                    f"What a kick, {p1['id']}!",
+                    f"Great job, {p1['id']}!",
+                    f"{p1['id']} kicks are amazing!"
+                ]
             ,
             "biased_opposing": 
-                []
+                [
+                    f"{p1['id']} is kicking, I guess.",
+                    f"Kick by {p1['id']} won't go very far.",
+                    f"An alright kick by {p1['id']}.",
+                    f"Let's get moving, {p1['id']}.",
+                    f"{p1['id']} needs training."
+                ]
         }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
@@ -650,7 +706,7 @@ def goal_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, t
         ,
         "biased_opposing": 
             [
-                f"Oh no {team} scores"
+                f"Oh no, {team} scores..."
             ]
     }
 
