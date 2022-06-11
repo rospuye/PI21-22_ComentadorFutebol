@@ -99,10 +99,10 @@ def get_euler_angles(pos, pos_r):
 
     # Coord mundo -> coord robo
     T1 = np.linalg.inv(r)@h
+    T1[:3, 3] = 0
 
-    T2 = rotation_from_matrix(T1)
-    q = mda.lib.transformations.quaternion_about_axis(T2[0], T2[1])
-    e = mda.lib.transformations.euler_from_quaternion(q)
+    from scipy.spatial.transform import Rotation as R
+    e = R.from_matrix(T1[:3, :3]).as_euler("xyz", degrees=False)
 
     return e
 

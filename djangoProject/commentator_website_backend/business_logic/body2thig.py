@@ -43,7 +43,7 @@ def get_thighs(euler, isRight=True):
     # if else for both legs
 
     if isRight:
-        R_llj1_j1 = lambda j1: R_general(-np.sqrt(2)/2, 0, np.sqrt(2)/2,j1)
+        R_llj1_j1 = lambda j1: R_general(-np.sqrt(2)/2, np.sqrt(2)/2,j1)
     else:
         R_llj1_j1 = lambda j1: R_general(-np.sqrt(2)/2, 0, -np.sqrt(2)/2,j1)
     
