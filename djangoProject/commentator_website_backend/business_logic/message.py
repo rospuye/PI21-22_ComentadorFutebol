@@ -1,4 +1,4 @@
-from .entities import Position
+from entities import Position
 
 class Message():
     def __init__(self, event, start=0, end=0) -> None:
