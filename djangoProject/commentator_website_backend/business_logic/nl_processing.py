@@ -795,7 +795,7 @@ def aggression_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_
                 "That's what you get for being rowdy.",
                 f"{p1['id']} and {p2['id']} need to get up.",
                 "Get up, come on!",
-                f"We don't have time for this, {p1['id']} and {p2['id']}.",
+                f"We don't have time for this, {p1['id']} and {p2['id']}."
             ]
         , 
         "friendly": 
@@ -846,27 +846,46 @@ def defense_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map
         "neutral": 
             [
                 f"Team {team} makes a defense.",
-                f"The shot was defended by Team {team}"
+                f"The shot was defended by team {team}.",
+                f"Team {team} defends.",
+                f"Defence by team {team}.",
+                f"Team {team} on the defensive."
             ]
         ,
         "aggressive": 
             [
-                f"What a defense by team {team}"
+                f"What a defense by team {team}!",
+                "Let's go, defence!",
+                "Come on, what a defence!",
+                "Go go, defence!",
+                "Defending skills on fire!"
             ]
         , 
         "friendly": 
             [
-                f"Great defence"
+                "Great defence!",
+                "Such lovely defence work.",
+                f"Team {team} defends beautifully.",
+                f"Team {team} does not lose spirit.",
+                "I love to see a good defence."
             ] 
         ,
         "biased_supporting": 
             [
-                f"A beutiful defense by team {team}"
+                f"A beautiful defense by team {team}!",
+                "That's how you defend!",
+                "Clearly one team has it together.",
+                f"Team {team} controls the game.",
+                f"{team} shows superb defensive skills."
             ]
         ,
         "biased_opposing": 
             [
-                f"Dammit team {team} defends the goal"
+                f"Argh! Team {team} defends the goal!",
+                "Unfortunately, there was a defence.",
+                "Okay, I guess...",
+                f"Team {team} did alright, for now.",
+                "Yes yes, a defence..."
             ]
     }
 
