@@ -781,21 +781,49 @@ def aggression_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_
 
     lines = { 
         "neutral": 
-            [f"{p1['id']} and {p2['id']} fall down",
-            f"{p1['id']} and {p2['id']} are going at it",
-            "Oh no! They fell."]
+            [
+                f"{p1['id']} and {p2['id']} fall down.",
+                f"{p1['id']} and {p2['id']} are going at it!",
+                "Oh no! They fell.",
+                "There's an aggression happening.",
+                "Not so much a friendly game!"
+            ]
         ,
         "aggressive": 
-            []
+            [
+                "Serves them right.",
+                "That's what you get for being rowdy.",
+                f"{p1['id']} and {p2['id']} need to get up.",
+                "Get up, come on!",
+                f"We don't have time for this, {p1['id']} and {p2['id']}.",
+            ]
         , 
         "friendly": 
-            [] 
+            [
+                "Hope they didn't hurt themselves!",
+                "Oh dear, that's quite concerning!",
+                f"Hope {p1['id']} and {p2['id']} are okay!",
+                f"{p1['id']} and {p2['id']}, this isn't you!",
+                "They'll be up again in no time."
+            ] 
         ,
         "biased_supporting": 
-            []
+            [
+                "Yay, bring them down!",
+                "Trip them!",
+                "Ahah!",
+                "Get them!",
+                "That's how it's done."
+            ]
         ,
         "biased_opposing": 
-            []
+            [
+                "I can't believe this disrespect!",
+                "This is unacceptable.",
+                "Never in all my years in sport have I seen this!",
+                "Quite unsportsmanlike.",
+                "What a foul."
+            ]
     }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
