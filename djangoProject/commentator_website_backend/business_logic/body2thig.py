@@ -68,10 +68,12 @@ def get_thighs(euler, prev,  isRight=True):
     fz_goal = f_rpy_z
     fy_goal = f_rpy_y
 
+    q = np.array(prev).reshape(3,1)
+
     #err = (fz-fz_goal).T@(fz-fz_goal)
 
 
-    fact=1.0
+    fact=0.5
     prev_err=10
     fails=0
 
