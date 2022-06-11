@@ -49,7 +49,7 @@ class Bounded_Queue():
             return self.queue.pop(0)
         else: return None
 
-lines_repeated = Bounded_Queue(10)
+lines_repeated = Bounded_Queue(25)
 
 def dice_roll(mod, bias : bool, supporting):
     """Returns the type of the next line based on the given modifier and bias."""
