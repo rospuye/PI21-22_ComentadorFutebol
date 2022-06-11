@@ -6,11 +6,15 @@ import numpy as np
              uz*ux*(1-cos(a))-uy*sin(a),uz*uy*(1-cos(a))+ux*sin(a),cos(a)+uz*uz*(1-cos(a))];
 """
 
-def R_general(ux, uy, uz, a):
+PRECISION = 1e-3
+
+
+def R_general(ux, uz, a):
+    """ General rotation matrix for x and z axis rotation """
     return np.array([
-        np.cos(a) + ux*ux*(1-np.cos(a)), ux*uy*(1-np.cos(a))-uz*np.sin(a), ux*uz*(1-np.cos(a)) + uy*np.sin(a),
-        uy*ux*(1-np.cos(a))+uz*np.sin(a),np.cos(a)+uy*uy*(1-np.cos(a)),   uy*uz*(1-np.cos(a))-ux*np.sin(a),
-        uz*ux*(1-np.cos(a))-uy*np.sin(a),uz*uy*(1-np.cos(a))+ux*np.sin(a),np.cos(a)+uz*uz*(1-np.cos(a))
+        np.cos(a) + ux*ux*(1-np.cos(a)), -uz*np.sin(a), ux*uz*(1-np.cos(a)),
+        uz*np.sin(a),                    np.cos(a),     -ux*np.sin(a),
+        uz*ux*(1-np.cos(a)),             ux*np.sin(a),  np.cos(a)+uz*uz*(1-np.cos(a))
     ]).reshape(3,3)
 
 def R_x(a):
@@ -22,7 +26,7 @@ def R_y(a):
 def R_z(a):
     return np.array([np.cos(a), -np.sin(a), 0, np.sin(a), np.cos(a), 0, 0, 0, 1]).reshape(3,3)
 
-def get_thighs(euler):
+def get_thighs(euler, isRight=True):
 
     R_roll_j1  = lambda j1: R_x(j1)
     R_pitch_j2 = lambda j2: R_y(j2)
@@ -37,7 +41,12 @@ def get_thighs(euler):
     f_rpy_y = R_rpy @ np.array([0, 1, 0]).reshape(3,1)
 
     # if else for both legs
-    R_llj1_j1 = lambda j1: R_general(-np.sqrt(2)/2, 0, -np.sqrt(2)/2,j1)
+
+    if isRight:
+        R_llj1_j1 = lambda j1: R_general(-np.sqrt(2)/2, 0, np.sqrt(2)/2,j1)
+    else:
+        R_llj1_j1 = lambda j1: R_general(-np.sqrt(2)/2, 0, -np.sqrt(2)/2,j1)
+    
     R_llj2_j2 = lambda j2: R_y(j2)
     R_llj3_j3 = lambda j3: R_x(j3)
 
@@ -62,7 +71,7 @@ def get_thighs(euler):
 
     c1 = 0
     
-    while (fz-fz_goal).T@(fz-fz_goal)+(fy-fy_goal).T@(fy-fy_goal) > 1e-3:
+    while (fz-fz_goal).T@(fz-fz_goal)+(fy-fy_goal).T@(fy-fy_goal) > PRECISION:
 
         c1 += 1
         if c1 > 1000:
