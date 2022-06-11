@@ -912,27 +912,46 @@ def intersect_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
         "neutral": 
             [
                 f"{p1['id']} stole the ball.",
-                f"But {p1['id']} intersected."
+                f"But {p1['id']} intersected.",
+                "Intersection here.",
+                "Ball steal!",
+                "Intercept!"
             ]
         ,
         "aggressive": 
             [
-                f"What a steal!"
+                "What a steal!",
+                f"{p1['id']} had to steal.",
+                f"Sneaky steal, {p1['id']}.",
+                f"{p1['id']} intercepts, go go go!",
+                f"{p1['id']} has it, come on!"
             ]
         , 
         "friendly": 
             [
-                f"Nice intersect {p1['id']}"
+                f"Nice intersect {p1['id']}.",
+                f"Very nicely done by {p1['id']}.",
+                f"{p1['id']}, a promising player with the steal.",
+                f"Great intercept!",
+                f"Nice! Good interception here."
             ] 
         ,
         "biased_supporting": 
             [
-                f"Amazing steal by {p1['id']}"
+                f"Amazing steal by {p1['id']}.",
+                f"The best interceptions with {p1['id']}.",
+                "No one intercepts like this team",
+                "The others didn't stand a chance, intercept.",
+                f"Great job by {p1['id']} on this one."
             ]
         ,
         "biased_opposing": 
             [
-                f"God dammit {p1['id']} steals the ball"
+                f"Wow, {p1['id']} dares to steal the ball.",
+                f"{p1['id']} getting away with a foul...",
+                "This is scandalous!",
+                f"Nah, {p1['id']}, that can't have been fair.",
+                "Come on, who trains these guys..."
             ]
     }
 
