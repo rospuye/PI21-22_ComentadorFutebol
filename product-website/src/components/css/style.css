@@ -1,0 +1,53 @@
+.pagination {
+    display: inline-block;
+}
+
+.pagination a:hover {
+    color:white;
+    text-decoration: underline;
+}
+
+.pagination a:not([href]) {
+    color: white;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    cursor: pointer;
+}
+
+.pagination a.active:not([href]) {
+    background-color: #4CAF50;
+    color: white;
+}.pagination {
+    display: inline-block;
+    
+}
+
+.pagination a {
+    font-size: 18px;
+    -webkit-transition:font-size 1s;
+    transition: font-size 0.4s;
+}
+
+
+.pagination a:hover {
+    color:white!important;
+    text-decoration: underline!important;
+    font-size: 24px;
+    
+}
+
+.pagination a:not([href]) {
+    color: white;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    /* transition: background-color 1s; */
+    cursor: pointer;
+}
+
+.pagination a.active:not([href]) {
+    background-color: #4CAF50;
+    color: white;
+}
