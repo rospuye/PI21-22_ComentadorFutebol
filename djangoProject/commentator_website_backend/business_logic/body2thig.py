@@ -30,11 +30,9 @@ def R_z(a):
 
 def get_thighs(euler, isRight=True):
 
-    
-
-    R_roll_j1  = lambda j1: R_x(j1)
-    R_pitch_j2 = lambda j2: R_y(j2)
-    R_yaw_j3   = lambda j3: R_z(j3)
+    R_roll_j1  = R_x
+    R_pitch_j2 = R_y
+    R_yaw_j3   = R_z
 
     rpy = np.array(euler) # -4.35 -1.81 3.47
 
@@ -46,23 +44,27 @@ def get_thighs(euler, isRight=True):
 
     # if else for both legs
 
+    sqrt_2 = np.sqrt(2)
+
     if isRight:
-        R_llj1_j1 = lambda j1: R_general(-np.sqrt(2)/2, np.sqrt(2)/2,j1)
+        R_llj1_j1 = lambda j1: R_general(-sqrt_2/2, sqrt_2/2,j1)
     else:
-        R_llj1_j1 = lambda j1: R_general(-np.sqrt(2)/2, -np.sqrt(2)/2,j1)
+        R_llj1_j1 = lambda j1: R_general(-sqrt_2/2, 0, -sqrt_2/2,j1)
     
-    R_llj2_j2 = lambda j2: R_y(j2)
-    R_llj3_j3 = lambda j3: R_x(j3)
+    R_llj2_j2 = R_y
+    R_llj3_j3 = R_x
 
     R_lHip_j1_j2_j3 = lambda j1,j2,j3: R_llj1_j1(j1) @ R_llj2_j2(j2) @ R_llj3_j3(j3)
 
-    fz_j1_j2_j3 = lambda j1,j2,j3: R_lHip_j1_j2_j3(j1,j2,j3) @ np.array([0, 0, 1]).reshape(3,1)
-    fy_j1_j2_j3 = lambda j1,j2,j3: R_lHip_j1_j2_j3(j1,j2,j3) @ np.array([0, 1, 0]).reshape(3,1)
+    fz_j1_j2_j3 = lambda R_lHip: R_lHip @ np.array([0, 0, 1]).reshape(3,1)
+    fy_j1_j2_j3 = lambda R_lHip: R_lHip @ np.array([0, 1, 0]).reshape(3,1)
 
     q = rpy.reshape(3,1)
 
-    fz = fz_j1_j2_j3(q[0],q[1],q[2])
-    fy = fy_j1_j2_j3(q[0],q[1],q[2])
+    R_lHip1 = R_lHip_j1_j2_j3(q[0], q[1], q[2])
+
+    fz = fz_j1_j2_j3(R_lHip1)
+    fy = fy_j1_j2_j3(R_lHip1)
     fz_goal = f_rpy_z
     fy_goal = f_rpy_y
 
@@ -80,14 +82,17 @@ def get_thighs(euler, isRight=True):
         c1 += 1
         if c1 > 1000:
             break
-        step = np.array([np.random.random()-0.5, np.random.random()-0.5, np.random.random()-0.5]).reshape(3,1)*fact
-
+        # step = np.array([np.random.random()-0.5, np.random.random()-0.5, np.random.random()-0.5]).reshape(3,1)*fact
+        step = (np.random.random(size=3) - 0.5)*fact
+        step = step.reshape(3, 1)
         q2 = q + step
 
         q2 = (q2+np.pi) % (2*np.pi) - np.pi
 
-        fz2 = fz_j1_j2_j3(q2[0],q2[1],q2[2])
-        fy2 = fy_j1_j2_j3(q2[0],q2[1],q2[2])
+        R_lHip2 = R_lHip_j1_j2_j3(q2[0],q2[1],q2[2])
+
+        fz2 = fz_j1_j2_j3(R_lHip2)
+        fy2 = fy_j1_j2_j3(R_lHip2)
         err = (fz2-fz_goal).T@(fz2-fz_goal)+(fy2-fy_goal).T@(fy2-fy_goal)
 
         if err < prev_err:
@@ -99,8 +104,10 @@ def get_thighs(euler, isRight=True):
             prev_err=err
 
             q2 = q2 + step
-            fz2 = fz_j1_j2_j3(q2[0],q2[1],q2[2])
-            fy2 = fy_j1_j2_j3(q2[0],q2[1],q2[2])
+            R_lHip2 = R_lHip_j1_j2_j3(q2[0], q2[1], q2[2])
+
+            fz2 = fz_j1_j2_j3(R_lHip2)
+            fy2 = fy_j1_j2_j3(R_lHip2)
             err = (fz2-fz_goal).T@(fz2-fz_goal)+(fy2-fy_goal).T@(fy2-fy_goal)
 
             c2 = 0
@@ -117,9 +124,12 @@ def get_thighs(euler, isRight=True):
                 fy=fy2
                 prev_err=err
 
-                q2 = q2 + step   
-                fz2 = fz_j1_j2_j3(q2[0],q2[1],q2[2])
-                fy2 = fy_j1_j2_j3(q2[0],q2[1],q2[2])
+                q2 = q2 + step
+
+                R_lHip2 = R_lHip_j1_j2_j3(q2[0], q2[1], q2[2])
+
+                fz2 = fz_j1_j2_j3(R_lHip2)
+                fy2 = fy_j1_j2_j3(R_lHip2)
                 err = (fz2-fz_goal).T@(fz2-fz_goal)+(fy2-fy_goal).T@(fy2-fy_goal);
                 #err2=err
 
