@@ -3,6 +3,7 @@ import numpy as np
 import MDAnalysis as mda
 from body2thig import get_thighs
 import time
+from scipy.spatial.transform import Rotation as R
 
 POSITIONS_SIZE = 2 # TODO random choice ()
 
@@ -102,7 +103,6 @@ def get_euler_angles(pos, pos_r):
     T1 = np.linalg.inv(r)@h
     T1[:3, 3] = 0
 
-    from scipy.spatial.transform import Rotation as R
     e = R.from_matrix(T1[:3, :3]).as_euler("xyz", degrees=False)
 
     return e
@@ -287,8 +287,8 @@ class Player(Entity):
             self.joints[9] = np.around(-e[2]*180/np.pi,2)
         elif name == "rthigh":
             rtic = time.time()
-            #e = get_euler_angles(self.rthigh_pos, self.cur_pos)
-            new_e = get_thighs(self.prev_rthigh_euler, True)
+            e = get_euler_angles(self.rthigh_pos, self.cur_pos)
+            new_e = get_thighs(e, self.prev_rthigh_euler, True)
             self.prev_rthigh_euler = new_e
             self.joints[10] = np.around(new_e[0]*180/np.pi,2)
             self.joints[11] = np.around(new_e[1]*180/np.pi,2)
@@ -308,8 +308,8 @@ class Player(Entity):
             self.joints[15] = np.around(e[1]*180/np.pi,2)
         elif name == "lthigh":
             ltic = time.time()
-            #e = get_euler_angles(self.lthigh_pos, self.cur_pos)
-            new_e = get_thighs(self.prev_lthigh_euler, False)
+            e = get_euler_angles(self.lthigh_pos, self.cur_pos)
+            new_e = get_thighs(e, self.prev_lthigh_euler, False)
             self.prev_lthigh_euler = new_e
             self.joints[16] = np.around(new_e[0]*180/np.pi,2)
             self.joints[17] = np.around(new_e[1]*180/np.pi,2)

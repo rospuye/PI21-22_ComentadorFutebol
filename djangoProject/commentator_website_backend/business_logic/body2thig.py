@@ -14,7 +14,7 @@ PRECISION = 1e-3
 def R_general(ux, uz, a):
     """ General rotation matrix for x and z axis rotation """
     return np.array([
-        cos(a) + ux*ux*(1-np.cos(a)), -uz*sin(a), ux*uz*(1-cos(a)),
+        cos(a) + ux*ux*(1-cos(a)), -uz*sin(a), ux*uz*(1-cos(a)),
         uz*sin(a),                    cos(a),     -ux*sin(a),
         uz*ux*(1-cos(a)),             ux*sin(a),  cos(a)+uz*uz*(1-cos(a))
     ]).reshape(3,3)
@@ -28,7 +28,7 @@ def R_y(a):
 def R_z(a):
     return np.array([cos(a), -sin(a), 0, sin(a), cos(a), 0, 0, 0, 1]).reshape(3,3)
 
-def get_thighs(euler, isRight=True):
+def get_thighs(euler, prev,  isRight=True):
 
     R_roll_j1  = R_x
     R_pitch_j2 = R_y
@@ -49,7 +49,7 @@ def get_thighs(euler, isRight=True):
     if isRight:
         R_llj1_j1 = lambda j1: R_general(-sqrt_2/2, sqrt_2/2,j1)
     else:
-        R_llj1_j1 = lambda j1: R_general(-sqrt_2/2, 0, -sqrt_2/2,j1)
+        R_llj1_j1 = lambda j1: R_general(-sqrt_2/2, -sqrt_2/2,j1)
     
     R_llj2_j2 = R_y
     R_llj3_j3 = R_x
@@ -78,7 +78,6 @@ def get_thighs(euler, isRight=True):
     c1 = 0
     
     while (fz-fz_goal).T@(fz-fz_goal)+(fy-fy_goal).T@(fy-fy_goal) > PRECISION:
-
         c1 += 1
         if c1 > 1000:
             break
@@ -135,8 +134,7 @@ def get_thighs(euler, isRight=True):
 
         else:
             fails=fails+1
-            if fails>2:
+            if fails>4:
                 fact=fact*0.5
                 fails=0
- 
     return q
