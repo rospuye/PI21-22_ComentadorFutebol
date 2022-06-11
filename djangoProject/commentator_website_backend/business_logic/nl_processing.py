@@ -475,27 +475,47 @@ def dribble_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map
     lines = { 
         "neutral": 
             [
-                f"{p1['id']} is racing through the field",
+                f"{p1['id']} is racing through the field.",
                 f"{p1['id']} has the ball!",
-                f"{p1['id']} is dribbling around!"
+                f"{p1['id']} is dribbling around!",
+                f"Another dribbling moment by {p1['id']}!",
+                f"{p1['id']} dribbles away."
             ]
         ,
         "aggressive": 
-            []
+            [
+                f"Can't believe {p1['id']} is just dribbling...",
+                f"{p1['id']} needs to dribble faster.",
+                f"{p1['id']} dribbling by again...",
+                f"All {p1['id']} knows is dribbling.",
+                f"{p1['id']} is dribbling, I guess."
+            ]
         , 
         "friendly": 
-            [] 
+            [
+                f"A lovely dribble by {p1['id']}.",
+                f"{p1['id']}, there it goes!",
+                f"{p1['id']} dribbles beautifully!",
+                f"Incredible dribble by {p1['id']}.",
+                f"{p1['id']} is dribbling and what a dribble!"
+            ] 
         ,
         "biased_supporting": 
             [
                 f"Amazing, {p1['id']} is racing through the field",
-                f"Amazing, {p1['id']} is dribbling around!"
+                f"Wow, {p1['id']} is dribbling around!",
+                f"{p1['id']} does an amazing dribble.",
+                f"No one compares to {p1['id']} dribbling!",
+                f"Wonderful dribble by {p1['id']}."
             ]
         ,
         "biased_opposing": 
             [
                f"Oh no, {p1['id']} is racing through the field",
-               f"Oh no, {p1['id']} is dribbling around!"
+               f"Oh no, {p1['id']} is dribbling around!",
+               f"{p1['id']} is dribbling, I guess...",
+               f"{p1['id']} dribbles, nothing special.",
+               f"Seems like a poor dribble by {p1['id']}."
             ]
         
     }
