@@ -711,27 +711,47 @@ def goal_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, t
     lines = { 
         "neutral": 
             [
-                f"{team} SCORES!!",
+                f"{team} scores!",
+                f"A goal by {team}!",
+                f"{team} strikes!",
+                "Goal!",
+                f"{team} coming through!"
             ]
         ,
         "aggressive": 
             [
-                "Its a GOAL!!!"
+                "Now a goal!",
+                "At last! Goal!",
+                f"Good job, {team}, but moving on!",
+                f"Goal by {team}, about time!"
+                "Finally someone with some sense."
             ]
         , 
         "friendly": 
             [
-                "What a great goal"
+                "Wow, what a nice goal!",
+                f"Extraordinary job by {team}!",
+                f"{team} doing great!",
+                f"Amazing goal, {team}!",
+                "Yes! Amazing!"
             ] 
         ,
         "biased_supporting": 
             [
-                "GOOOOOOOOOOOOOOOOOOOOOOAAAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLl"
+                "Goal goal goal goal!",
+                f"Yay, {team} scores!",
+                f"Let's go, {team}!",
+                "Best team ever!",
+                f"{team} with a clear advantage!"
             ]
         ,
         "biased_opposing": 
             [
-                f"Oh no, {team} scores..."
+                f"Oh no, {team} scores...",
+                "Ah, the worst scenario!",
+                "Oh no...",
+                f"Very poor goal by {team}.",
+                f"Well done {team}, I guess..."
             ]
     }
 
