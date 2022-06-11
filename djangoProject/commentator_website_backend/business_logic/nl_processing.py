@@ -655,22 +655,47 @@ def goal_shot_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
         "neutral": 
             [
                 f"{p1['id']} shoots!",
-                "And he kicks"
+                "And they kick.",
+                f"{p1['id']} tries for a goal!",
+                "A shot to the goal!",
+                "Here we go!"
             ]
         ,
         "aggressive": 
-            []
+            [
+                f"Ah! {p1['id']} finally shoots!",
+                f"Come on, a shot by {p1['id']}.",
+                "Is this finally going to be a good shot?",
+                f"{p1['id']} showing some nerve!",
+                f"At least {p1['id']} shoots!"
+            ]
         , 
         "friendly": 
             [
-                f"Great kick by {p1['id']}"
+                f"Great kick by {p1['id']}!",
+                f"What a kick by {p1['id']}!",
+                f"Awesome attempt by {p1['id']}!",
+                f"{p1['id']} sparks up the game!",
+                f"{p1['id']} tries bravely!"
             ] 
         ,
         "biased_supporting": 
-            []
+            [
+                f"Great kick by {p1['id']}!",
+                f"Great kick by {p1['id']}!",
+                f"Great kick by {p1['id']}!",
+                f"Great kick by {p1['id']}!",
+                f"Great kick by {p1['id']}!"
+            ]
         ,
         "biased_opposing": 
-            []
+            [
+                f"{p1['id']} just had to shoot!",
+                f"Ugh, {p1['id']} shot like that!",
+                "Hope it doesn't go in.",
+                "Good shot... not.",
+                f"{p1['id']} shoots, gonna need luck."
+            ]
     }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
