@@ -80,7 +80,7 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
     elif event["event"] in ["dribble", "kick_off", "defense", "intersect", "out_shot", "corner_shot", "goalkeeper_out_shot"]:
         p1 = event["args"]["player"]
     elif event["event"] in ["aggression"]:
-        p1 = event["args"]["player_1"]
+        p1 = random.choice([event["args"]["player_1"],event["args"]["player_2"]])
 
     decide = ["team"]
     if p1: decide.append("player")
@@ -104,6 +104,8 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
                     "performing_well": # goals?
                         [
                             f"{p1['id']} has scored {goal_num} goals this match",
+                            f"{p1['id']} is one of the few players who has scored a goal",
+                            f"{p1['id']} "
                         ]
                     ,
                     "performing_poorly": # no goals?
@@ -344,7 +346,7 @@ def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, t
     if statistic_prob > roll:
         return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams)
 
-    team = teams[1] if p1["team"] else teams[0]
+    team, other_team = (teams[0], teams[1]) if p1["team"] else (teams[1], teams[0])
     supporting = True if p1["team"] == (bias > 0) else False
     team_supporting, team_opposing = (teams[0], teams[1]) if (bias < 0) else (teams[1], teams[0])
 
@@ -363,7 +365,9 @@ def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, t
             "pass_fail": [
                 f"{p2['id']} stole the ball",
                 f"{p1['id']} lost the ball for his team",
-                f"Team {team} loses the ball"
+                f"{team} loses the ball",
+                f"{other_team} gets the ball",
+                f"Unsuccessful pass by {p1['id']}"
             ]
         },
         "aggressive": {
@@ -373,7 +377,11 @@ def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, t
                 f"terrific pass by {p1['id']}",
                 f"what a strong pass, {p2['id']} was barely able to hold on to the ball",
                 f"{p2['id']} almost lost his footing there getting the ball from his teammate",
-                f"{p2['id']} has the ball now! keep going! keep going!"
+                f"{p2['id']} has the ball now! keep going! keep going!",
+                f"{p1['id']} getting the ball across the field like a bullet",
+                f"ball passed with fury by {p1['id']}",
+                f"{team} advancing at light's speed toward their enemy goal",
+                f"{other_team} better watch out, their enemies are advancing like truckloaders",
             ],
             "pass_fail": [
                 f"{p1['id']} stupidly lost the ball to {p2['id']}",
@@ -391,27 +399,51 @@ def pass_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, t
         "friendly": {
             "pass_success": [
                 f"incredible pass by {p1['id']}",
-                f"{p2['id']} catching the shot from his teammate with style"
+                f"{p2['id']} catching the shot from his teammate with style",
+                f"the ball was wonderfully passed by {p1['id']}",
+                f"{team} is getting the ball across the field! good job",
+                f"{other_team} is losing terrain, though im sure they'll give it some fight!",
             ],
             "pass_fail": [
                 f"pass missed! they can still bounce back though",
                 f"{p1['id']} failed their pass, I'm sure they'll get it next time"
+                f"{other_team} now has the ball, congratulations!",
+                f"dont feel bad {p1['id']}! youll get the pass next try",
+                f"{p2['id']} now ahs the ball, make good use of it!",
+                f"i know {team} wont let this failed pass bring them down",
             ]
         },
         "biased_supporting": {
             "pass_success": [
-
+                f"{team} getting the ball across the field! You guys show 'em!",
+                f"wonderful pass between {p1['id']} and {p2['id']}, setting an example to {other_team}",
+                f"see that, {other_team}? that's how you advance the ball",
+                f"a wonderful pass by the wonderful {team} team",
+                f"{p2['id']} catches his teammates's pass effortlessly, great job",
             ],
             "pass_fail": [
+                f"Oh no, {team} loses the ball",
+                f"{other_team} gets the ball, must be pure dumb luck",
+                f"{p2['id']} accidentally stumbles into {team}'s pass there, im sure they wont keep it for long",
+                f"{p1['id']} lost the ball, unlucky and undeserved",
+                f"{other_team} now has the ball, wonder how long that will last"
 
             ]
         },
         "biased_opposing": {
             "pass_success": [
-
+                f"{team_opposing} advances with the ball, how lucky",
+                f"{p1['id']} gets a lucky pass to their teammate",
+                f"Oh no, {team_supporting} is losing ground",
+                f"{team_supporting} needs to stop {p1['id']}'s advances",
+                f"{team_opposing} is getting closer to the goal, fight back guys!"
             ],
             "pass_fail": [
-
+                f"game is back on track, {team_supporting} has the ball now",
+                f"ahah, {team_opposing} loses the ball",
+                f"{p1['id']} lost the ball to the amazing {p2['id']}",
+                f"better luck next time {p1['id']}, now let the real game begin",
+                f"{team_supporting} effortlessly gets the ball back to their side"
             ]
         }
     }
