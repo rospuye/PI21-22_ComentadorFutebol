@@ -31,10 +31,10 @@ class GameViewSet(viewsets.ModelViewSet):
 
         user = self.request.user
 
-        queryset = queryset.filter(round__contains=roud)
-        queryset = queryset.filter(title__contains=title)
-        queryset = queryset.filter(league__contains=league)
-        queryset = queryset.filter(match_group__contains=group)
+        queryset = queryset.filter(round__icontains=roud)
+        queryset = queryset.filter(title__icontains=title)
+        queryset = queryset.filter(league__icontains=league)
+        queryset = queryset.filter(match_group__icontains=group)
 
         if year is not None:
             queryset = queryset.filter(year=year)

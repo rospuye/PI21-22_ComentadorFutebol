@@ -24,7 +24,7 @@ import axios from 'axios'
 function SelectGamePage() {
 
     const [cookies, setCookie] = useCookies(['logged_user'])
-    const [login, setLogin] = useState(cookies.logged_user !== '' && cookies.logged_user !== null);
+    const [login, setLogin] = useState(cookies.logged_user !== '' && cookies.logged_user !== undefined);
 
     const [selectedLeague, setSelectedLeague] = useState("")
     const [selectedUser, setSelectedUser] = useState("")
@@ -108,6 +108,8 @@ function SelectGamePage() {
 
     useEffect(() => {
         requestGame()
+        console.log("login", login)
+        console.log("token", cookies.logged_user)
     }, [selectedPage, sort])
 
 
