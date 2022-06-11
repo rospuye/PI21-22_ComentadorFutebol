@@ -170,6 +170,7 @@ def process_log(log, skip=1, skip_flg=False):
                 elif "rthigh" in tmp[i]:
                     robot.rthighIndex = i-1
                     robot.rthigh_pos = position_to_array(tmp[i-1])
+                    robot.init_thigh(robot.rthigh_pos, True)
                     robot.add_joint("rthigh")
                 elif "rshank" in tmp[i]:
                     robot.rshankIndex = i-1
@@ -185,6 +186,7 @@ def process_log(log, skip=1, skip_flg=False):
                 elif "lthigh" in tmp[i]:
                     robot.lthighIndex = i-1
                     robot.lthigh_pos = position_to_array(tmp[i-1])
+                    robot.init_thigh(robot.lthigh_pos, False)
                     robot.add_joint("lthigh")
                 elif "lshank" in tmp[i]:
                     robot.lshankIndex = i-1
@@ -248,6 +250,17 @@ def process_log(log, skip=1, skip_flg=False):
         if old_timestamp == timestamp:
             break
         old_timestamp = timestamp
+
+        if timestamp > 5:
+            
+            for ent in entities[1:]:
+                print(f"{ent.id}, time: {ent.joint_time/ent.count}, {ent.rthigh_time/ent.rthigh_count}, {ent.lthigh_time/ent.lthigh_count}")
+                print(f"{ent.id}, time: {ent.joint_time}, {ent.rthigh_time}, {ent.lthigh_time}")
+
+
+            break
+
+
         if not skip_flg or not count % skip == 0:
             tmp = re.split("\(nd", line)
             had_changes = [False] * len(entities)

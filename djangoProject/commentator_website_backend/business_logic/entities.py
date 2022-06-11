@@ -2,6 +2,7 @@ import math
 import numpy as np
 import MDAnalysis as mda
 from body2thig import get_thighs
+import time
 
 POSITIONS_SIZE = 2 # TODO random choice ()
 
@@ -247,8 +248,23 @@ class Player(Entity):
         self.positions_rfoot = []
         self.positions_lfoot = []
         self.joints = [0]*22
+
+        self.prev_rthigh_euler = [0]*3
+        self.prev_lthigh_euler = [0]*3
+
+
+        self.joint_time = 0
+        self.count = 0
+        self.rthigh_time = 0
+        self.rthigh_count = 0
+        self.lthigh_time = 0
+        self.lthigh_count = 0
+
+
+
     
     def add_joint(self, name):
+        tic = time.time()
         if name == "head":
             e = get_euler_angles(self.head_pos, self.cur_pos)
             self.joints[0] = np.around(e[2]*180/np.pi,2)
@@ -270,11 +286,16 @@ class Player(Entity):
             self.joints[8] = np.around(-e[1]*180/np.pi,2)
             self.joints[9] = np.around(-e[2]*180/np.pi,2)
         elif name == "rthigh":
-            e = get_euler_angles(self.rthigh_pos, self.cur_pos)
-            new_e = get_thighs(e)
+            rtic = time.time()
+            #e = get_euler_angles(self.rthigh_pos, self.cur_pos)
+            new_e = get_thighs(self.prev_rthigh_euler, True)
+            self.prev_rthigh_euler = new_e
             self.joints[10] = np.around(new_e[0]*180/np.pi,2)
             self.joints[11] = np.around(new_e[1]*180/np.pi,2)
             self.joints[12] = np.around(new_e[2]*180/np.pi,2)
+            rtoc = time.time()
+            self.rthigh_time += rtoc - rtic
+            self.rthigh_count += 1
         elif name == "rshank":
             #e = get_euler_angles(self.rshank_pos, self.cur_pos)
             #self.joints[11] = np.around(e[1]*180/np.pi,2)
@@ -286,11 +307,16 @@ class Player(Entity):
             e = get_euler_angles(self.rfoot_pos, self.rthigh_pos)
             self.joints[15] = np.around(e[1]*180/np.pi,2)
         elif name == "lthigh":
-            e = get_euler_angles(self.lthigh_pos, self.cur_pos)
-            new_e = get_thighs(e)
+            ltic = time.time()
+            #e = get_euler_angles(self.lthigh_pos, self.cur_pos)
+            new_e = get_thighs(self.prev_lthigh_euler, False)
+            self.prev_lthigh_euler = new_e
             self.joints[16] = np.around(new_e[0]*180/np.pi,2)
             self.joints[17] = np.around(new_e[1]*180/np.pi,2)
             self.joints[18] = np.around(new_e[2]*180/np.pi,2)
+            ltoc = time.time()
+            self.lthigh_time += ltoc - ltic
+            self.lthigh_count += 1
         elif name == "lshank":
             #e = get_euler_angles(self.lshank_pos, self.cur_pos)
             #self.joints[17] = np.around(e[1]*180/np.pi,2)
@@ -301,6 +327,15 @@ class Player(Entity):
             self.joints[20] = np.around(e[0]*180/np.pi,2)
             e = get_euler_angles(self.lfoot_pos, self.lthigh_pos)
             self.joints[21] = np.around(e[1]*180/np.pi,2)
+        toc = time.time()
+        self.joint_time += toc - tic
+        self.count += 1
+
+    def init_thigh(self, pos, isRight):
+        if isRight:
+            self.prev_rthigh_euler = get_euler_angles(pos, self.cur_pos)
+        else:
+            self.prev_lthigh_euler = get_euler_angles(pos, self.cur_pos)
 
     def add_position_rfoot(self, position):
         self.positions_rfoot.append(position)
