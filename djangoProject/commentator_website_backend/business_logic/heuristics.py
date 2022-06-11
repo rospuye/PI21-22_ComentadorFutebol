@@ -1,7 +1,7 @@
 import math
 
 from commentator_website_backend.business_logic.entities import Ball, Position
-from commentator_website_backend.business_logic.message import Message, Aggresion, Goal, Kick_Off, Pass, Dribble, \
+from commentator_website_backend.business_logic.message import Corner_Shot, GoalKeeper_Out_Shot, Message, Aggresion, Goal, Kick_Off, Out_Shot, Pass, Dribble, \
     Defense, Goal_Shot, Intersect
 
 KICK_OFF_CONTACT_DISTANCE = 0.13  # Distance to be considered contact between entities
@@ -34,6 +34,9 @@ def process(entities: list, field: dict, goal: dict, curr_timestamp: float, even
             for i in range(3):
                 formation_count[player][i] = 0
 
+    formation = []
+    formation_players = dict()
+
     # Event detection
     messages += detect_kick_off(ball, teamA, teamB, curr_timestamp, events)
     messages += detect_corner_shot(ball, teamA, teamB, curr_timestamp, events)
@@ -46,7 +49,7 @@ def process(entities: list, field: dict, goal: dict, curr_timestamp: float, even
         messages += detect_pass_or_dribble(ball, entities[1:], curr_timestamp, events)
         messages += detect_defense(ball, teamA, teamB, curr_timestamp, events)
 
-    formation, formation_players = update_formation(ball, teamA, teamB, field, formation_count)
+        formation, formation_players = update_formation(ball, teamA, teamB, field, formation_count)
 
     return messages, formation, formation_players
 
@@ -140,21 +143,21 @@ def detect_out_goal(ball: Ball, teamA, teamB, field, goal, timestamp, events):
             if (teamRight == ball.owner.isTeamRight):
                 # Verify if is the same corner event
                 if "corner" not in events:
-                    message = Message(event="corner", start=ball_pos.timestamp, end=ball_pos.timestamp)
+                    message = Corner_Shot(event="corner", start=ball_pos.timestamp, end=ball_pos.timestamp, player=ball.owner)
                     events["corner"] = message
                     # print("Corner made it")
                     return [message]
             else:
                 # Goal Keeper kickoff
                 if "goalkeeper_out" not in events:
-                    message = Message(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp)
+                    message = GoalKeeper_Out_Shot(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp, player=ball.owner)
                     events["goalkeeper_out"] = message
                     # print("Out made it")
                     return [message]
 
         else:  # It's an out
             if "out" not in events:
-                message = Message(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp)
+                message = Out_Shot(event="out", start=ball_pos.timestamp, end=ball_pos.timestamp, player=ball.owner)
                 events["out"] = message
                 # print(f"{timestamp}: Out made it")
                 return [message]
@@ -203,7 +206,7 @@ def start_outside_shot(event: str, ball: Ball, teamA: list, teamB: list, curr_ti
     player = ball.get_closest_player(atk_team)
     if ball.get_distance_from(player) < KICK_OFF_CONTACT_DISTANCE:
         events.pop(event)
-        events[f"{event}_shot"] = {"start": curr_timestamp}
+        events[f"{event}_shot"] = {"start": curr_timestamp, "player": player}
         # print(f"after {events[event + '_shot'] = }")
         return True
 
@@ -213,7 +216,14 @@ def start_outside_shot(event: str, ball: Ball, teamA: list, teamB: list, curr_ti
 def outside_shot(event: str, ball: Ball, teamA: list, teamB: list, curr_timestamp: float, events):
     # The shot ends when the ball stops moving
     if has_ball_stopped(ball, teamA, teamB):
-        message = Message(event=f"{event}_shot", start=events[f"{event}_shot"]["start"], end=curr_timestamp)
+        message = None
+        if event == "out":
+            message = Out_Shot("out_shot", player=events[f"out_shot"]["player"], start=events[f"out_shot"]["start"], end=curr_timestamp)
+        elif event == "goalkeeper_out":
+            message = GoalKeeper_Out_Shot("goalkeeper_out_shot", player=events[f"goalkeeper_out_shot"]["player"], start=events[f"goalkeeper_out_shot"]["start"], end=curr_timestamp)
+        elif event == "corner_shot":
+            message = Corner_Shot("corner_shot", player=events[f"corner_shot"]["player"], start=events[f"corner_shot"]["start"], end=curr_timestamp)
+        #message = Message(event=f"{event}_shot", start=events[f"{event}_shot"]["start"], end=curr_timestamp)
         events.pop(f"{event}_shot")
         return message
 
@@ -447,17 +457,19 @@ def update_formation(ball: Ball, teamA: list, teamB: list, field: dict, formatio
     # 0 - defender
     # 1 - midfielder
     # 2 - forwards
-    if not abs(ball.positions[-1].x) > field["length"] / 2 - field["length"] * 0.15:
-        left = get_areas(ball, False, field)
-        right = get_areas(ball, True, field)
+    #if not abs(ball.positions[-1].x) > field["length"] / 2 - field["length"] * 0.15:
+    left, areaL = get_areas(ball, False, field)
+    right, areaR = get_areas(ball, True, field)
 
-        # Team A (left)
+    # Team A (left)
+    if areaL > field["length"]*0.10:
         for player in teamA:
             for i in range(len(left)):
                 if left[i][0] < player.positions[-1].x < left[i][1]:
                     formation_count[player][i] += 1
                     break
 
+    if areaR > field["length"]*0.10:                
         for player in teamB:
             for i in range(len(right)):
                 if left[i][0] < player.positions[-1].x < left[i][1]:
@@ -489,9 +501,9 @@ def get_areas(ball: Ball, isRight: bool, field: dict):
     goal_line = field["length"] / 2 if isRight else -field["length"] / 2
     ball_line = ball.positions[-1].x
     rangeEnemy = abs(-goal_line - ball_line)
-    rangeFriendly = abs(goal_line - ball_line)
     start_forward = ball_line - FORWARD_OFFSET * rangeEnemy if isRight else ball_line + FORWARD_OFFSET * rangeEnemy
+    rangeFriendly = abs(goal_line - start_forward)
     end_mid = start_forward + MID_SIZE * rangeFriendly if isRight else start_forward - MID_SIZE * rangeFriendly
-    return [[end_mid, goal_line], [start_forward, end_mid], [-goal_line, start_forward]] if isRight \
-        else [[goal_line, end_mid], [end_mid, start_forward], [start_forward, -goal_line]]
+    return ([[end_mid, goal_line], [start_forward, end_mid], [-goal_line, start_forward]], rangeFriendly) if isRight \
+        else ([[goal_line, end_mid], [end_mid, start_forward], [start_forward, -goal_line]], rangeFriendly)
 

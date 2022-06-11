@@ -36,7 +36,7 @@ function FocoNavbar({goesBack,backPage,hasLoginBtn,cookies,setCookie,updateLogin
           </Nav>
           <Nav>
           {(hasLoginBtn) ? <>
-          {(cookies.logged_user !== '') ?
+          {(cookies.logged_user != null && cookies.logged_user !== '') ?
             <Button className='loginButton' variant="light" onClick={() => {
               setCookie('logged_user', '', { path: '/' })
               setCookie('token', '', {path: '/'})

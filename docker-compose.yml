@@ -14,6 +14,8 @@ services:
   django-api:
     build: ./djangoProject
     container_name: django-api
+    volumes:
+      - django-data:/djangoProject/uploads/replays
     ports:
       - 8000:8000
     restart: unless-stopped
@@ -35,4 +37,6 @@ services:
 
 volumes:
   mysql-data:
+    driver: local
+  django-data:
     driver: local

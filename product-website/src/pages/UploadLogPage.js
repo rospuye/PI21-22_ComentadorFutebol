@@ -95,6 +95,7 @@ function UploadLogPage() {
 
         setLoading(true)
         axios.post(url, formData, config).then((response) => {
+          console.log(response);
           let game_id = response.data.game_id
           navigate('/personality/' + game_id, {state: { game_id: game_id }});
           document.getElementById('confirmBtn').disabled = false;

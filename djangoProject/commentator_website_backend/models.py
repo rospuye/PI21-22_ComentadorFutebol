@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 class Preset(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, related_name="presets", on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
     gender = models.CharField(max_length=20)
     aggressive_val = models.IntegerField()
     energetic_val = models.IntegerField()

@@ -24,12 +24,13 @@ class team_analytics():
         self.defenses = 0
         self.ball_poss = 0
         self.aggressions = 0
+        self.passes = 0
 
     def __str__(self) -> str:
         return f"Shots: {self.shots}, Goals: {self.goals}, Defenses: {self.defenses}, Ball Posession: {self.ball_poss}"
 
     def to_json(self):
-        return {"goals": self.goals, "shots": self.shots, "defenses": self.defenses, "ball_pos": self.ball_poss, "aggressions": self.aggressions}
+        return {"goals": self.goals, "shots": self.shots, "defenses": self.defenses, "ball_pos": self.ball_poss, "aggressions": self.aggressions, "passes": self.passes}
 
 def update_analytics(analysis, team_analysis, entities, update_poss=True):
 
@@ -48,6 +49,8 @@ def update_analytics(analysis, team_analysis, entities, update_poss=True):
         team_analysis["B"].defenses = sum([analysis[player.id].defenses for player in entities[12:]])
         team_analysis["A"].aggressions = sum([analysis[player.id].aggressions for player in entities[1:12]])
         team_analysis["B"].aggressions = sum([analysis[player.id].aggressions for player in entities[12:]])
+        team_analysis["A"].passes = sum([analysis[player.id].s_passes + analysis[player.id].l_passes for player in entities[1:12]])
+        team_analysis["B"].passes = sum([analysis[player.id].s_passes + analysis[player.id].l_passes for player in entities[12:]])
 
         for player in entities[1:]:
             analysis[player.id].ball_poss = (analysis[player.id].ball_time/posession_total) * 100
@@ -64,8 +67,8 @@ def get_analytics(events : list, entities : list):
     last_ball_owner = None
 
     team_analysis = dict()
-    team_analysis["A"] = team_analytics()
-    team_analysis["B"] = team_analytics()
+    team_analysis["A"] = team_analytics() # Left
+    team_analysis["B"] = team_analytics() # Right
 
     analysis = dict()
     for player in entities[1:]:
