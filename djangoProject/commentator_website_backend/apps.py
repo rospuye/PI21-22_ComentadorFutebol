@@ -1,5 +1,5 @@
 from django.apps import AppConfig
-from commentator_website_backend import global_var
+from commentator_website_backend.business_logic import global_var
 
 teste = 0
 

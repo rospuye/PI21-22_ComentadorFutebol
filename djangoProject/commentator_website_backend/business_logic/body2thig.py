@@ -1,5 +1,7 @@
 import numpy as np
 
+from global_var import cos, sin
+
 """
     R_general = [cos(a)+ux*ux*(1-cos(a)),   ux*uy*(1-cos(a))-uz*sin(a),ux*uz*(1-cos(a))+uy*sin(a);
              uy*ux*(1-cos(a))+uz*sin(a),cos(a)+uy*uy*(1-cos(a)),   uy*uz*(1-cos(a))-ux*sin(a);
@@ -12,21 +14,23 @@ PRECISION = 1e-3
 def R_general(ux, uz, a):
     """ General rotation matrix for x and z axis rotation """
     return np.array([
-        np.cos(a) + ux*ux*(1-np.cos(a)), -uz*np.sin(a), ux*uz*(1-np.cos(a)),
-        uz*np.sin(a),                    np.cos(a),     -ux*np.sin(a),
-        uz*ux*(1-np.cos(a)),             ux*np.sin(a),  np.cos(a)+uz*uz*(1-np.cos(a))
+        cos(a) + ux*ux*(1-np.cos(a)), -uz*sin(a), ux*uz*(1-cos(a)),
+        uz*sin(a),                    cos(a),     -ux*sin(a),
+        uz*ux*(1-cos(a)),             ux*sin(a),  cos(a)+uz*uz*(1-cos(a))
     ]).reshape(3,3)
 
 def R_x(a):
-    return np.array([1, 0, 0, 0, np.cos(a), -np.sin(a), 0, np.sin(a), np.cos(a)]).reshape(3,3)
+    return np.array([1, 0, 0, 0, cos(a), -sin(a), 0, sin(a), cos(a)]).reshape(3,3)
 
 def R_y(a):
-    return np.array([np.cos(a), 0, np.sin(a), 0, 1, 0, -np.sin(a), 0, np.cos(a)]).reshape(3,3)
+    return np.array([cos(a), 0, sin(a), 0, 1, 0, -sin(a), 0, cos(a)]).reshape(3,3)
 
 def R_z(a):
-    return np.array([np.cos(a), -np.sin(a), 0, np.sin(a), np.cos(a), 0, 0, 0, 1]).reshape(3,3)
+    return np.array([cos(a), -sin(a), 0, sin(a), cos(a), 0, 0, 0, 1]).reshape(3,3)
 
 def get_thighs(euler, isRight=True):
+
+    
 
     R_roll_j1  = lambda j1: R_x(j1)
     R_pitch_j2 = lambda j2: R_y(j2)

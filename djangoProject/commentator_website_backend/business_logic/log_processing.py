@@ -1,11 +1,13 @@
 import math
 import sys
+
 import re
 import copy
 import time
 from entities import Position, Entity, Ball, Player
 from heuristics import process
 from analytics import analytics, get_analytics
+from global_var import createCache
 
 
 def position_to_array(position, flg=False):
@@ -412,6 +414,8 @@ def process_log(log, skip=1, skip_flg=False):
 
 if __name__ == "__main__":
     log = open("test1.log", "r")
+
+    createCache()
     
     skip_lines = 1
     flg = False
