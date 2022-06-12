@@ -1034,19 +1034,49 @@ def out_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, te
 
     lines = { 
         "neutral": 
-            []
+            [
+                "We have an out.",
+                "Out!",
+                f"{p1['id']} with an out.",
+                "The ball is out.",
+                f"{p1['id']} kicked the ball out."
+            ]
         ,
         "aggressive": 
-            []
+            [
+                "Out out out!",
+                "We have an out everyone!",
+                "Everyone remain calm, it's an out!",
+                f"Wow! {p1['id']} shot the ball out!",
+                f"Ah! {p1['id']} with an out!"
+            ]
         , 
         "friendly": 
-            [] 
+            [
+                f"{p1['id']} kicked the ball out, that's okay!",
+                "Out! No problem!",
+                "Out! Let's give it another try!",
+                f"{p1['id']} had an out there, no biggie.",
+                f"{p1['id']} kicked it out. Better luck next time!"
+            ] 
         ,
         "biased_supporting": 
-            []
+            [
+                f"{p1['id']} unfortunately kicked the ball out!",
+                "Even great teams mess up!",
+                f"Oh no, {p1['id']} with an out.",
+                "They can recover from this out.",
+                "Sadly, the ball went out of the court."
+            ]
         ,
         "biased_opposing": 
-            []
+            [
+                "Ahah! An out!",
+                "Of course they kicked it out!",
+                f"Great job, {p1['id']}... not.",
+                f"Out. {p1['id']} always messes up like this.",
+                "An out? Are you kidding?"
+            ]
     }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
