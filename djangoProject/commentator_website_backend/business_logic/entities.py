@@ -1,7 +1,7 @@
 import math
 import numpy as np
 import MDAnalysis as mda
-from body2thig import get_thighs
+from body2thigh_analytic import get_thighs
 import time
 from scipy.spatial.transform import Rotation as R
 

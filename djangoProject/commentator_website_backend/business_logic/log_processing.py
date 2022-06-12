@@ -253,7 +253,7 @@ def process_log(log, skip=1, skip_flg=False):
         if old_timestamp == timestamp:
             break
         old_timestamp = timestamp
-        # #print(timestamp)
+        # print(timestamp)
         # if timestamp > 5:
             
         #     # for ent in entities[1:]:
@@ -261,7 +261,7 @@ def process_log(log, skip=1, skip_flg=False):
         #     #     print(f"{ent.id}, time: {ent.joint_time}, {ent.rthigh_time}, {ent.lthigh_time}")
 
 
-        #     return
+        #     break
 
 
         if not skip_flg or not count % skip == 0:
@@ -414,35 +414,35 @@ def process_log(log, skip=1, skip_flg=False):
 
 
 if __name__ == "__main__":
-
+    log = open("test1.log", "r")
 
     createCache()
     
     skip_lines = 1
     flg = False
-    # if len(sys.argv) > 2:
-    #     flg = True
-    #     skip_lines = int(sys.argv[2])
-    # events = process_log(log, skip=skip_lines, skip_flg=flg)
-    # print("Log processed!")
+    if len(sys.argv) > 2:
+        flg = True
+        skip_lines = int(sys.argv[2])
+    events = process_log(log, skip=skip_lines, skip_flg=flg)
+    print("Log processed!")
 
-    n_fails = [x for x in range(10,21)]
-    init_fact = [1/x for x in range(1, 21)]
+    # n_fails = [x for x in range(10,21)]
+    # init_fact = [1/x for x in range(1, 21)]
 
-    for i in n_fails:
-        for j in init_fact:
-            N_FAILS = i
-            INIT_FACT = j
-            print(f"{N_FAILS},{INIT_FACT},", end="")
-            for n in range(3):
-                log = open("test1.log", "r")
+    # for i in n_fails:
+    #     for j in init_fact:
+    #         N_FAILS = i
+    #         INIT_FACT = j
+    #         print(f"{N_FAILS},{INIT_FACT},", end="")
+    #         for n in range(3):
+    #             log = open("test1.log", "r")
 
-                set_vars(N_FAILS, INIT_FACT)
+    #             set_vars(N_FAILS, INIT_FACT)
 
-                tic = time.time()
-                process_log(log, skip=skip_lines, skip_flg=flg)
-                toc = time.time()
-                log.close()
-                print(f"{toc - tic},", end="")
-            print()
+    #             tic = time.time()
+    #             process_log(log, skip=skip_lines, skip_flg=flg)
+    #             toc = time.time()
+    #             log.close()
+    #             print(f"{toc - tic},", end="")
+    #         print()
                 
