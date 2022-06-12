@@ -8,6 +8,7 @@ from entities import Position, Entity, Ball, Player
 from heuristics import process
 from analytics import analytics, get_analytics
 from global_var import createCache
+from body2thig import set_vars
 
 
 def position_to_array(position, flg=False):
@@ -58,17 +59,17 @@ def process_log(log, skip=1, skip_flg=False):
             continue
         tmp = re.split('\s|\)', line)
         fieldParams["length"] = float(tmp[1])
-        print("Length:", fieldParams["length"])
+        #print("Length:", fieldParams["length"])
         fieldParams["width"] = float(tmp[3])
-        print("Width:", fieldParams["width"])
+        #print("Width:", fieldParams["width"])
         fieldParams["height"] = float(tmp[5])
-        print("Height:", fieldParams["height"])
+        #print("Height:", fieldParams["height"])
         goalParams["width"] = float(tmp[7])
-        print("Goal Width:", goalParams["width"])
+        #print("Goal Width:", goalParams["width"])
         goalParams["depth"] = float(tmp[9])
-        print("Goal Depth:", goalParams["depth"])
+        #print("Goal Depth:", goalParams["depth"])
         goalParams["height"] = float(tmp[11])
-        print("Goal Height:", goalParams["height"])
+        #print("Goal Height:", goalParams["height"])
         replayParams["BorderSize"] = tmp[13]
         replayParams["FreeKickDistance"] = tmp[15]
         replayParams["WaitBeforeKickOff"] = tmp[17]
@@ -248,19 +249,19 @@ def process_log(log, skip=1, skip_flg=False):
         if new_timestamp==timestamp:
             continue
         timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
-        print(timestamp)
+
         if old_timestamp == timestamp:
             break
         old_timestamp = timestamp
-
-        if timestamp > 5:
+        # #print(timestamp)
+        # if timestamp > 5:
             
-            for ent in entities[1:]:
-                print(f"{ent.id}, time: {ent.joint_time/ent.count}, {ent.rthigh_time/ent.rthigh_count}, {ent.lthigh_time/ent.lthigh_count}")
-                print(f"{ent.id}, time: {ent.joint_time}, {ent.rthigh_time}, {ent.lthigh_time}")
+        #     # for ent in entities[1:]:
+        #     #     print(f"{ent.id}, time: {ent.joint_time/ent.count}, {ent.rthigh_time/ent.rthigh_count}, {ent.lthigh_time/ent.lthigh_count}")
+        #     #     print(f"{ent.id}, time: {ent.joint_time}, {ent.rthigh_time}, {ent.lthigh_time}")
 
 
-            break
+        #     return
 
 
         if not skip_flg or not count % skip == 0:
@@ -413,14 +414,35 @@ def process_log(log, skip=1, skip_flg=False):
 
 
 if __name__ == "__main__":
-    log = open("test1.log", "r")
+
 
     createCache()
     
     skip_lines = 1
     flg = False
-    if len(sys.argv) > 2:
-        flg = True
-        skip_lines = int(sys.argv[2])
-    events = process_log(log, skip=skip_lines, skip_flg=flg)
-    print("Log processed!")
+    # if len(sys.argv) > 2:
+    #     flg = True
+    #     skip_lines = int(sys.argv[2])
+    # events = process_log(log, skip=skip_lines, skip_flg=flg)
+    # print("Log processed!")
+
+    n_fails = [x for x in range(10,21)]
+    init_fact = [1/x for x in range(1, 21)]
+
+    for i in n_fails:
+        for j in init_fact:
+            N_FAILS = i
+            INIT_FACT = j
+            print(f"{N_FAILS},{INIT_FACT},", end="")
+            for n in range(3):
+                log = open("test1.log", "r")
+
+                set_vars(N_FAILS, INIT_FACT)
+
+                tic = time.time()
+                process_log(log, skip=skip_lines, skip_flg=flg)
+                toc = time.time()
+                log.close()
+                print(f"{toc - tic},", end="")
+            print()
+                

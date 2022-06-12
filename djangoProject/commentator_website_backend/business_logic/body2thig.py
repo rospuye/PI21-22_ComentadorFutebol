@@ -9,6 +9,15 @@ from global_var import cos, sin
 """
 
 PRECISION = 1e-3
+N_FAILS = 10
+INIT_FACT = 1/15
+
+
+def set_vars(fail, fact):
+    global N_FAILS
+    global INIT_FACT
+    N_FAILS = fail
+    INIT_FACT = fact
 
 
 def R_general(ux, uz, a):
@@ -44,12 +53,12 @@ def get_thighs(euler, prev,  isRight=True):
 
     # if else for both legs
 
-    sqrt_2 = np.sqrt(2)
+    sqrt_2 = np.sqrt(2)/2
 
     if isRight:
-        R_llj1_j1 = lambda j1: R_general(-sqrt_2/2, sqrt_2/2,j1)
+        R_llj1_j1 = lambda j1: R_general(-sqrt_2, sqrt_2,j1)
     else:
-        R_llj1_j1 = lambda j1: R_general(-sqrt_2/2, -sqrt_2/2,j1)
+        R_llj1_j1 = lambda j1: R_general(-sqrt_2, -sqrt_2,j1)
     
     R_llj2_j2 = R_y
     R_llj3_j3 = R_x
@@ -61,10 +70,10 @@ def get_thighs(euler, prev,  isRight=True):
 
     q = rpy.reshape(3,1)
 
-    R_lHip1 = R_lHip_j1_j2_j3(q[0], q[1], q[2])
+    #R_lHip1 = R_lHip_j1_j2_j3(q[0], q[1], q[2])
 
-    fz = fz_j1_j2_j3(R_lHip1)
-    fy = fy_j1_j2_j3(R_lHip1)
+    #z = fz_j1_j2_j3(R_lHip1)
+    #y = fy_j1_j2_j3(R_lHip1)
     fz_goal = f_rpy_z
     fy_goal = f_rpy_y
 
@@ -73,13 +82,13 @@ def get_thighs(euler, prev,  isRight=True):
     #err = (fz-fz_goal).T@(fz-fz_goal)
 
 
-    fact=0.5
+    fact=0.05
     prev_err=10
     fails=0
 
     c1 = 0
     
-    while (fz-fz_goal).T@(fz-fz_goal)+(fy-fy_goal).T@(fy-fy_goal) > PRECISION:
+    while prev_err > PRECISION:
         c1 += 1
         if c1 > 1000:
             break
@@ -121,8 +130,8 @@ def get_thighs(euler, prev,  isRight=True):
                 q=q2
                 #q*180/np.pi
 
-                fz=fz2
-                fy=fy2
+                #fz=fz2
+                #fy=fy2
                 prev_err=err
 
                 q2 = q2 + step
@@ -131,12 +140,13 @@ def get_thighs(euler, prev,  isRight=True):
 
                 fz2 = fz_j1_j2_j3(R_lHip2)
                 fy2 = fy_j1_j2_j3(R_lHip2)
-                err = (fz2-fz_goal).T@(fz2-fz_goal)+(fy2-fy_goal).T@(fy2-fy_goal);
+                err = (fz2-fz_goal).T@(fz2-fz_goal)+(fy2-fy_goal).T@(fy2-fy_goal)
                 #err2=err
 
         else:
             fails=fails+1
-            if fails>4:
-                fact=fact*0.5
+            if fails>5:
+                if fact > 5e-2:
+                    fact=fact*0.5
                 fails=0
     return q
