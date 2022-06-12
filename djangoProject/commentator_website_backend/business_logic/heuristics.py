@@ -11,7 +11,7 @@ AGGRESSION_DISTANCE_TO_BALL = 1.2  # Just notify aggressions at maximum that dis
 MID_SIZE = 0.3
 FORWARD_OFFSET = 0.1
 
-def process(entities: list, field: dict, goal: dict, curr_timestamp: float, events=None, formation_count=None):
+def process(entities: list, field: dict, goal: dict, curr_timestamp: float, events=None, formation_count=None, formation=[], formation_players={}):
     """If event is detected, the positions related to the event's timestamp are deleted from all entities.
     It returns a string event"""
     if formation_count is None:
@@ -33,9 +33,6 @@ def process(entities: list, field: dict, goal: dict, curr_timestamp: float, even
             formation_count[player] = dict()
             for i in range(3):
                 formation_count[player][i] = 0
-
-    formation = []
-    formation_players = dict()
 
     # Event detection
     messages += detect_kick_off(ball, teamA, teamB, curr_timestamp, events)
