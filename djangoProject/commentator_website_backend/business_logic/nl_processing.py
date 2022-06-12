@@ -1096,19 +1096,49 @@ def goalkeeper_out_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_n
 
     lines = { 
         "neutral": 
-            []
+            [
+                "A goalkeeper out here.",
+                "A goalkeeper out just happened.",
+                f"Goalkeeper out by {p1['id']}.",
+                f"{p1['id']} with a goalkeeper out.",
+                "Goalkeeper out!"
+            ]
         ,
         "aggressive": 
-            []
+            [
+                "Wow! A goalkeeper out!",
+                "Ah! Goalkeeper out!",
+                f"Here goes {p1['id']} with a goalkeeper out!",
+                f"Attention! Goalkeeper out by {p1['id']}!",
+                f"Impossible! {p1['id']} causes a goalkeeper out!"
+            ]
         , 
         "friendly": 
-            [] 
+            [
+                "Goalkeeper out, all good.",
+                "Goalkeeper out, happens sometimes!",
+                "Oopsie! Goalkeeper out.",
+                f"{p1['id']} with a goalkeeper out, all good!",
+                f"Goalkeeper out by {p1['id']} but the game goes on!"
+            ] 
         ,
         "biased_supporting": 
-            []
+            [
+                f"Goalkeeper out by {p1['id']}, they can recover quick.",
+                "Goalkeeper out, that's fine.",
+                f"{p1['id']} with a goalkeeper out, just a small mistake.",
+                "Oh no, a goalkeeper out!",
+                f"{p1['id']} with a goalkeeper out, no biggie."
+            ]
         ,
         "biased_opposing": 
-            []
+            [
+                "Ahah! Goalkeeper out.",
+                "A goalkeeper out, beginner mistake.",
+                f"{p1['id']} with a goalkeeper out, come on...",
+                f"Had to be {p1['id']} with a goalkeeper out.",
+                "Goalkeeper out, ridiculous."
+            ]
     }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
