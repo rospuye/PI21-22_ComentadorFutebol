@@ -972,19 +972,49 @@ def corner_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map,
 
     lines = { 
         "neutral": 
-            []
+            [
+                "That's a corner.",
+                "Corner right there.",
+                f"And we have a corner by {p1['id']}.",
+                f"{p1['id']} did a corner now.",
+                f"A corner from {p1['id']}."
+            ]
         ,
         "aggressive": 
-            []
+            [
+                "Woah, corner!",
+                f"Woah, {p1['id']} did a corner!",
+                f"Ah! Corner by {p1['id']}!",
+                "Corner corner corner!",
+                "Attention! Corner!"
+            ]
         , 
         "friendly": 
-            [] 
+            [
+                f"{p1['id']} did a corner there, no problem!",
+                "Great, a corner!",
+                "Corner! How exciting!",
+                f"Corner from {p1['id']}, that's okay!",
+                f"{p1['id']} with a lovely corner!"
+            ] 
         ,
         "biased_supporting": 
-            []
+            [
+                "A corner, no problem!",
+                f"{p1['id']} with a corner, great player!",
+                "Corner. All great teams have setbacks!",
+                f"Corner by {p1['id']}, they'll recover!",
+                "Corner happens! No biggie."
+            ]
         ,
         "biased_opposing": 
-            []
+            [
+                "Always with the corners!",
+                f"{p1['id']} corners, what a disgrace!",
+                "Ugh, corner...",
+                f"{p1['id']} wasting our time with a corner.",
+                "Corner? Really?"
+            ]
     }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
