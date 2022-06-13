@@ -17,7 +17,7 @@ def position_to_array(position, flg=False):
     # assert len(pos) == 16
     return pos
 
-def process_log(log, prefix1, prefix2, createReplay=False, skip=1, skip_flg=False):
+def process_log(log, prefix1="/djangoProject/commentator_website_backend/business_logic/prefix1.txt", prefix2="/djangoProject/commentator_website_backend/business_logic/prefix2.txt", createReplay=False, skip=1, skip_flg=False):
     tik = time.time()
     count = 0
     flg = False
@@ -97,11 +97,11 @@ def process_log(log, prefix1, prefix2, createReplay=False, skip=1, skip_flg=Fals
 
     if createReplay:
         prefix1 = open(prefix1, "r")
-        output.append(prefix1)
+        output.append(prefix1.read())
         prefix1.close()
         output.append(f"T {left} {right}  #0000ff #ff0000\n")
         prefix2 = open(prefix2, "r")
-        output.append(prefix2)
+        output.append(prefix2.read())
         prefix2.close()
 
     c = 0
@@ -239,6 +239,7 @@ def process_log(log, prefix1, prefix2, createReplay=False, skip=1, skip_flg=Fals
     old_timestamp = timestamp
     count = 0
     for line in log:
+        
         line = line.decode()
         new_timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
         if new_timestamp==timestamp:
@@ -370,15 +371,15 @@ def process_log(log, prefix1, prefix2, createReplay=False, skip=1, skip_flg=Fals
             output.extend([ent.to_replay() for ent in entities])
         count += 1
 
-        # if count == 5000:  # 1000 ~= 40 seg
-        #     break
+        if count == 1000:  # 1000 ~= 40 seg
+            break
 
     tik1 = time.time()
     replayfile = None
     if createReplay:
         replayfile = open("replayfile.replay", "w")
         #yprint(output)
-        replayfile.write("".join(output))
+        replayfile.write("".join([x.encode() for x in output]))
         replayfile.close()
     tok1 = time.time()
     print("Writing time:", tok1 - tik1)

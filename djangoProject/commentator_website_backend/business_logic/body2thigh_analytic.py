@@ -49,10 +49,9 @@ def get_thighs(euler, isRight=True):
     RR = f_roty(-pi4)@R_rpy
     #print(RR)
 
-    cos_t2 = np.cos(t2-pi4)
-
 
     t2 = (np.arcsin(-RR[2,0]))+pi4
+    cos_t2 = np.cos(t2-pi4)
     t1 = -np.arcsin(-RR[1,0]/cos_t2) if isRight else np.arcsin(-RR[1,0]/cos_t2)
     t3 = np.pi/2-np.arccos(RR[2,1]/cos_t2)
 

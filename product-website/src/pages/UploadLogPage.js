@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
 import Title from '../components/Title'
 import DragDrop from '../components/DragDrop'
-import { Container } from 'react-bootstrap'
+import { Alert, Container } from 'react-bootstrap'
 import { Row } from 'react-bootstrap'
 import { Col } from 'react-bootstrap'
 import Img from '../images/upload.jpeg'
@@ -38,25 +38,9 @@ function UploadLogPage() {
 
   const [loading, setLoading] = useState(false)
 
+  const [hasReplay, setHasReplay] = useState(true)
+
   let navigate = useNavigate();
-
-  // // tts states
-  // const [tts, setTts] = useState(new TTS())
-  // const [hasLoadedVoices, setHasLoadedVoices] = useState(false)
-  // let hasButtonClicked = { value: false }
-
-  // useEffect(() => {
-  //   if (!tts.isSearchingVoices) {
-  //     tts.updateStateWhenVoicesLoaded(setHasLoadedVoices)
-  //   }
-  // }, [])
-
-  // useEffect(() => {
-  //   console.log("loaded voices", tts.voices)
-  //   const lang_voices = tts.getVoicesByLanguage("en")
-  //   const voices_names = tts.getVoicesByName("male", lang_voices)
-  //   tts.setVoice(voices_names[0])
-  // }, [hasLoadedVoices])
 
   function validateFormField(field) {
     if ((field.length > 0 && field.length <= 255)) {
@@ -66,7 +50,7 @@ function UploadLogPage() {
   }
 
   function processFile() {
-    if (logFile && replayFile) {
+    if (logFile && (replayFile || !hasReplay)) {
 
       if (validateFormField(title) && validateFormField(league) && validateFormField(round) && validateFormField(matchGroup)) {
 
@@ -83,6 +67,7 @@ function UploadLogPage() {
         formData.append('year', year);
         formData.append('round', round);
         formData.append('matchGroup', matchGroup);
+        formData.append('has_replay', hasReplay)
         const config = {
           headers: {
             'content-type': 'multipart/form-data',
@@ -94,13 +79,19 @@ function UploadLogPage() {
         document.getElementById('confirmBtn').disabled = true;
 
         setLoading(true)
-        axios.post(url, formData, config).then((response) => {
-          console.log(response);
-          let game_id = response.data.game_id
-          navigate('/personality/' + game_id, {state: { game_id: game_id }});
-          document.getElementById('confirmBtn').disabled = false;
-          setLoading(false)
-        });
+        axios.post(url, formData, config)
+          .then((response) => {
+            console.log(response);
+            let game_id = response.data.game_id
+            navigate('/personality/' + game_id, {state: { game_id: game_id }});
+            document.getElementById('confirmBtn').disabled = false;
+            setLoading(false)
+          })
+          .catch(err => {
+            alert("Error")
+            document.getElementById('confirmBtn').disabled = false;
+            setLoading(false)
+          })
 
       }
       else {
@@ -166,16 +157,59 @@ function UploadLogPage() {
             </Col>
           </Row>
         </Container>
+        <br/>
 
+        <Container style={{display: "flex", justifyContent: "center"}}>
+          <Form.Check
+            inline
+            label="Upload Replay File"
+            name="filetype"
+            type="radio"
+            checked={hasReplay}
+            onChange={() => setHasReplay(true)}
+          />
+          <Form.Check
+            inline
+            label="Generate Replay File"
+            name="filetype"
+            type="radio"
+            checked={!hasReplay}
+            onChange={() => setHasReplay(false)}
+          />          
+        </Container>
+
+        {!hasReplay &&
+        <Container style={{display: "flex", justifyContent: "center"}}>
+          <br/>
+          <span 
+            variant="warning"
+            style={{color: "red"}}
+          >Generating a Replay may take some minutes to proccess!</span>
+        </Container>
+        }
+        
+        
+        
         <Container>
           <Col style={{ marginLeft: '10%', marginRight: '10%' }}>
 
             <Row className='text-center' style={{ marginTop: '5%', marginBottom: '5%', display: 'flex', justifyContent: 'center' }}>
-              <h6 style={{ color: 'white' }}>Upload both a log file and a replay file of your game!</h6>
+              <h6 style={{ color: 'white' }}>
+                {hasReplay ? 
+                <>
+                Upload both a log file and a replay file of your game!
+                </>
+                :
+                <>
+                Upload a log file of your game!
+                </>
+                }
+                
+              </h6>
               <DragDrop parentCallback={handleCallback} />
             </Row>
 
-            {(logFile && replayFile) ?
+            {(logFile && (replayFile || !hasReplay)) ?
               <Row style={{ marginBottom: '5%' }}>
                 <Col style={{ paddingLeft: '20%', paddingRight: '20%' }}>
                   <Container className='logUpload'>
