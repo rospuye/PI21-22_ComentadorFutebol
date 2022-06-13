@@ -164,9 +164,6 @@ function SelectGamePage() {
                                         <Link to="/upload">
                                             <Button variant="primary" type="submit" size="lg" className='formBtn searchBoxDivInput'>Upload Your Game</Button>
                                         </Link>
-                                        <Link to="/simulator">
-                                            <Button variant="primary" type="submit" size="lg" className='formBtn searchBoxDivInput'>Connect to Simulator</Button>
-                                        </Link>
                                     </div>
                                     : <></>}
                             </Col>
