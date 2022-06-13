@@ -379,7 +379,7 @@ def process_log(log, prefix1="/djangoProject/commentator_website_backend/busines
     if createReplay:
         replayfile = open("replayfile.replay", "w")
         #yprint(output)
-        replayfile.write("".join([x.encode() for x in output]))
+        replayfile.write("".join([x for x in output]))
         replayfile.close()
     tok1 = time.time()
     print("Writing time:", tok1 - tik1)
