@@ -221,7 +221,7 @@ def outside_shot(event: str, ball: Ball, teamA: list, teamB: list, curr_timestam
             message = Out_Shot("out_shot", player=events[f"out_shot"]["player"], start=events[f"out_shot"]["start"], end=curr_timestamp)
         elif event == "goalkeeper_out":
             message = GoalKeeper_Out_Shot("goalkeeper_out_shot", player=events[f"goalkeeper_out_shot"]["player"], start=events[f"goalkeeper_out_shot"]["start"], end=curr_timestamp)
-        elif event == "corner_shot":
+        elif event == "corner":
             message = Corner_Shot("corner_shot", player=events[f"corner_shot"]["player"], start=events[f"corner_shot"]["start"], end=curr_timestamp)
         #message = Message(event=f"{event}_shot", start=events[f"{event}_shot"]["start"], end=curr_timestamp)
         events.pop(f"{event}_shot")

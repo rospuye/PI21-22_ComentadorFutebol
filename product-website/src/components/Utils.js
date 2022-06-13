@@ -72,7 +72,7 @@ export const commentaryToSSML = (text, mood, diction, gender) => {
         voice = "en-US-JennyNeural"
     }
     else if (gender.toLowerCase() == "male") {
-        voice = "en-US-BrandonNeural"
+        voice = "en-US-JasonNeural"
     }
 
     let style = null
@@ -81,6 +81,14 @@ export const commentaryToSSML = (text, mood, diction, gender) => {
     }
     else if (mood == "friendly") {
         style = "friendly"
+    }
+    else if (mood == "neutral") {
+        if (diction >=5) {
+            style = "terrified"
+        }
+        else if (diction <=5) {
+            style = "whispering"
+        }
     }
 
     let rate = 1

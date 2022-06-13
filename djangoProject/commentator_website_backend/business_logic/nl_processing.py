@@ -73,6 +73,10 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
 
     timestamp = event["start"]
     statistic = get_stats(timestamp, stats)
+
+    if not statistic:
+        return event_to_text(event, "neutral", stats, en_calm_mod, bias, teams, ["Very close game."], priority)
+
     team_supporting, team_opposing = (teams[0], teams[1]) if (bias < 0) else (teams[1], teams[0])
     p1 = None
     if event["event"] in ["short_pass", "long_pass"]:
@@ -276,10 +280,10 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
 
         line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
         lines = []
-        if performing_well_goals: lines.append(lines_goals[line_type]["performing_well"])
-        else: lines.append(lines_goals[line_type]["performing_poorly"])
-        if performing_well_poss: lines.append(lines_posession[line_type]["performing_well"])
-        else: lines.append(lines_posession[line_type]["performing_poorly"])
+        if performing_well_goals: lines + lines_goals[line_type]["performing_well"]
+        else: lines + lines_goals[line_type]["performing_poorly"]
+        if performing_well_poss: lines + lines_posession[line_type]["performing_well"]
+        else: lines + lines_posession[line_type]["performing_poorly"]
     else:
         # Lines about the game or a team
         team = random.choice(["Left","Right"])
@@ -470,11 +474,11 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
         line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
         lines = []
         if not tied:
-            if performing_well_goals: lines.append(lines_goals[line_type]["performing_well"])
-            else: lines.append(lines_goals[line_type]["performing_poorly"])
+            if performing_well_goals: lines + lines_goals[line_type]["performing_well"]
+            else: lines + lines_goals[line_type]["performing_poorly"]
         if not tied_possession:
-            if performing_well_poss: lines.append(lines_posession[line_type]["performing_well"])
-            else: lines.append(lines_posession[line_type]["performing_poorly"])
+            if performing_well_poss: lines + lines_posession[line_type]["performing_well"]
+            else: lines + lines_posession[line_type]["performing_poorly"]
         if not lines:
             lines.append("Very close game.")
 
@@ -677,6 +681,12 @@ def dribble_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map
     }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
+    print("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
+    print(f"{line_type = }")
+    print(f"{lines[line_type] = }")
+    # if line_type == "aggressive":
+    #     print("AA")
+    #     print(lines[line_type])
     return event_to_text(event, line_type, stats, en_calm_mod, bias, teams, lines[line_type], priority)
 
 def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams, priority):
@@ -997,8 +1007,8 @@ def defense_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map
     #         return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map)
 
     args = event["args"]
-    team = team[1] if args["player"]["team"] else team[0]
-    supporting = True if (team == "Right") == (bias > 0) else False
+    team = teams[1] if args["player"]["team"] else teams[0]
+    supporting = True if args["player"]["team"] == (bias > 0) else False
     team_supporting, team_opposing = (teams[0], teams[1]) if (bias < 0) else (teams[1], teams[0])
 
 
@@ -1126,7 +1136,7 @@ def corner_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map,
         return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams)
 
     args = event["args"]
-    team = team[1] if args["player"]["team"] else team[0]
+    team = teams[1] if args["player"]["team"] else teams[0]
     supporting = True if args["player"]["team"] == (bias > 0) else False
     team_supporting, team_opposing = (teams[0], teams[1]) if (bias < 0) else (teams[1], teams[0])
 
@@ -1191,7 +1201,7 @@ def out_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, te
         return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams)
 
     args = event["args"]
-    team = team[1] if args["player"]["team"] else team[0]
+    team = teams[1] if args["player"]["team"] else teams[0]
     supporting = True if args["player"]["team"] == (bias > 0) else False
     team_supporting, team_opposing = (teams[0], teams[1]) if (bias < 0) else (teams[1], teams[0])
 
@@ -1256,7 +1266,7 @@ def goalkeeper_out_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_n
         return statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams)
 
     args = event["args"]
-    team = team[1] if args["player"]["team"] else team[0]
+    team = teams[1] if args["player"]["team"] else teams[0]
     supporting = True if args["player"]["team"] == (bias > 0) else False
     team_supporting, team_opposing = (teams[0], teams[1]) if (bias < 0) else (teams[1], teams[0])
 
@@ -1317,12 +1327,17 @@ def event_to_text(event, type, stats, en_calm_mod, bias, teams, lines=None, prio
     # print(f"event_to_text {stats = }")
     if lines is None:
         lines = []
+
+    if len(lines) < 1:
+        #print(type, event["event"])
+        pass
+    
     for line in lines:
         if remove_players(line, teams) in lines_repeated.queue:
             lines.remove(line)
 
     if len(lines) == 0:
-        phrase = "Not implemented with those parameters."
+        phrase = ""
     else:
         n = random.randint(0, len(lines) - 1)
         phrase = lines[n]
@@ -1352,11 +1367,11 @@ def event_to_text(event, type, stats, en_calm_mod, bias, teams, lines=None, prio
 def remove_players(line, teams):
     names = ["Dinis", "Isabel", "Afonso", "Miguel", "Lucius", "Joanne", "Louis", "Camila", \
         "Dianne", "Amber", "Carl", "Martha", "Bob", "Helen", "Joseph", "Josephine", "Gared", \
-        "Ursula", "Bernard"] + teams
+        "Ursula", "Bernard", "Kimberly", "Troy", "Ginny"] + teams
 
-    l = ""
+    l = line
     for name in names:
-        l = line.replace(name, "")
+        l = l.replace(name, "")
 
     return l
 
@@ -1484,11 +1499,11 @@ def generate_player_names():
         "Ursula", "Bernard", "Kimberly", "Troy", "Ginny"]
 
     random.shuffle(names)
-    for i in range(11):
+    for i in range(1, 12):
         idLeft = "matNum" + str(i) + "matLeft"
         idRight = "matNum" + str(i) + "matRight"
-        ret[idLeft] = names[i]
-        ret[idRight] = names[i+11]
+        ret[idLeft] = names[i-1]
+        ret[idRight] = names[i+11-1]
 
     return ret
 
