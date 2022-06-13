@@ -280,10 +280,10 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
 
         line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
         lines = []
-        if performing_well_goals: lines + lines_goals[line_type]["performing_well"]
-        else: lines + lines_goals[line_type]["performing_poorly"]
-        if performing_well_poss: lines + lines_posession[line_type]["performing_well"]
-        else: lines + lines_posession[line_type]["performing_poorly"]
+        if performing_well_goals: lines = lines + lines_goals[line_type]["performing_well"]
+        else: lines = lines + lines_goals[line_type]["performing_poorly"]
+        if performing_well_poss: lines = lines + lines_posession[line_type]["performing_well"]
+        else: lines = lines + lines_posession[line_type]["performing_poorly"]
     else:
         # Lines about the game or a team
         team = random.choice(["Left","Right"])
@@ -474,11 +474,11 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
         line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
         lines = []
         if not tied:
-            if performing_well_goals: lines + lines_goals[line_type]["performing_well"]
-            else: lines + lines_goals[line_type]["performing_poorly"]
+            if performing_well_goals: lines = lines + lines_goals[line_type]["performing_well"]
+            else: lines = lines + lines_goals[line_type]["performing_poorly"]
         if not tied_possession:
-            if performing_well_poss: lines + lines_posession[line_type]["performing_well"]
-            else: lines + lines_posession[line_type]["performing_poorly"]
+            if performing_well_poss: lines = lines + lines_posession[line_type]["performing_well"]
+            else: lines = lines + lines_posession[line_type]["performing_poorly"]
         if not lines:
             lines.append("Very close game.")
 
@@ -681,12 +681,6 @@ def dribble_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map
     }
 
     line_type = dice_roll(agr_frnd_mod, bias != 0, supporting)
-    print("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
-    print(f"{line_type = }")
-    print(f"{lines[line_type] = }")
-    # if line_type == "aggressive":
-    #     print("AA")
-    #     print(lines[line_type])
     return event_to_text(event, line_type, stats, en_calm_mod, bias, teams, lines[line_type], priority)
 
 def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams, priority):
@@ -1329,9 +1323,9 @@ def event_to_text(event, type, stats, en_calm_mod, bias, teams, lines=None, prio
         lines = []
 
     if len(lines) < 1:
-        #print(type, event["event"])
+        print(type, event["event"])
         pass
-    
+
     for line in lines:
         if remove_players(line, teams) in lines_repeated.queue:
             lines.remove(line)
