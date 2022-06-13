@@ -304,7 +304,7 @@ def detect_aggressions(teamA: list, teamB: list, ball: Ball, events, distance_ma
 
             for i in range(len(positions1)):
                 pos1: Position = positions1[i]
-
+                
                 positions2: list = entity2.get_recent_positions()
                 pos2: Position = positions2[i]
 

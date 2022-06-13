@@ -3,6 +3,7 @@ import sys
 import re
 import copy
 import time
+
 from .entities import Position, Entity, Ball, Player
 from .heuristics import process
 from .analytics import analytics, get_analytics
@@ -16,37 +17,7 @@ def position_to_array(position, flg=False):
     # assert len(pos) == 16
     return pos
 
-
-def order_by_distance_to_ball(entities):
-    "Given the entities, returns their position relative to the Ball entity"
-
-    ball = entities[0]
-    players = entities[1:]
-
-    teamLeft = []
-    teamRight = []
-
-    for player in players:
-        player.x -= ball.x
-        player.y -= ball.y
-        player.z -= ball.z
-        player.distance_to_ball = math.sqrt(player.x ** 2 + player.y ** 2 + player.z ** 2)
-
-        teamLeft.append(player) if "Left" in player.id else teamRight.append(player)
-
-    teamLeft.sort(key=lambda p: p.distance_to_ball)
-    teamRight.sort(key=lambda p: p.distance_to_ball)
-
-    return [ball] + teamLeft + teamRight
-
-
-def write_to_file(timestamp, entities, output):
-    output_str = f"{timestamp}," + "".join([entity.to_csv() for entity in entities]).rstrip(",")
-
-    output.write(output_str + "\n")
-
-
-def process_log(log, skip=1, skip_flg=False):
+def process_log(log, prefix1="/djangoProject/commentator_website_backend/business_logic/prefix1.txt", prefix2="/djangoProject/commentator_website_backend/business_logic/prefix2.txt", createReplay=False, skip=1, skip_flg=False):
     tik = time.time()
     count = 0
     flg = False
@@ -54,6 +25,7 @@ def process_log(log, skip=1, skip_flg=False):
 
     fieldParams = {}
     goalParams = {}
+    replayParams = {}
     entities = []
     events_dict = {}
     formation_counts = {}
@@ -62,23 +34,56 @@ def process_log(log, skip=1, skip_flg=False):
     timestamp = 0
     left = ""
     right = ""
+    play_modes = []
+    curr_playmode = 0
+
+    output = []
+
     # ((FieldLength 30)(FieldWidth 20)(FieldHeight 40)(GoalWidth 2.1)(GoalDepth 0.6)(GoalHeight 0.8)
     for line in log:
+        count += 1
         line = line.decode()
+
+        if not play_modes and "play_modes" in line:
+            modes = re.findall("\(play_modes .*?\)", line)[0]
+            play_modes = [mode for mode in modes.rstrip(")").split(" ")[1:]]
+
+        if "play_mode" in line:
+            mode = re.findall("\(play_mode \d+\)", line)[0]
+            curr_playmode = int(mode.rstrip(")").split(" ")[1])
+
+        timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
+
+
         if not ("FieldLength" in line and "FieldWidth" in line):
             continue
         tmp = re.split('\s|\)', line)
         fieldParams["length"] = float(tmp[1])
-        print("Length:", fieldParams["length"])
+        #print("Length:", fieldParams["length"])
         fieldParams["width"] = float(tmp[3])
-        print("Width:", fieldParams["width"])
+        #print("Width:", fieldParams["width"])
+        fieldParams["height"] = float(tmp[5])
+        #print("Height:", fieldParams["height"])
         goalParams["width"] = float(tmp[7])
-        print("Goal Width:", goalParams["width"])
+        #print("Goal Width:", goalParams["width"])
         goalParams["depth"] = float(tmp[9])
-        print("Goal Depth:", goalParams["depth"])
+        #print("Goal Depth:", goalParams["depth"])
         goalParams["height"] = float(tmp[11])
-        print("Goal Height:", goalParams["height"])
+        #print("Goal Height:", goalParams["height"])
+        replayParams["BorderSize"] = tmp[13]
+        replayParams["FreeKickDistance"] = tmp[15]
+        replayParams["WaitBeforeKickOff"] = tmp[17]
+        replayParams["AgentRadius"] = tmp[19]
+        replayParams["BallRadius"] = tmp[21]
+        replayParams["BallMass"] = tmp[23]
+        replayParams["RuleGoalPauseTime"] = tmp[25]
+        replayParams["RuleKickInPauseTime"] = tmp[27]
+        replayParams["RuleHalfTime"] = tmp[29]
+        replayParams["half"] = tmp[31]
+        replayParams["score_left"] = tmp[33]
+        replayParams["score_right"] = tmp[35]
         break
+
     for line in log:
         line = line.decode()
         tmp = re.findall("\(team_left .*?\)", line)
@@ -89,8 +94,19 @@ def process_log(log, skip=1, skip_flg=False):
             right = tmp2[0].split(" ")[1].rstrip(")")
         if left and right:
             break
+
+    if createReplay:
+        prefix1 = open(prefix1, "r")
+        output.append(prefix1.read())
+        prefix1.close()
+        output.append(f"T {left} {right}  #0000ff #ff0000\n")
+        prefix2 = open(prefix2, "r")
+        output.append(prefix2.read())
+        prefix2.close()
+
     c = 0
     for line in log:
+        count += 1
         line = line.decode()
         tmp = re.findall("soccerball.obj|models/naobody", line)
         c += 1
@@ -109,6 +125,7 @@ def process_log(log, skip=1, skip_flg=False):
             tmp4 = [(tmp[i - 2].strip(), re.findall(pattern, tmp[i])[0], i) for i in range(len(tmp)) if
                     re.search("naobody", tmp[i])]
             tmp5 = [(tmp[i - 1].strip(), i - 1, tmp[i]) for i in range(len(tmp)) if re.search("rfoot|lfoot", tmp[i])]
+            
             for pos, n, i in tmp4:
                 l = n.split(" ")
                 robotID = l[1] + l[2]
@@ -118,6 +135,68 @@ def process_log(log, skip=1, skip_flg=False):
                 robot = Player(id=robotID, index=i, offset=2, team=team)
                 robot.add_position(position)
                 entities.append(robot)
+
+            ent_idx = 0
+            n_foot = 0
+            if createReplay:
+                for i in range(len(tmp)):
+                    robot = entities[ent_idx]
+
+                    if "naobody" in tmp[i]:
+                        ent_idx += 1
+                        n_foot = 0
+                    elif "head" in tmp[i]:
+                        robot.headIndex = i-2
+                        robot.head_pos = position_to_array(tmp[i-2])
+                        robot.add_joint("head")
+                    elif "rupperarm" in tmp[i]:
+                        robot.rupperarmIndex = i-1
+                        robot.rupperarm_pos = position_to_array(tmp[i-1])
+                        robot.add_joint("rupperarm")
+                    elif "rlowerarm" in tmp[i]:
+                        robot.rlowerarmIndex = i-1
+                        robot.rlowerarm_pos = position_to_array(tmp[i-1])
+                        robot.add_joint("rlowerarm")
+                    elif "lupperarm" in tmp[i]:
+                        robot.lupperarmIndex = i-1
+                        robot.lupperarm_pos = position_to_array(tmp[i-1])
+                        robot.add_joint("lupperarm")
+                    elif "llowerarm" in tmp[i]:
+                        robot.llowerarmIndex = i-1
+                        robot.llowerarm_pos = position_to_array(tmp[i-1])
+                        robot.add_joint("llowerarm")
+                    elif "rthigh" in tmp[i]:
+                        robot.rthighIndex = i-1
+                        robot.rthigh_pos = position_to_array(tmp[i-1])
+                        robot.init_thigh(robot.rthigh_pos, True)
+                        robot.add_joint("rthigh")
+                    elif "rshank" in tmp[i]:
+                        robot.rshankIndex = i-1
+                        robot.rshank_pos = position_to_array(tmp[i-1])
+                        robot.add_joint("rshank")
+                    elif "rfoot" in tmp[i]:
+                        n_foot += 1
+                        if n_foot > 2:
+                            robot.has_extra_foot = True
+                        robot.rfootIndex = i-1
+                        robot.rfoot_pos = position_to_array(tmp[i-1])
+                        robot.add_joint("rfoot")
+                    elif "lthigh" in tmp[i]:
+                        robot.lthighIndex = i-1
+                        robot.lthigh_pos = position_to_array(tmp[i-1])
+                        robot.init_thigh(robot.lthigh_pos, False)
+                        robot.add_joint("lthigh")
+                    elif "lshank" in tmp[i]:
+                        robot.lshankIndex = i-1
+                        robot.lshank_pos = position_to_array(tmp[i-1])
+                        robot.add_joint("lshank")
+                    elif "lfoot" in tmp[i]:
+                        n_foot += 1
+                        if n_foot > 2:
+                            robot.has_extra_foot = True
+                        robot.lfootIndex = i-1
+                        robot.lfoot_pos = position_to_array(tmp[i-1])
+                        robot.add_joint("lfoot")
 
             for pos, i, foot_dir in tmp5:
                 position_array = position_to_array(pos)
@@ -143,25 +222,44 @@ def process_log(log, skip=1, skip_flg=False):
             messages, form, form_players = process(entities, fieldParams, goalParams, timestamp, events_dict, formation_counts, form, form_players)
             events += messages
 
+            
             break
 
     for line in log:
+        count += 1
         line = line.decode()
         new_timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
         if new_timestamp != timestamp:
             break
 
+    #output.append(f"S {timestamp} {play_modes[curr_playmode]} 0 0\n")
+    #for i in range(count):
+    #output.extend([ent.to_replay() for ent in entities])
+
     old_timestamp = timestamp
     count = 0
     for line in log:
+        
         line = line.decode()
         new_timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
         if new_timestamp==timestamp:
             continue
         timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
+
         if old_timestamp == timestamp:
             break
         old_timestamp = timestamp
+        # print(timestamp)
+        # if timestamp > 5:
+            
+        #     # for ent in entities[1:]:
+        #     #     print(f"{ent.id}, time: {ent.joint_time/ent.count}, {ent.rthigh_time/ent.rthigh_count}, {ent.lthigh_time/ent.lthigh_count}")
+        #     #     print(f"{ent.id}, time: {ent.joint_time}, {ent.rthigh_time}, {ent.lthigh_time}")
+
+
+        #     break
+
+
         if not skip_flg or not count % skip == 0:
             tmp = re.split("\(nd", line)
             had_changes = [False] * len(entities)
@@ -179,14 +277,73 @@ def process_log(log, skip=1, skip_flg=False):
                     rIndex = entity.rfootIndex
                     lIndex = entity.lfootIndex
 
+                    if createReplay:
+
+                        headIndex = entity.headIndex
+                        rupperarmIndex = entity.rupperarmIndex
+                        rlowerarmIndex = entity.rlowerarmIndex
+                        lupperarmIndex = entity.lupperarmIndex
+                        llowerarmIndex = entity.llowerarmIndex
+                        rthighIndex = entity.rthighIndex
+                        rshankIndex = entity.rshankIndex
+                        lthighIndex = entity.lthighIndex
+                        lshankIndex = entity.lshankIndex
+
+                        rfootIndex = entity.rfootIndex
+                        lfootIndex = entity.lfootIndex
+
+                        if tmp[headIndex]:
+                            #print(tmp)
+                            #had_changes[idx] = True
+                            entity.head_pos = position_to_array(tmp[headIndex].strip())
+                            entity.add_joint("head")
+                        if tmp[rupperarmIndex]:
+                            #had_changes[idx] = True
+                            entity.rupperarm = position_to_array(tmp[rupperarmIndex].strip())
+                            entity.add_joint("rupperarm")
+                        if tmp[rlowerarmIndex]:
+                            #had_changes[idx] = True
+                            entity.rlowerarm = position_to_array(tmp[rlowerarmIndex].strip())
+                            entity.add_joint("rlowerarm")
+                        if tmp[lupperarmIndex]:
+                            #had_changes[idx] = True
+                            entity.lupperarm = position_to_array(tmp[lupperarmIndex].strip())
+                            entity.add_joint("lupperarm")
+                        if tmp[llowerarmIndex]:
+                            #had_changes[idx] = True
+                            entity.llowerarm = position_to_array(tmp[llowerarmIndex].strip())
+                            entity.add_joint("llowerarm")
+                        if tmp[rthighIndex]:
+                            #had_changes[idx] = True
+                            entity.rthigh = position_to_array(tmp[rthighIndex].strip())
+                            entity.add_joint("rthigh")
+                        if tmp[rshankIndex]:
+                            #had_changes[idx] = True
+                            entity.rshank = position_to_array(tmp[rshankIndex].strip())
+                            entity.add_joint("rshank")
+                        if tmp[lthighIndex]:
+                            had_changes[idx] = True
+                            entity.lthigh = position_to_array(tmp[lthighIndex].strip())
+                            entity.add_joint("lthigh")
+                        if tmp[lshankIndex]:
+                            #had_changes[idx] = True
+                            entity.lshank = position_to_array(tmp[lshankIndex].strip())
+                            entity.add_joint("lshank")
+
                     if tmp[rIndex]:
                         had_changes[idx] = True
                         new_pos = Position(position=position_to_array(tmp[rIndex].strip()), timestamp=timestamp)
                         entity.add_position_rfoot(new_pos)
+                        entity.rfoot = position_to_array(tmp[rIndex].strip())
+                        if createReplay:
+                            entity.add_joint("rfoot")
                     if tmp[lIndex]:
                         had_changes[idx] = True
                         new_pos = Position(position=position_to_array(tmp[lIndex].strip()), timestamp=timestamp)
                         entity.add_position_lfoot(new_pos)
+                        entity.lfoot = position_to_array(tmp[lIndex].strip())
+                        if createReplay:
+                            entity.add_joint("lfoot")
 
             # If at least one entity has an updated value, other entities who didn't update should repeat the last position
             if any(had_changes):
@@ -209,11 +366,25 @@ def process_log(log, skip=1, skip_flg=False):
 
             messages, form, form_players = process(entities, fieldParams, goalParams, timestamp, events_dict, formation_counts, form, form_players)
             events += messages
+
+            output.append(f"S {timestamp} {play_modes[curr_playmode]} 0 0\n")
+            output.extend([ent.to_replay() for ent in entities])
         count += 1
 
-        # if count == 5000:  # 1000 ~= 40 seg
-        #     break
+        if count == 1000:  # 1000 ~= 40 seg
+            break
 
+    tik1 = time.time()
+    replayfile = None
+    if createReplay:
+        replayfile = open("replayfile.replay", "w")
+        #yprint(output)
+        replayfile.write("".join([x for x in output]))
+        replayfile.close()
+    tok1 = time.time()
+    print("Writing time:", tok1 - tik1)
+
+    #replayfile.close()
     tok = time.time()
     elapsed = tok - tik
     print("Event detection in:", elapsed)
@@ -240,11 +411,13 @@ def process_log(log, skip=1, skip_flg=False):
     elapsed2 = tok - tik
     print("Analytics gathered in:", elapsed2)
     print("Total processing time:", elapsed+elapsed2)
-    return events, analytics_log, form, form_players, [left, right]
+    
+    return events, analytics_log, form, form_players, [left, right], replayfile
 
 
 if __name__ == "__main__":
-    log = sys.argv[1]
+    log = open("test1.log", "r")
+    
     skip_lines = 1
     flg = False
     if len(sys.argv) > 2:
@@ -252,3 +425,24 @@ if __name__ == "__main__":
         skip_lines = int(sys.argv[2])
     events = process_log(log, skip=skip_lines, skip_flg=flg)
     print("Log processed!")
+
+    # n_fails = [x for x in range(10,21)]
+    # init_fact = [1/x for x in range(1, 21)]
+
+    # for i in n_fails:
+    #     for j in init_fact:
+    #         N_FAILS = i
+    #         INIT_FACT = j
+    #         print(f"{N_FAILS},{INIT_FACT},", end="")
+    #         for n in range(3):
+    #             log = open("test1.log", "r")
+
+    #             set_vars(N_FAILS, INIT_FACT)
+
+    #             tic = time.time()
+    #             process_log(log, skip=skip_lines, skip_flg=flg)
+    #             toc = time.time()
+    #             log.close()
+    #             print(f"{toc - tic},", end="")
+    #         print()
+                

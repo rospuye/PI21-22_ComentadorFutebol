@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
+from django.core.files import File
 import json
 
 from djangoProject.permissions import IsOwnerOrIsAdmin
@@ -51,6 +52,7 @@ def new_register(request):
     except django.db.utils.IntegrityError:
         return JsonResponse({"message": "username_already_in_use"})
 
+
 class UserList(generics.ListAPIView):
     # Access only to the admin
     permission_classes = [permissions.IsAdminUser]
@@ -93,7 +95,8 @@ def game_generate_script(request, i):
 def file_upload(request):
     print("File uploaded.")
     log_file = request.FILES['logFile']
-    replay_file = request.FILES['replayFile']
+    replay_file = None
+    hasReplay = 'replayFile' in request.FILES
     data = request.data
     title = data["title"]
     description = data["description"]
@@ -102,9 +105,18 @@ def file_upload(request):
     try:
         year = int(data["year"])
     except:
+        print("ERROR 1")
         return JsonResponse({"message": "Year invalid"})
     roud = data["round"]
     match_group = data["matchGroup"]
+
+    print(f"{data['has_replay'] = }")
+    try:
+        has_replay = True if data["has_replay"] == "true" else False
+    except:
+        print("ERROR 2")
+        return JsonResponse({"message": "has_replay invalid"})
+    print(f"{has_replay = }")
 
     user = request.user
     if user.is_anonymous:
@@ -116,14 +128,15 @@ def file_upload(request):
         return JsonResponse({"error": "Reached number of games by given user."})
 
     try:
-        events, analytics, form, form_players, teams = process_log(log_file)
+        events, analytics, form, form_players, teams, rep_file = process_log(log_file, createReplay=not has_replay)
     except AssertionError:
         return JsonResponse({"error": "Processing Failed"})
 
     json_response = {"events": [], "form": form, "form_players": form_players, "teams": teams}
 
-    if len(events) < 10:
-        return Response({"error": "Processing Failed"})
+    # if len(events) < 10:
+    #     print("ERROR 3")
+    #     return Response({"error": "Processing Failed"})
 
     for event in events:
         json_response["events"].append(event.to_json())
@@ -135,13 +148,24 @@ def file_upload(request):
             analytics[timestamp]["players"][player] = analytics[timestamp]["players"][player].to_json()
     json_response["stats"] = analytics
 
+    if hasReplay:
+        replay_file = request.FILES['replayFile']
+    else:
+        replay_file = File( open("replayfile.replay", "r"))
+        
+        
+
+
     game = Game(replay_file=replay_file, title=title, description=description, user=user,
                 is_public=is_public, league=league, year=year, round=roud, match_group=match_group,
                 processed_data=json_response)
 
     game.save()
 
-    serializer = GameSerializer(game)
-    print(serializer.data['id'])
-    return Response({'game_id': serializer.data['id']})
+    if not hasReplay:
+        replay_file.close()
+        rep_file.close()
 
+    serializer = GameSerializer(game)
+    print("ID", serializer.data['id'])
+    return Response({'game_id': serializer.data['id']})
