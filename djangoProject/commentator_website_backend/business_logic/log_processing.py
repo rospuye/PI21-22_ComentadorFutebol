@@ -57,6 +57,8 @@ def process_log(log, skip=1, skip_flg=False):
     entities = []
     events_dict = {}
     formation_counts = {}
+    form = []
+    form_players = dict()
     timestamp = 0
     left = ""
     right = ""
@@ -138,7 +140,7 @@ def process_log(log, skip=1, skip_flg=False):
                         break
 
 
-            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp, events_dict, formation_counts)
+            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp, events_dict, formation_counts, form, form_players)
             events += messages
 
             break
@@ -205,7 +207,7 @@ def process_log(log, skip=1, skip_flg=False):
                             entity.add_position_lfoot(new_pos)
 
 
-            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp, events_dict, formation_counts)
+            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp, events_dict, formation_counts, form, form_players)
             events += messages
         count += 1
 
