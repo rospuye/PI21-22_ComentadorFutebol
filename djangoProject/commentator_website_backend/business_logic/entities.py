@@ -1,58 +1,11 @@
 import math
 import numpy as np
-import MDAnalysis as mda
 from body2thigh_analytic import get_thighs
 import time
 from scipy.spatial.transform import Rotation as R
 
 POSITIONS_SIZE = 2 # TODO random choice ()
 
-def rotation_from_matrix(matrix):
-    """Return rotation angle and axis from rotation matrix.
-    >>> angle = (random.random() - 0.5) * (2*math.pi)
-    >>> direc = np.random.random(3) - 0.5
-    >>> point = np.random.random(3) - 0.5
-    >>> R0 = rotation_matrix(angle, direc, point)
-    >>> angle, direc, point = rotation_from_matrix(R0)
-    >>> R1 = rotation_matrix(angle, direc, point)
-    >>> is_same_transform(R0, R1)
-    True
-    """
-    R = np.array(matrix, dtype=np.float64, copy=False)
-    R33 = R[:3, :3]
-    # direction: unit eigenvector of R33 corresponding to eigenvalue of 1
-    l, W = np.linalg.eig(R33.T)
-    i = np.where(abs(np.real(l) - 1.0) < 1e-4)[0]
-    if not len(i):
-        print(matrix)
-        u0 = matrix[0,0:3]
-        u1 = matrix[1,0:3]
-        u2 = matrix[2,0:3]
-        print(np.linalg.norm(u0), np.linalg.norm(u1), np.linalg.norm(u2))
-        raise ValueError("no unit eigenvector corresponding to eigenvalue 1")
-    direction = np.real(W[:, i[-1]]).squeeze()
-    # point: unit eigenvector of R33 corresponding to eigenvalue of 1
-    l, Q = np.linalg.eig(R)
-    i = np.where(abs(np.real(l) - 1.0) < 1e-4)[0]
-    if not len(i):
-        print(matrix)
-        u0 = matrix[0,0:3]
-        u1 = matrix[1,0:3]
-        u2 = matrix[2,0:3]
-        print(np.linalg.norm(u0), np.linalg.norm(u1), np.linalg.norm(u2))
-        raise ValueError("no unit eigenvector corresponding to eigenvalue 1")
-    point = np.real(Q[:, i[-1]]).squeeze()
-    point /= point[3]
-    # rotation angle depending on direction
-    cosa = (np.trace(R33) - 1.0) / 2.0
-    if abs(direction[2]) > 1e-8:
-        sina = (R[1, 0] + (cosa - 1.0) * direction[0] * direction[1]) / direction[2]
-    elif abs(direction[1]) > 1e-8:
-        sina = (R[0, 2] + (cosa - 1.0) * direction[0] * direction[2]) / direction[1]
-    else:
-        sina = (R[2, 1] + (cosa - 1.0) * direction[1] * direction[2]) / direction[0]
-    angle = math.atan2(sina, cosa)
-    return angle, direction, point
 
 def get_quaternion(arr):
     r90 = np.array([[0, -1, 0, 0], [1, 0, 0, 0], [0, 0, 1, 0], [0, 0 ,0 ,1]])
@@ -76,10 +29,12 @@ def get_quaternion(arr):
     #print("V", v)
 
     V1 = r90@r
-    V2 = rotation_from_matrix(V1)
-    #print(V2)
-    q = mda.lib.transformations.quaternion_about_axis(V2[0], V2[1])
-    return [-q[0], -q[2], q[1], -q[3]]
+
+    V1[:3, 3] = 0
+    q = R.from_matrix(V1[:3, :3]).as_quat()
+
+    #return [-q[0], -q[2], q[1], -q[3]]
+    return [-q[3], -q[1], q[0], -q[2]]
 
 def get_euler_angles(pos, pos_r):
 
