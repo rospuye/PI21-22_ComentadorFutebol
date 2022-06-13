@@ -52,7 +52,7 @@ class Bounded_Queue():
             return self.queue.pop(0)
         else: return None
 
-lines_repeated = Bounded_Queue(25)
+lines_repeated = Bounded_Queue(20)
 
 def dice_roll(mod, bias : bool, supporting : bool):
     """Returns the type of the next line based on the given modifier and bias."""
@@ -105,49 +105,85 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
                         [
                             f"{p1['id']} has scored {goal_num} goals this match",
                             f"{p1['id']} is one of the few players who has scored a goal",
-                            f"{p1['id']} "
+                            f"{p1['id']} is one of this matche's goal scorers"
                         ]
                     ,
                     "performing_poorly": # no goals?
                         [
                             f"{p1['id']} hasnt scored yet this match",
+                            f"{p1['id']} has scored 0 goals so far",
+                            f"{p1['id']} has had no goals so far"
+
                         ]
                 }
             ,
             "aggressive": 
                 {
                     "performing_well": # goals?
-                        []
+                        [
+                            f"{p1['id']} has scored a goal this match, like a machine gun!",
+                            f"{goal_num} goals so far for {p1['id']} this match, at least they brought us some action!",
+                            f"{p1['id']} has scored a goal so far, hopefully it won't be too long until the next one..."
+                        ]
                     ,
                     "performing_poorly": # no goals?
-                        []
+                        [
+                            f"no goals from {p1['id']} so far, come on, we're waiting for some action!",
+                            f"nothing to be said about {p1['id']}'s scoring capabilities, they haven't done anything yet!",
+                            f"Sigh... {p1['id']} has had no goals so far.",
+                        ]
                 }
             , 
             "friendly": 
                 {
                     "performing_well": # goals?
-                        []
+                        [
+                            f"we've already seen some wonderful goal scoring technique by {p1['id']} this match",
+                            f"{p1['id']} is one of the few who've scored! Keep up the great job!",
+                            f"Incredible, {p1['id']} has already scored {goal_num} goals this match!",
+                        ]
                     ,
                     "performing_poorly": # no goals?
-                        []
+                        [
+                            f"{p1['id']} hasn't scored yet, but will they be this match's next goal scorer? Stay tuned!",
+                            f"{p1['id']} has had no goals so far, but that doesn't mean they might not get one soon!",
+                            f"I believe in you {p1['id']}! You'll score your first goal really really soon!"
+                        ]
                 } 
             ,
             "biased_supporting": 
                 {
                     "performing_well": # goals?
-                        []
+                        [
+                            f"{p1['id']} has scored a goal for their incredible team {team_supporting}",
+                            f"Incredible player {p1['id']} has scored {goal_num} fantastic goals this match",
+                            f"{p1['id']} has scored a goal this match, bringing their team {team_supporting} some deserved advantage."
+                        ]
                     ,
                     "performing_poorly": # no goals?
-                        []
+                        [
+                            f"{p1['id']} hasn't scored yet, but with the support of the great {team_supporting} team I'm sure they will soon",
+                            f"{p1['id']} has had no goals yet, but soon they will bring {team_supporting} their rightful advantage",
+                            f"{p1['id']} hasn't had a goal yet but this great player surely won't let that discourage them",
+                        ]
                 }
             ,
             "biased_opposing": 
                 {
                     "performing_well": # goals?
-                        []
+                        [
+                            f"{p1['id']} has scored some goals... so what",
+                            f"{p1['id']} has scored {goal_num} goals this match... must've been luck",
+                            f"{p1['id']} has scored for their lucky lucky team",
+                            f"{p1['id']} has {goal_num} goals... please don't be in a hurry to score any more",
+                        ]
                     ,
                     "performing_poorly": # no goals?
-                        []
+                        [
+                            f"{p1['id']} from {team_opposing} has scored no goals yet, unsurprisingly",
+                            f"{p1['id']} has had 0 goals so far, but please, have no hurry in scoring dear!",
+                            f"{p1['id']} isn't being a big asset to {team_opposing}, with their 0 goals so far...",
+                        ]
                 }
         }
 
@@ -155,46 +191,86 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
             "neutral": 
                 {
                     "performing_well": # poss > avg -> doing well
-                        []
+                        [
+                            f"{p1['id']} has had control of the ball most of the match",
+                            f"{p1['id']} is one of the players who has performed better at keeping the ball within the team",
+                            f"{p1['id']} has been consistent at keeping the ball at their feet"
+                        ]
                     ,
                     "performing_poorly": 
-                        []
+                        [
+                            f"{p1['id']} has had a lower than average performance at controlling the ball",
+                            f"{p1['id']} hasn't had huge success in keeping the ball",
+                            f"we haven't seen much of {p1['id']} this match"
+                        ]
                 }
             ,
             "aggressive": 
                 {
                     "performing_well": 
-                        []
+                        [
+                            f"{p1['id']} has been good at keeping the ball from everyone else, truly individualistic",
+                            f"no one has been able to take the ball from {p1['id']}'s feet, what a warrior",
+                            f"if there's something we've learned from {p1['id']} this match, is that they will keep the ball tot ehmselves no matter what",
+                        ]
                     ,
                     "performing_poorly":
-                        []
+                        [
+                            f"{p1['id']} has hardly touched the ball this match, keep up!",
+                            f"we've seen nothing special from {p1['id']} so far, they've hardly touched the ball",
+                            f"{p1['id']} really needs to do something soon, they've hardly been seen with the ball this match",
+                        ]
                 }
             , 
             "friendly": 
                 {
                     "performing_well":
-                        []
+                        [
+                            f"{p1['id']} has been great at keeping the ball this match, keep it up!",
+                            f"{p1['id']} is truly a player to behold, they are one of the player with the most ball control this match",
+                            f"we've been seeing a great performance by {p1['id']} who has had astonishingly good ball possession"
+                        ]
                     ,
                     "performing_poorly":
-                        []
+                        [
+                            f"{p1['id']} hasn't been the player with most ball control so far, but that doesn't mean they can't turn that around!",
+                            f"{p1['id']} hasn't been seen with the ball much, but I'm sure they won't give up!",
+                            f"we haven't seen much from {p1['id']} so far this match, can't see what they have in store for the rest of the game",
+                        ]
                 } 
             ,
             "biased_supporting": 
                 {
                     "performing_well":
-                        []
+                        [
+                            f"{p1['id']} is a formidable player from a formidable team who has kept the ball at their feet most of the match",
+                            f"{p1['id']} is truly shinning for their team, the ball won't leave their feet",
+                            f"we've been seeing a great performance by {p1['id']} who has had astonishingly good ball possession"
+                        ]
                     ,
                     "performing_poorly":
-                        []
+                        [
+                            f"{p1['id']} hasn't been seen with the ball much but I'm sure they'll make their great team proud",
+                            f"we haven't seen much of {p1['id']} this match but you always know they have something up their sleeve!",
+                            f"{p1['id']} is known for turning a match around, so even if they haven't been in the game much, be ready to be surprised"
+                        ]
                 }
             ,
             "biased_opposing": 
                 {
                     "performing_well":
-                        []
+                        [
+                            f"{p1['id']} has been holding the ball a lot this game, hardly sharing with their teammates. Pathetic.",
+                            f"Sure, {p1['id']} has had the ball a good portion of the game, that doesn't mean it's not just luck.",
+                            f"{team_opposing} sure has been struck by luck today with how much {p1['id']} has had the ball",
+                        ]
                     ,
                     "performing_poorly":
-                        []
+                        [
+                            f"unsurprisingly, {p1['id']} from team {team_opposing} has hardly been able to get hold of the ball this match",
+                            f"{p1['id']} has been really struggling to keep the ball at their feet, maybe just let the grown ups play.",
+                            f"we've seen almost nothing from {p1['id']} this match, as expected.",
+                        ]
                 }
         }
 
@@ -212,7 +288,8 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
         team, other_team = (teams[0], teams[1]) if team == "Right" else (teams[1], teams[0])
         performing_well_goals = True if statistic["teams"][team_key]["goals"] > statistic["teams"][other_team_key]["goals"] else False
         tied = True if statistic["teams"][team_key]["goals"] == statistic["teams"][other_team_key]["goals"] else False
-        performing_well_poss = True if statistic["teams"][team_key]["goals"] > statistic["teams"][other_team_key]["goals"] else False
+        tied_possession = True if abs(statistic["teams"][team_key]["ball_pos"] - statistic["teams"][other_team_key]["ball_pos"]) > 15 else False
+        performing_well_poss = True if statistic["teams"][team_key]["ball_pos"] > statistic["teams"][other_team_key]["ball_pos"] else False
 
         goal_diff = abs(statistic["teams"][team_key]["goals"] - statistic["teams"][other_team_key]["goals"])
 
@@ -222,28 +299,50 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
                     "performing_well": # goals?
                         [
                             f"{team} is winning over {other_team} by a difference of {goal_diff} goals",
+                            f"we move on with the game with {team} still winning",
+                            f"{other_team} is still at a disadvantage by {goal_diff} goals"
                         ]
                     ,
                     "performing_poorly": # no goals?
-                        []
+                        [
+                            f"{other_team} is winning over {team} by a difference of {goal_diff} goals",
+                            f"we move on with the game with {other_team} still winning",
+                            f"{team} is still at a disadvantage by {goal_diff} goals"
+                        ]
                 }
             ,
             "aggressive": 
                 {
                     "performing_well": # goals?
-                        []
+                        [
+                            f"{team} is crushing {other_team} by {goal_diff} goals",
+                            f"{other_team} is suffocating with {team}'s goal advantage",
+                            f"{team} has overwhelmed {other_team} with their goal advantage"
+                        ]
                     ,
                     "performing_poorly": # no goals?
-                        []
+                        [
+                            f"{other_team} is crushing {team} by {goal_diff} goals",
+                            f"{team} is suffocating with {other_team}'s goal advantage",
+                            f"{other_team} has overwhelmed {team} with their goal advantage" 
+                        ]
                 }
             , 
             "friendly": 
                 {
                     "performing_well": # goals?
-                        []
+                        [
+                            f"{team} has a goal advantage of {goal_diff}, let's see if {other_team} bounces back",
+                            f"we've got an excitingly close game at our hands, with {team} currently having an advantage",
+                            f"{team} is winning! Let's see how {other_team} responds"
+                        ]
                     ,
                     "performing_poorly": # no goals?
-                        []
+                        [
+                            f"{other_team} has a goal advantage of {goal_diff}, let's see if {team} bounces back",
+                            f"we've got an excitingly close game at our hands, with {other_team} currently having an advantage",
+                            f"{other_team} is winning! Let's see how {team} responds"
+                        ]
                 } 
             ,
             "biased_supporting": 
@@ -251,19 +350,33 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
                     "performing_well": # goals?
                         [
                             f"{team_supporting} is dominating {team_opposing} as demonstrated by their goal advantage",
+                            f"as expected {team_supporting} is winning",
+                            f"{team_opposing} never stood a chance. {team_supporting} is winning"
                         ]
                     ,
                     "performing_poorly": # no goals?
-                        []
+                        [
+                            f"this is unbelievable, somehow {team_opposing} has the goal advantage",
+                            f"{team_opposing} has been struck by luck today with their goal advantage",
+                            f"Come on, {team_supporting}, bounce back!"
+                        ]
                 }
             ,
             "biased_opposing": 
                 {
                     "performing_well": # goals?
-                        []
+                        [
+                            f"this is unbelievable, somehow {team_opposing} has the goal advantage",
+                            f"{team_opposing} has been struck by luck today with their goal advantage",
+                            f"Come on, {team_supporting}, bounce back!"
+                        ]
                     ,
                     "performing_poorly": # no goals?
-                        []
+                        [
+                            f"{team_supporting} is dominating {team_opposing} as demonstrated by their goal advantage",
+                            f"as expected {team_supporting} is winning",
+                            f"{team_opposing} never stood a chance. {team_supporting} is winning"
+                        ]
                 }
         }
 
@@ -271,46 +384,86 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
             "neutral": 
                 {
                     "performing_well": # poss > enemy -> doing well
-                        []
+                        [
+                            f"We've seen {team} having a much more prevalent stand in this game",
+                            f"{team} has had greater ball possession overall",
+                            f"{team} has been able to keep the ball within the team better than {other_team}"
+                        ]
                     ,
                     "performing_poorly": 
-                        []
+                        [
+                            f"We've seen {other_team} having a much more prevalent stand in this game",
+                            f"{other_team} has had greater ball possession overall",
+                            f"{other_team} has been able to keep the ball within the team better than {team}"
+                        ]
                 }
             ,
             "aggressive": 
                 {
                     "performing_well": 
-                        []
+                        [
+                            f"{team} has had the ball most of the game. Do something {other_team}! this is boring",
+                            f"{other_team} is hardly giving the game a struggle, {team} almost always had the ball",
+                            f"{team} is completely dominating {other_team} in terms of ball possession"
+                        ]
                     ,
                     "performing_poorly":
-                        []
+                        [
+                            f"{other_team} has had the ball most of the game. Do something {team}! this is boring",
+                            f"{team} is hardly giving the game a struggle, {other_team} almost always had the ball",
+                            f"{other_team} is completely dominating {team} in terms of ball possession"
+                        ]
                 }
             , 
             "friendly": 
                 {
                     "performing_well":
-                        []
+                        [
+                            f"{team} has kept the ball within the team very gracefully",
+                            f"{team} has had formidable plays to keep the ball in their posession this long, let's see how {other_team} will respond to this",
+                            f"{other_team} has had less luck in keeping the ball, surely they are hard at work on countering this"
+                        ]
                     ,
                     "performing_poorly":
-                        []
+                        [
+                            f"{other_team} has kept the ball within the team very gracefully",
+                            f"{other_team} has had formidable plays to keep the ball in their posession this long, let's see how {team} will respond to this",
+                            f"{team} has had less luck in keeping the ball, surely they are hard at work on countering this"
+                        ]
                 } 
             ,
             "biased_supporting": 
                 {
                     "performing_well":
-                        []
+                        [
+                            f"{team_supporting} has been dominating the weaker {team_opposing}, as expected",
+                            f"{team_opposing} has barely been able to keep up to {team_supporting}'s high level playing",
+                            f"{team_supporting} keeps the ball within their team easily considering the little fight {team_opposing} puts up"
+                        ]
                     ,
                     "performing_poorly":
-                        []
+                        [
+                            f"{team_supporting} has had a few unlucky hiccups that have them at a disadvantage, they'll surely go back to dominating the field soon",
+                            f"{team_opposing} has been extremely lucky at keeping the ball within the team...",
+                            f"{team_supporting} must be preparing something to get back their field advantage"
+                        ]
                 }
             ,
             "biased_opposing": 
                 {
                     "performing_well":
-                        []
+                        [
+                            f"{team_supporting} has had a few unlucky hiccups that have them at a disadvantage, they'll surely go back to dominating the field soon",
+                            f"{team_opposing} has been extremely lucky at keeping the ball within the team...",
+                            f"{team_supporting} must be preparing something to get back their field advantage"
+                        ]
                     ,
                     "performing_poorly":
-                        []
+                        [
+                            f"{team_supporting} has been dominating the weaker {team_opposing}, as expected",
+                            f"{team_opposing} has barely been able to keep up to {team_supporting}'s high level playing",
+                            f"{team_supporting} keeps the ball within their team easily considering the little fight {team_opposing} puts up"
+                        ]
                 }
         }
 
@@ -319,8 +472,11 @@ def statistic_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
         if not tied:
             if performing_well_goals: lines.append(lines_goals[line_type]["performing_well"])
             else: lines.append(lines_goals[line_type]["performing_poorly"])
-        if performing_well_poss: lines.append(lines_posession[line_type]["performing_well"])
-        else: lines.append(lines_posession[line_type]["performing_poorly"])
+        if not tied_possession:
+            if performing_well_poss: lines.append(lines_posession[line_type]["performing_well"])
+            else: lines.append(lines_posession[line_type]["performing_poorly"])
+        if not lines:
+            lines.append("Very close game.")
 
     return event_to_text(event, line_type, stats, en_calm_mod, bias, teams, lines, priority)
 
@@ -536,7 +692,11 @@ def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_ma
 
     args = event["args"]
     p1 = args.get("player")
-    supporting = True if p1["team"] == (bias > 0) else False
+    supporting = True
+    if p1:
+        supporting = True if p1["team"] == (bias > 0) else False
+    else:
+        bias = 0
     team_supporting, team_opposing = (teams[0], teams[1]) if (bias < 0) else (teams[1], teams[0])
 
     if p1['id'] in player_name_map.keys(): 
@@ -704,7 +864,7 @@ def goal_shot_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_m
 
 def goal_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams, priority):
     args = event["args"]
-    team = teams[0] if args["team"] == "Left" else teams[1]
+    team = teams[1] if args["team"] == "Left" else teams[0]
     supporting = True if team == (bias > 0) else False
     team_supporting, team_opposing = (teams[0], teams[1]) if (bias < 0) else (teams[1], teams[0])
 
@@ -970,6 +1130,9 @@ def corner_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map,
     supporting = True if args["player"]["team"] == (bias > 0) else False
     team_supporting, team_opposing = (teams[0], teams[1]) if (bias < 0) else (teams[1], teams[0])
 
+    p1 = args["player"]
+    if p1['id'] in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+
     lines = { 
         "neutral": 
             [
@@ -1032,6 +1195,9 @@ def out_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, te
     supporting = True if args["player"]["team"] == (bias > 0) else False
     team_supporting, team_opposing = (teams[0], teams[1]) if (bias < 0) else (teams[1], teams[0])
 
+    p1 = args["player"]
+    if p1['id'] in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
+
     lines = { 
         "neutral": 
             [
@@ -1093,6 +1259,9 @@ def goalkeeper_out_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_n
     team = team[1] if args["player"]["team"] else team[0]
     supporting = True if args["player"]["team"] == (bias > 0) else False
     team_supporting, team_opposing = (teams[0], teams[1]) if (bias < 0) else (teams[1], teams[0])
+
+    p1 = args["player"]
+    if p1['id'] in player_name_map.keys(): p1['id'] = player_name_map[p1['id']]
 
     lines = { 
         "neutral": 
