@@ -249,10 +249,6 @@ class Player(Entity):
         self.positions_lfoot = []
         self.joints = [0]*22
 
-        self.prev_rthigh_euler = [0]*3
-        self.prev_lthigh_euler = [0]*3
-
-
         self.joint_time = 0
         self.count = 0
         self.rthigh_time = 0
@@ -288,7 +284,7 @@ class Player(Entity):
         elif name == "rthigh":
             rtic = time.time()
             e = get_euler_angles(self.rthigh_pos, self.cur_pos)
-            new_e = get_thighs(e, self.prev_rthigh_euler, True)
+            new_e = get_thighs(e, True)
             self.prev_rthigh_euler = new_e
             self.joints[10] = np.around(new_e[0]*180/np.pi,2)
             self.joints[11] = np.around(new_e[1]*180/np.pi,2)
@@ -309,7 +305,7 @@ class Player(Entity):
         elif name == "lthigh":
             ltic = time.time()
             e = get_euler_angles(self.lthigh_pos, self.cur_pos)
-            new_e = get_thighs(e, self.prev_lthigh_euler, False)
+            new_e = get_thighs(e, False)
             self.prev_lthigh_euler = new_e
             self.joints[16] = np.around(new_e[0]*180/np.pi,2)
             self.joints[17] = np.around(new_e[1]*180/np.pi,2)
