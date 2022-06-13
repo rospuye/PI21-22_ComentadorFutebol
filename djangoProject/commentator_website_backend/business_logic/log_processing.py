@@ -96,17 +96,6 @@ def process_log(log, skip=1, skip_flg=False):
             break
 
 
-    output.append("RPL 3D 1\n")
-    output.append(
-        f'EP {{"log_step": 40,"FieldLength": {fieldParams["length"]},"FieldWidth": {fieldParams["width"]},"FieldHeight": {fieldParams["height"]},' +
-        f'"GoalWidth": {goalParams["width"]},"GoalDepth": {goalParams["depth"]},"GoalHeight": {goalParams["height"]},' +
-        f'"BorderSize": {replayParams["BorderSize"]},"FreeKickDistance": {replayParams["FreeKickDistance"]},' + 
-        f'"WaitBeforeKickOff": {replayParams["WaitBeforeKickOff"]},"AgentRadius": {replayParams["AgentRadius"]},' + 
-        f'"BallRadius": {replayParams["BallRadius"]},"BallMass": {replayParams["BallMass"]},"RuleGoalPauseTime": {replayParams["RuleGoalPauseTime"]},' + 
-        f'"RuleKickInPauseTime": {replayParams["RuleKickInPauseTime"]},"RuleHalfTime": {replayParams["RuleHalfTime"]},'+
-        f'"play_modes": {play_modes},"half": {replayParams["half"]} }}")\n'
-    )
-    output.append('PT 0 {"model": "nao_hetero","model_type": 4}\n')
     output.append(f"T {left} {right}  #0000ff #ff0000\n")
     
 
@@ -237,9 +226,9 @@ def process_log(log, skip=1, skip_flg=False):
         if new_timestamp != timestamp:
             break
 
-    output.append(f"S {timestamp} {play_modes[curr_playmode]} 0 0\n")
+    #output.append(f"S {timestamp} {play_modes[curr_playmode]} 0 0\n")
     #for i in range(count):
-    output.extend([ent.to_replay() for ent in entities])
+    #output.extend([ent.to_replay() for ent in entities])
 
     old_timestamp = timestamp
     count = 0
