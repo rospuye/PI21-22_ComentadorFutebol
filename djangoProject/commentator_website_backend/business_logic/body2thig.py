@@ -1,6 +1,6 @@
 import numpy as np
 
-from global_var import cos, sin
+from .global_var import cos, sin
 
 """
     R_general = [cos(a)+ux*ux*(1-cos(a)),   ux*uy*(1-cos(a))-uz*sin(a),ux*uz*(1-cos(a))+uy*sin(a);
