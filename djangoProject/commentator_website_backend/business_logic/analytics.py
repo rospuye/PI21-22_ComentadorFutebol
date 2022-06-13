@@ -67,8 +67,8 @@ def get_analytics(events : list, entities : list):
     last_ball_owner = None
 
     team_analysis = dict()
-    team_analysis["A"] = team_analytics()
-    team_analysis["B"] = team_analytics()
+    team_analysis["A"] = team_analytics() # Left
+    team_analysis["B"] = team_analytics() # Right
 
     analysis = dict()
     for player in entities[1:]:
