@@ -19,7 +19,7 @@ def position_to_array(position, flg=False):
     # assert len(pos) == 16
     return pos
 
-def process_log(log, skip=1, skip_flg=False):
+def process_log(log, prefix1, prefix2, createReplay=False, skip=1, skip_flg=False):
     tik = time.time()
     count = 0
     flg = False
@@ -42,7 +42,7 @@ def process_log(log, skip=1, skip_flg=False):
     # ((FieldLength 30)(FieldWidth 20)(FieldHeight 40)(GoalWidth 2.1)(GoalDepth 0.6)(GoalHeight 0.8)
     for line in log:
         count += 1
-        # line = line.decode()
+        line = line.decode()
 
         if not play_modes and "play_modes" in line:
             modes = re.findall("\(play_modes .*?\)", line)[0]
@@ -85,7 +85,7 @@ def process_log(log, skip=1, skip_flg=False):
         break
 
     for line in log:
-        # line = line.decode()
+        line = line.decode()
         tmp = re.findall("\(team_left .*?\)", line)
         tmp2 = re.findall("\(team_right .*?\)", line)
         if tmp:
@@ -95,14 +95,19 @@ def process_log(log, skip=1, skip_flg=False):
         if left and right:
             break
 
-
-    output.append(f"T {left} {right}  #0000ff #ff0000\n")
-    
+    if createReplay:
+        prefix1 = open(prefix1, "r")
+        output.append(prefix1)
+        prefix1.close()
+        output.append(f"T {left} {right}  #0000ff #ff0000\n")
+        prefix2 = open(prefix2, "r")
+        output.append(prefix2)
+        prefix2.close()
 
     c = 0
     for line in log:
         count += 1
-        # line = line.decode()
+        line = line.decode()
         tmp = re.findall("soccerball.obj|models/naobody", line)
         c += 1
         if len(tmp) == 23 and not re.search("matTeam", line):
@@ -133,64 +138,65 @@ def process_log(log, skip=1, skip_flg=False):
 
             ent_idx = 0
             n_foot = 0
-            for i in range(len(tmp)):
-                robot = entities[ent_idx]
+            if createReplay:
+                for i in range(len(tmp)):
+                    robot = entities[ent_idx]
 
-                if "naobody" in tmp[i]:
-                    ent_idx += 1
-                    n_foot = 0
-                elif "head" in tmp[i]:
-                    robot.headIndex = i-2
-                    robot.head_pos = position_to_array(tmp[i-2])
-                    robot.add_joint("head")
-                elif "rupperarm" in tmp[i]:
-                    robot.rupperarmIndex = i-1
-                    robot.rupperarm_pos = position_to_array(tmp[i-1])
-                    robot.add_joint("rupperarm")
-                elif "rlowerarm" in tmp[i]:
-                    robot.rlowerarmIndex = i-1
-                    robot.rlowerarm_pos = position_to_array(tmp[i-1])
-                    robot.add_joint("rlowerarm")
-                elif "lupperarm" in tmp[i]:
-                    robot.lupperarmIndex = i-1
-                    robot.lupperarm_pos = position_to_array(tmp[i-1])
-                    robot.add_joint("lupperarm")
-                elif "llowerarm" in tmp[i]:
-                    robot.llowerarmIndex = i-1
-                    robot.llowerarm_pos = position_to_array(tmp[i-1])
-                    robot.add_joint("llowerarm")
-                elif "rthigh" in tmp[i]:
-                    robot.rthighIndex = i-1
-                    robot.rthigh_pos = position_to_array(tmp[i-1])
-                    robot.init_thigh(robot.rthigh_pos, True)
-                    robot.add_joint("rthigh")
-                elif "rshank" in tmp[i]:
-                    robot.rshankIndex = i-1
-                    robot.rshank_pos = position_to_array(tmp[i-1])
-                    robot.add_joint("rshank")
-                elif "rfoot" in tmp[i]:
-                    n_foot += 1
-                    if n_foot > 2:
-                        robot.has_extra_foot = True
-                    robot.rfootIndex = i-1
-                    robot.rfoot_pos = position_to_array(tmp[i-1])
-                    robot.add_joint("rfoot")
-                elif "lthigh" in tmp[i]:
-                    robot.lthighIndex = i-1
-                    robot.lthigh_pos = position_to_array(tmp[i-1])
-                    robot.init_thigh(robot.lthigh_pos, False)
-                    robot.add_joint("lthigh")
-                elif "lshank" in tmp[i]:
-                    robot.lshankIndex = i-1
-                    robot.lshank_pos = position_to_array(tmp[i-1])
-                    robot.add_joint("lshank")
-                elif "lfoot" in tmp[i]:
-                    n_foot += 1
-                    if n_foot > 2:
-                        robot.has_extra_foot = True
-                    robot.lfootIndex = i-1
-                    robot.lfoot_pos = position_to_array(tmp[i-1])
-                    robot.add_joint("lfoot")
+                    if "naobody" in tmp[i]:
+                        ent_idx += 1
+                        n_foot = 0
+                    elif "head" in tmp[i]:
+                        robot.headIndex = i-2
+                        robot.head_pos = position_to_array(tmp[i-2])
+                        robot.add_joint("head")
+                    elif "rupperarm" in tmp[i]:
+                        robot.rupperarmIndex = i-1
+                        robot.rupperarm_pos = position_to_array(tmp[i-1])
+                        robot.add_joint("rupperarm")
+                    elif "rlowerarm" in tmp[i]:
+                        robot.rlowerarmIndex = i-1
+                        robot.rlowerarm_pos = position_to_array(tmp[i-1])
+                        robot.add_joint("rlowerarm")
+                    elif "lupperarm" in tmp[i]:
+                        robot.lupperarmIndex = i-1
+                        robot.lupperarm_pos = position_to_array(tmp[i-1])
+                        robot.add_joint("lupperarm")
+                    elif "llowerarm" in tmp[i]:
+                        robot.llowerarmIndex = i-1
+                        robot.llowerarm_pos = position_to_array(tmp[i-1])
+                        robot.add_joint("llowerarm")
+                    elif "rthigh" in tmp[i]:
+                        robot.rthighIndex = i-1
+                        robot.rthigh_pos = position_to_array(tmp[i-1])
+                        robot.init_thigh(robot.rthigh_pos, True)
+                        robot.add_joint("rthigh")
+                    elif "rshank" in tmp[i]:
+                        robot.rshankIndex = i-1
+                        robot.rshank_pos = position_to_array(tmp[i-1])
+                        robot.add_joint("rshank")
+                    elif "rfoot" in tmp[i]:
+                        n_foot += 1
+                        if n_foot > 2:
+                            robot.has_extra_foot = True
+                        robot.rfootIndex = i-1
+                        robot.rfoot_pos = position_to_array(tmp[i-1])
+                        robot.add_joint("rfoot")
+                    elif "lthigh" in tmp[i]:
+                        robot.lthighIndex = i-1
+                        robot.lthigh_pos = position_to_array(tmp[i-1])
+                        robot.init_thigh(robot.lthigh_pos, False)
+                        robot.add_joint("lthigh")
+                    elif "lshank" in tmp[i]:
+                        robot.lshankIndex = i-1
+                        robot.lshank_pos = position_to_array(tmp[i-1])
+                        robot.add_joint("lshank")
+                    elif "lfoot" in tmp[i]:
+                        n_foot += 1
+                        if n_foot > 2:
+                            robot.has_extra_foot = True
+                        robot.lfootIndex = i-1
+                        robot.lfoot_pos = position_to_array(tmp[i-1])
+                        robot.add_joint("lfoot")
 
             for pos, i, foot_dir in tmp5:
                 position_array = position_to_array(pos)
@@ -221,7 +227,7 @@ def process_log(log, skip=1, skip_flg=False):
 
     for line in log:
         count += 1
-        # line = line.decode()
+        line = line.decode()
         new_timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
         if new_timestamp != timestamp:
             break
@@ -233,7 +239,7 @@ def process_log(log, skip=1, skip_flg=False):
     old_timestamp = timestamp
     count = 0
     for line in log:
-        # line = line.decode()
+        line = line.decode()
         new_timestamp = float(re.findall("time \d+[.]?\d*", line)[0].split(" ")[1])
         if new_timestamp==timestamp:
             continue
@@ -270,69 +276,73 @@ def process_log(log, skip=1, skip_flg=False):
                     rIndex = entity.rfootIndex
                     lIndex = entity.lfootIndex
 
-                    headIndex = entity.headIndex
-                    rupperarmIndex = entity.rupperarmIndex
-                    rlowerarmIndex = entity.rlowerarmIndex
-                    lupperarmIndex = entity.lupperarmIndex
-                    llowerarmIndex = entity.llowerarmIndex
-                    rthighIndex = entity.rthighIndex
-                    rshankIndex = entity.rshankIndex
-                    lthighIndex = entity.lthighIndex
-                    lshankIndex = entity.lshankIndex
-                    
-                    rfootIndex = entity.rfootIndex
-                    lfootIndex = entity.lfootIndex
+                    if createReplay:
 
-                    if tmp[headIndex]:
-                        #print(tmp)
-                        #had_changes[idx] = True
-                        entity.head_pos = position_to_array(tmp[headIndex].strip())
-                        entity.add_joint("head")
-                    if tmp[rupperarmIndex]:
-                        #had_changes[idx] = True
-                        entity.rupperarm = position_to_array(tmp[rupperarmIndex].strip())
-                        entity.add_joint("rupperarm")
-                    if tmp[rlowerarmIndex]:
-                        #had_changes[idx] = True
-                        entity.rlowerarm = position_to_array(tmp[rlowerarmIndex].strip())
-                        entity.add_joint("rlowerarm")
-                    if tmp[lupperarmIndex]:
-                        #had_changes[idx] = True
-                        entity.lupperarm = position_to_array(tmp[lupperarmIndex].strip())
-                        entity.add_joint("lupperarm")
-                    if tmp[llowerarmIndex]:
-                        #had_changes[idx] = True
-                        entity.llowerarm = position_to_array(tmp[llowerarmIndex].strip())
-                        entity.add_joint("llowerarm")
-                    if tmp[rthighIndex]:
-                        #had_changes[idx] = True
-                        entity.rthigh = position_to_array(tmp[rthighIndex].strip())
-                        entity.add_joint("rthigh")
-                    if tmp[rshankIndex]:
-                        #had_changes[idx] = True
-                        entity.rshank = position_to_array(tmp[rshankIndex].strip())
-                        entity.add_joint("rshank")
-                    if tmp[lthighIndex]:
-                        had_changes[idx] = True
-                        entity.lthigh = position_to_array(tmp[lthighIndex].strip())
-                        entity.add_joint("lthigh")
-                    if tmp[lshankIndex]:
-                        #had_changes[idx] = True
-                        entity.lshank = position_to_array(tmp[lshankIndex].strip())
-                        entity.add_joint("lshank")
+                        headIndex = entity.headIndex
+                        rupperarmIndex = entity.rupperarmIndex
+                        rlowerarmIndex = entity.rlowerarmIndex
+                        lupperarmIndex = entity.lupperarmIndex
+                        llowerarmIndex = entity.llowerarmIndex
+                        rthighIndex = entity.rthighIndex
+                        rshankIndex = entity.rshankIndex
+                        lthighIndex = entity.lthighIndex
+                        lshankIndex = entity.lshankIndex
+
+                        rfootIndex = entity.rfootIndex
+                        lfootIndex = entity.lfootIndex
+
+                        if tmp[headIndex]:
+                            #print(tmp)
+                            #had_changes[idx] = True
+                            entity.head_pos = position_to_array(tmp[headIndex].strip())
+                            entity.add_joint("head")
+                        if tmp[rupperarmIndex]:
+                            #had_changes[idx] = True
+                            entity.rupperarm = position_to_array(tmp[rupperarmIndex].strip())
+                            entity.add_joint("rupperarm")
+                        if tmp[rlowerarmIndex]:
+                            #had_changes[idx] = True
+                            entity.rlowerarm = position_to_array(tmp[rlowerarmIndex].strip())
+                            entity.add_joint("rlowerarm")
+                        if tmp[lupperarmIndex]:
+                            #had_changes[idx] = True
+                            entity.lupperarm = position_to_array(tmp[lupperarmIndex].strip())
+                            entity.add_joint("lupperarm")
+                        if tmp[llowerarmIndex]:
+                            #had_changes[idx] = True
+                            entity.llowerarm = position_to_array(tmp[llowerarmIndex].strip())
+                            entity.add_joint("llowerarm")
+                        if tmp[rthighIndex]:
+                            #had_changes[idx] = True
+                            entity.rthigh = position_to_array(tmp[rthighIndex].strip())
+                            entity.add_joint("rthigh")
+                        if tmp[rshankIndex]:
+                            #had_changes[idx] = True
+                            entity.rshank = position_to_array(tmp[rshankIndex].strip())
+                            entity.add_joint("rshank")
+                        if tmp[lthighIndex]:
+                            had_changes[idx] = True
+                            entity.lthigh = position_to_array(tmp[lthighIndex].strip())
+                            entity.add_joint("lthigh")
+                        if tmp[lshankIndex]:
+                            #had_changes[idx] = True
+                            entity.lshank = position_to_array(tmp[lshankIndex].strip())
+                            entity.add_joint("lshank")
 
                     if tmp[rIndex]:
                         had_changes[idx] = True
                         new_pos = Position(position=position_to_array(tmp[rIndex].strip()), timestamp=timestamp)
                         entity.add_position_rfoot(new_pos)
                         entity.rfoot = position_to_array(tmp[rIndex].strip())
-                        entity.add_joint("rfoot")
+                        if createReplay:
+                            entity.add_joint("rfoot")
                     if tmp[lIndex]:
                         had_changes[idx] = True
                         new_pos = Position(position=position_to_array(tmp[lIndex].strip()), timestamp=timestamp)
                         entity.add_position_lfoot(new_pos)
                         entity.lfoot = position_to_array(tmp[lIndex].strip())
-                        entity.add_joint("lfoot")
+                        if createReplay:
+                            entity.add_joint("lfoot")
 
             # If at least one entity has an updated value, other entities who didn't update should repeat the last position
             if any(had_changes):
@@ -360,14 +370,16 @@ def process_log(log, skip=1, skip_flg=False):
             output.extend([ent.to_replay() for ent in entities])
         count += 1
 
-        if count == 5000:  # 1000 ~= 40 seg
-            break
+        # if count == 5000:  # 1000 ~= 40 seg
+        #     break
 
     tik1 = time.time()
-    replayfile = open("replayfile.replay", "w")
-    #yprint(output)
-    replayfile.write("".join(output))
-    replayfile.close()
+    replayfile = None
+    if createReplay:
+        replayfile = open("replayfile.replay", "w")
+        #yprint(output)
+        replayfile.write("".join(output))
+        replayfile.close()
     tok1 = time.time()
     print("Writing time:", tok1 - tik1)
 
@@ -404,7 +416,6 @@ def process_log(log, skip=1, skip_flg=False):
 
 if __name__ == "__main__":
     log = open("test1.log", "r")
-
     createCache()
     
     skip_lines = 1
