@@ -1,5 +1,5 @@
 import numpy as np
-from global_var import cos, sin
+# from global_var import cos, sin
 
 R_rotx = lambda a: np.array([1, 0, 0, 0, np.cos(a), -np.sin(a), 0, np.sin(a), np.cos(a)]).reshape(3,3)
              

@@ -4,6 +4,7 @@ from djangoProject.permissions import IsOwnerOrIsAdmin
 from .models import Game, Preset
 from django.contrib.auth.models import User
 from rest_framework.response import Response
+from django.conf import settings
 
 
 class GameSerializer(serializers.ModelSerializer):
@@ -18,7 +19,6 @@ class GameViewSet(viewsets.ModelViewSet):
     serializer_class = GameSerializer
 
     def get_queryset(self):
-        print(f"get_queryset")
         queryset = Game.objects.all()
         query_params = self.request.query_params
         username = query_params.get('username')
@@ -29,23 +29,25 @@ class GameViewSet(viewsets.ModelViewSet):
         roud = query_params.get('round', '')
         sort_field = query_params.get('sort')
 
-        if username is not None:
-            queryset = queryset.filter(user__username=username)
-            if not self.request.user.is_superuser and username != self.request.user.username:
-                queryset = queryset.filter(is_public=True)
+        user = self.request.user
 
-        elif not self.request.user.is_superuser:
-            queryset = queryset.filter(is_public=True)
-
-        queryset = queryset.filter(round__contains=roud)
-        queryset = queryset.filter(title__contains=title)
-        queryset = queryset.filter(league__contains=league)
-        queryset = queryset.filter(match_group__contains=group)
+        queryset = queryset.filter(round__icontains=roud)
+        queryset = queryset.filter(title__icontains=title)
+        queryset = queryset.filter(league__icontains=league)
+        queryset = queryset.filter(match_group__icontains=group)
 
         if year is not None:
             queryset = queryset.filter(year=year)
         if sort_field is not None:
             queryset = queryset.order_by(sort_field)
+        if username is not None:
+            queryset = queryset.filter(user__username=username)
+
+        if user.is_anonymous:
+            queryset = queryset.filter(is_public=True)
+
+        elif not user.is_superuser:
+            queryset = queryset.filter(user=user) | queryset.filter(is_public=True)
 
         return queryset
 
@@ -66,17 +68,30 @@ class UserViewSet(viewsets.ModelViewSet):
 class PresetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Preset
-        fields = ['id', 'user', 'gender', 'aggressive_val', 'energetic_val', 'bias']
+        fields = ['id', 'user', 'name', 'gender', 'aggressive_val', 'energetic_val', 'bias']
 
 
 class PresetViewSet(viewsets.ModelViewSet):
     queryset = Preset.objects.all()
     serializer_class = PresetSerializer
     permission_classes = [IsOwnerOrIsAdmin]
+    pagination_class = None
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_anonymous:
+            return []
+
+        queryset = Preset.objects.filter(user=user)
+        return queryset
 
     def create(self, request, *args, **kwargs):
         data = request.data
         missing_fields = []
+
+        if "name" not in data:
+            missing_fields.append("name")
+
         if "gender" not in data:
             missing_fields.append("gender")
 
@@ -100,7 +115,7 @@ class PresetViewSet(viewsets.ModelViewSet):
         if user.is_anonymous:
             return Response({"message": "Not authenticated user."})
 
-        preset = Preset(gender=data["gender"], aggressive_val=data["aggressive_val"],
+        preset = Preset(name=data["name"], gender=data["gender"], aggressive_val=data["aggressive_val"],
                         energetic_val=data["energetic_val"], bias=data["bias"], user=user)
         preset.save()
         serializer = PresetSerializer(preset)

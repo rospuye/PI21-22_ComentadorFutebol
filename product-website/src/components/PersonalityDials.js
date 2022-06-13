@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import './components_css/PersonalityDials.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -11,45 +11,140 @@ import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import RangeSlider from 'react-bootstrap-range-slider';
 
 // Fontawesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
+import { Modal } from 'react-bootstrap';
 
-function PersonalityDials(props) {
-    return <Container className="text-center" style={{ marginTop: '10%' }}>
-                <Row className="dialRow">
-                    <Form.Label>Gender</Form.Label>
-                    <Col>
-                        <ButtonGroup aria-label="Basic example">
-                            {/* className="genderChoiceSelected" */}
-                            <Button variant="primary">Male</Button>
-                            <Button variant="light">Female</Button>
-                        </ButtonGroup>
-                    </Col>
-                </Row>
-                <Row className="dialRow">
-                    <Col><Form.Label>Energetic</Form.Label></Col>
-                    <Col><Form.Range /></Col>
-                    <Col><Form.Label>Calm</Form.Label></Col>
-                </Row>
-                <Row className="dialRow">
-                    <Col><Form.Label>Aggressive</Form.Label></Col>
-                    <Col><Form.Range /></Col>
-                    <Col><Form.Label>Friendly</Form.Label></Col>
-                </Row>
-                <Row className="dialRow">
-                    <Form.Label>Bias</Form.Label>
-                    <Col><Form.Label>Team A</Form.Label></Col>
-                    <Col><Form.Range /></Col>
-                    <Col><Form.Label>Team B</Form.Label></Col>
-                </Row>
-                <Row className="dialRow">
-                    <Link to="/game_viewing">
-                        <Button variant="success" size="lg">Start <FontAwesomeIcon icon={faPlay} /></Button>
-                    </Link>
-                </Row>
-            </Container>;
+function PersonalityDials({ gender, setGender, energy, setEnergy, aggressiveness,
+    setAggressiveness, bias, setBias, createPreset, hasCreate,
+    presetName, setPresetName, goToGameViewing}) {
+
+
+    // Modal
+    const [show, setShow] = useState(false)
+    const handleClose = () => setShow(false);
+
+    return <>
+        <Container className="text-center">
+            <Row >
+                <Col style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <p className='sectionSubtitle'>Gender</p>
+                </Col>
+            </Row>
+            <Row className="dialRow">
+                <Col>
+                    <ButtonGroup aria-label="Basic example" style={{width:'30%'}}>
+                        {/* className="genderChoiceSelected" */}
+                        <Button className="genderSelector"variant={gender == "Male" ? "primary" : "light"} onClick={() => { setGender("Male") }}>Male</Button>
+                        <Button className="genderSelector" variant={gender == "Female" ? "primary" : "light"} onClick={() => { setGender("Female") }}>Female</Button>
+                        <Button className="genderSelector" variant={gender == "Child" ? "primary" : "light"} onClick={() => { setGender("Child") }}>Child</Button>
+
+                    </ButtonGroup>
+                </Col>
+            </Row>
+            <Row>
+                <p className='sectionSubtitle'>Personality</p>
+            </Row>
+            <Row className="dialRow">
+                <Col>
+                    <Form.Label>Calm</Form.Label>
+                </Col>
+                <Col>
+                    <RangeSlider
+                        value={energy}
+                        onChange={e => setEnergy(e.target.value)}
+                        min={-50}
+                        max={50}
+                    />
+                </Col>
+                <Col><Form.Label>Energetic</Form.Label></Col>
+            </Row>
+            <Row className="dialRow">
+                <Col>
+                    <Form.Label>Friendly</Form.Label>
+                </Col>
+                <Col>
+                    <RangeSlider
+                        value={aggressiveness}
+                        onChange={e => setAggressiveness(e.target.value)}
+                        min={-50}
+                        max={50}
+                    />
+                </Col>
+                <Col>
+                    <Form.Label>Aggressive</Form.Label>
+                </Col>
+            </Row>
+            <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}>
+                <p className='sectionSubtitle'>Bias</p>
+            </Row>
+            <Row className="dialRow">
+                <Col>
+                    <Form.Label>Team A</Form.Label>
+                </Col>
+                <Col>
+                    <RangeSlider
+                        value={bias}
+                        onChange={e => setBias(e.target.value)}
+                        min={-1}
+                        max={1}
+                    />
+                </Col>
+                <Col>
+                    <Form.Label>Team B</Form.Label>
+                </Col>
+            </Row>
+            <Row className="dialRow" style={{marginBottom:'5%'}}>
+                {hasCreate && 
+                <Col>
+                    <Button className='btnUpload' size="lg" onClick={() => setShow(true)}>Save Preset</Button>
+                </Col>
+                }
+                
+                <Col>
+                    <Button className='btnUpload' size="lg" onClick={goToGameViewing}>Start Game</Button>
+                </Col>
+            </Row>
+        </Container>
+
+        {
+            hasCreate &&
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Almost Done! Please insert the Preset Name</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Control
+                            type="text"
+                            placeholder="Preset Name"
+                            autoFocus
+                            value={presetName}
+                            onChange={(e) => setPresetName(e.target.value)}
+                        />
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={() => {
+                        handleClose()
+                        createPreset(true)
+                    }} id="saveBtn">
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        }
+
+        
+    </>
 }
 
 export default PersonalityDials;

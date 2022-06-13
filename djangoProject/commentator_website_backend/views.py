@@ -15,7 +15,7 @@ from rest_framework.authtoken.models import Token
 from .models import Game
 from .serializers import GameSerializer, UserSerializer
 
-NUMBER_OF_GAMES_BY_USER = 10
+NUMBER_OF_GAMES_BY_USER = 19
 
 
 @csrf_exempt
@@ -75,6 +75,12 @@ def game_generate_script(request, i):
     agr_frnd_mod = params.get("agr_frnd_mod", 0)  # aggressive/friendly modifier (-50 to 50)
     en_calm_mod = params.get("en_calm_mod", 0)  # energetic/calm modifier (-5 to 5)
     bias = params.get("bias", 0)  # -1 Left, 1 Right, 0 None
+    try:
+        bias = int(bias)
+        agr_frnd_mod = int(agr_frnd_mod)
+        en_calm_mod = int(en_calm_mod)
+    except:
+        return Response({"message": "Not valid modifiers!"})
 
     # TODO Errors because of NL not working
     response = generate_script(data["events"], data["stats"], agr_frnd_mod, en_calm_mod, bias, data["teams"])
@@ -88,6 +94,7 @@ def file_upload(request):
     print("File uploaded.")
     log_file = request.FILES['logFile']
     #replay_file = request.FILES['replayFile']
+    hasReplay = 'replayFile' in request.FILES
     data = request.data
     title = data["title"]
     description = data["description"]
@@ -128,6 +135,9 @@ def file_upload(request):
         for player in analytics[timestamp]["players"]:
             analytics[timestamp]["players"][player] = analytics[timestamp]["players"][player].to_json()
     json_response["stats"] = analytics
+
+    if hasReplay:
+        replay_file = request.FILES['replayFile']
 
     game = Game(replay_file=replay_file, title=title, description=description, user=user,
                 is_public=is_public, league=league, year=year, round=roud, match_group=match_group,

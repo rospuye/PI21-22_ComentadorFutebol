@@ -23,6 +23,7 @@ function FocoNavbar({goesBack,backPage,hasLoginBtn,cookies,setCookie,updateLogin
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
+            <Nav.Link href="/meet_foco">Meet FoCo</Nav.Link>
             <Nav.Link href="https://isabelrosario8.wixsite.com/foco">About</Nav.Link>
             {/* <Nav.Link href="#pricing">Pricing</Nav.Link>
             <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
@@ -35,7 +36,7 @@ function FocoNavbar({goesBack,backPage,hasLoginBtn,cookies,setCookie,updateLogin
           </Nav>
           <Nav>
           {(hasLoginBtn) ? <>
-          {(cookies.logged_user !== '') ?
+          {(cookies.logged_user != null && cookies.logged_user !== '') ?
             <Button className='loginButton' variant="light" onClick={() => {
               setCookie('logged_user', '', { path: '/' })
               setCookie('token', '', {path: '/'})

@@ -31,6 +31,8 @@ def process_log(log, prefix1, prefix2, createReplay=False, skip=1, skip_flg=Fals
     entities = []
     events_dict = {}
     formation_counts = {}
+    form = []
+    form_players = dict()
     timestamp = 0
     left = ""
     right = ""
@@ -219,7 +221,7 @@ def process_log(log, prefix1, prefix2, createReplay=False, skip=1, skip_flg=Fals
                         break
 
 
-            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp, events_dict, formation_counts)
+            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp, events_dict, formation_counts, form, form_players)
             events += messages
 
             
@@ -363,7 +365,7 @@ def process_log(log, prefix1, prefix2, createReplay=False, skip=1, skip_flg=Fals
                             entity.add_position_lfoot(new_pos)
 
 
-            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp, events_dict, formation_counts)
+            messages, form, form_players = process(entities, fieldParams, goalParams, timestamp, events_dict, formation_counts, form, form_players)
             events += messages
 
             output.append(f"S {timestamp} {play_modes[curr_playmode]} 0 0\n")
@@ -391,7 +393,7 @@ def process_log(log, prefix1, prefix2, createReplay=False, skip=1, skip_flg=Fals
     # print("Formation for teamA:", form[0])
     # print("Formation for teamB:", form[1])
     # print("Players and their spot in the formation:")
-    # translate = {0: "defender", 1: "midfielder", 2: "forward"}
+    translate = {0: "defender", 1: "midfielder", 2: "forward"}
     # for player in form_players:
     #     print(player.id, translate[form_players[player]])
     tik = time.time()

@@ -48,8 +48,8 @@ function Homepage() {
 
     <Container>
       <Row>
-        <Col>
-          <ThreeJSCanvas/>
+        <Col style={{paddingTop:'5%'}}>
+        <ThreeJSCanvas fstate="f_neutral" cstate="c_neutral" />
         </Col>
         <Col>
           <div style={{ width: '100%',  paddingTop: '20%', textAlign:"center" }}>
