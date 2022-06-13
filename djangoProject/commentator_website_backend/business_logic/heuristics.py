@@ -203,7 +203,7 @@ def start_outside_shot(event: str, ball: Ball, teamA: list, teamB: list, curr_ti
     player = ball.get_closest_player(atk_team)
     if ball.get_distance_from(player) < KICK_OFF_CONTACT_DISTANCE:
         events.pop(event)
-        events[f"{event}_shot"] = {"start": curr_timestamp}
+        events[f"{event}_shot"] = {"start": curr_timestamp, "player": player}
         # print(f"after {events[event + '_shot'] = }")
         return True
 
@@ -213,7 +213,14 @@ def start_outside_shot(event: str, ball: Ball, teamA: list, teamB: list, curr_ti
 def outside_shot(event: str, ball: Ball, teamA: list, teamB: list, curr_timestamp: float, events):
     # The shot ends when the ball stops moving
     if has_ball_stopped(ball, teamA, teamB):
-        message = Message(event=f"{event}_shot", start=events[f"{event}_shot"]["start"], end=curr_timestamp)
+        message = None
+        if event == "out":
+            message = Out_Shot("out_shot", player=events[f"out_shot"]["player"], start=events[f"out_shot"]["start"], end=curr_timestamp)
+        elif event == "goalkeeper_out":
+            message = GoalKeeper_Out_Shot("goalkeeper_out_shot", player=events[f"goalkeeper_out_shot"]["player"], start=events[f"goalkeeper_out_shot"]["start"], end=curr_timestamp)
+        elif event == "corner":
+            message = Corner_Shot("corner_shot", player=events[f"corner_shot"]["player"], start=events[f"corner_shot"]["start"], end=curr_timestamp)
+        #message = Message(event=f"{event}_shot", start=events[f"{event}_shot"]["start"], end=curr_timestamp)
         events.pop(f"{event}_shot")
         return message
 
