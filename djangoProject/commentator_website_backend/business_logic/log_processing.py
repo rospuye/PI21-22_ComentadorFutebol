@@ -371,8 +371,8 @@ def process_log(log, prefix1="/djangoProject/commentator_website_backend/busines
             output.extend([ent.to_replay() for ent in entities])
         count += 1
 
-        if count == 1000:  # 1000 ~= 40 seg
-            break
+        # if count == 1000:  # 1000 ~= 40 seg
+        #     break
 
     tik1 = time.time()
     replayfile = None

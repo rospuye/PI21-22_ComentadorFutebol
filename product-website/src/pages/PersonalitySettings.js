@@ -34,14 +34,14 @@ function PersonalitySettings() {
             name: "Kind",
             gender: "Female",
             aggressive_val: -45,
-            energetic_val: -45,
+            energetic_val: -4,
             bias: 0
         },
         {
             name: "Pissed",
             gender: "Child",
             aggressive_val: 35,
-            energetic_val: 50,
+            energetic_val: 5,
             bias: 1
         },
         {
@@ -55,21 +55,21 @@ function PersonalitySettings() {
             name: "Aggressive",
             gender: "Female",
             aggressive_val: 50,
-            energetic_val: 10,
+            energetic_val: 1,
             bias: 0
         },
         {
             name: "Friendly",
             gender: "Child",
             aggressive_val: -50,
-            energetic_val: -10,
+            energetic_val: -1,
             bias: 0
         },
         {
             name: "Passive-Aggressive",
             gender: "Male",
             aggressive_val: 50,
-            energetic_val: -50,
+            energetic_val: -5,
             bias: -1
         },
    

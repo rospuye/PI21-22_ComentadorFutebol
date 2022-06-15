@@ -40,7 +40,7 @@ function PersonalityDials({ gender, setGender, energy, setEnergy, aggressiveness
                         {/* className="genderChoiceSelected" */}
                         <Button className="genderSelector"variant={gender == "Male" ? "primary" : "light"} onClick={() => { setGender("Male") }}>Male</Button>
                         <Button className="genderSelector" variant={gender == "Female" ? "primary" : "light"} onClick={() => { setGender("Female") }}>Female</Button>
-                        <Button className="genderSelector" variant={gender == "Child" ? "primary" : "light"} onClick={() => { setGender("Child") }}>Child</Button>
+                        {/* <Button className="genderSelector" variant={gender == "Child" ? "primary" : "light"} onClick={() => { setGender("Child") }}>Child</Button> */}
 
                     </ButtonGroup>
                 </Col>
@@ -56,8 +56,8 @@ function PersonalityDials({ gender, setGender, energy, setEnergy, aggressiveness
                     <RangeSlider
                         value={energy}
                         onChange={e => setEnergy(e.target.value)}
-                        min={-50}
-                        max={50}
+                        min={-5}
+                        max={5}
                     />
                 </Col>
                 <Col><Form.Label>Energetic</Form.Label></Col>
