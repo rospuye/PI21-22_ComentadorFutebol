@@ -702,9 +702,10 @@ def kick_off_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_ma
     else:
         bias = 0
     team_supporting, team_opposing = (teams[0], teams[1]) if (bias < 0) else (teams[1], teams[0])
-
-    if p1['id'] in player_name_map.keys(): 
-        p1['id'] = player_name_map[p1['id']]
+    
+    if p1:
+        if p1['id'] in player_name_map.keys(): 
+            p1['id'] = player_name_map[p1['id']]
 
     lines_without_player = {
         "neutral": 
