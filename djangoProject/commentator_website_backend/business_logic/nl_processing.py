@@ -1318,7 +1318,6 @@ def goalkeeper_out_lines(event, stats, agr_frnd_mod, en_calm_mod, bias, player_n
     return event_to_text(event, line_type, stats, en_calm_mod, bias, teams, lines[line_type], priority)
 
 def event_to_text(event, type, stats, en_calm_mod, bias, teams, lines=None, priority=10):
-    # print(f"event_to_text {stats = }")
     if lines is None:
         lines = []
 
@@ -1331,7 +1330,7 @@ def event_to_text(event, type, stats, en_calm_mod, bias, teams, lines=None, prio
             lines.remove(line)
 
     if len(lines) == 0:
-        phrase = ""
+        return
     else:
         n = random.randint(0, len(lines) - 1)
         phrase = lines[n]
@@ -1431,8 +1430,8 @@ def generate_script(events, stats, agr_frnd_mod, en_calm_mod, bias, teams):
             commentary.append(Comentary(event['event'] + " not implemented yet", "neutral", 0, event['start'], 10).to_json())
         else:
             line = lines.get(event["event"])
-            commentary.append(
-                line["function"](event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams, line["priority"]).to_json())
+            comment = line["function"](event, stats, agr_frnd_mod, en_calm_mod, bias, player_name_map, teams, line["priority"])
+            if comment: commentary.append(comment.to_json())
 
 
     # commentary = [

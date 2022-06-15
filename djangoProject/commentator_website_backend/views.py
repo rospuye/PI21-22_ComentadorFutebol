@@ -84,8 +84,9 @@ def game_generate_script(request, i):
     except:
         return Response({"message": "Not valid modifiers!"})
 
-    # TODO Errors because of NL not working
     response = generate_script(data["events"], data["stats"], agr_frnd_mod, en_calm_mod, bias, data["teams"])
+    # for commentary in response:
+    #     print(f"{commentary = }")
 
     return Response(response)
 
