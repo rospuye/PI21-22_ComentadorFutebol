@@ -39,7 +39,7 @@ function PersonalitySettings() {
         },
         {
             name: "Pissed",
-            gender: "Child",
+            gender: "Female",
             aggressive_val: 35,
             energetic_val: 5,
             bias: 1
@@ -60,7 +60,7 @@ function PersonalitySettings() {
         },
         {
             name: "Friendly",
-            gender: "Child",
+            gender: "Male",
             aggressive_val: -50,
             energetic_val: -1,
             bias: 0
