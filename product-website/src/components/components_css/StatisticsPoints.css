@@ -1,0 +1,7 @@
+.point {
+    width: 1em;
+    height: 1em;
+    border-radius: 100%;
+    position: absolute;
+    z-index: 1;
+}

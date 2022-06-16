@@ -1,0 +1,42 @@
+
+version: "3.9"
+services:
+
+  frontend:
+    build: ./product-website
+    container_name: frontend
+    ports:
+      - 3001:3000
+    stdin_open: true
+    restart: unless-stopped
+    image: foco-frontend
+
+  django-api:
+    build: ./djangoProject
+    container_name: django-api
+    volumes:
+      - django-data:/djangoProject/uploads/replays
+    ports:
+      - 8000:8000
+    restart: unless-stopped
+    image: foco-api
+    env_file: .env
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql/mysql-server:5.7
+    container_name: db
+    command: mysqld 
+    volumes:
+      - mysql-data:/var/local/mysql/data
+    ports:
+      - "33060:3306"
+    hostname: mysql
+    env_file: .env
+
+volumes:
+  mysql-data:
+    driver: local
+  django-data:
+    driver: local

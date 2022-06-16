@@ -1,0 +1,38 @@
+
+#sortP {
+    color: whitesmoke;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 18px;
+    line-height: 24px;
+    /* margin: 0 0 24px; */
+    text-align: right;
+    text-justify: inter-word;
+    margin-top: 0;
+    margin-bottom: 0;
+    /* padding-top: 0%; */
+    /* vertical-align: middle; */
+}
+
+.searchBoxDiv {
+    margin-top: 10%;
+    align-items: center;
+    text-align: center;
+}
+
+.searchBoxDivInput {
+    margin-bottom: 5%;
+    width: 80%;
+    
+}
+
+.thumbnailTitle {
+    font-size: 18px;
+    font-weight: bold;
+    color: #e0d8c1;
+    margin-bottom: 0px;
+}
+
+.thumbnailDate {
+    font-size: 15px;
+    color: #e0d8c1;
+}
