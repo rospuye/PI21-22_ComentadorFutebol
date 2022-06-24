@@ -176,7 +176,7 @@ function GameViewingPage() {
     const observer = new MutationObserver(onGameTimeChange)
 
     const initializeSynthetiser = () => {
-        const speechConfig = sdk.SpeechConfig.fromSubscription("dfb5fa14bd85423db7a60da4b0ac369f", "westeurope");
+        const speechConfig = sdk.SpeechConfig.fromSubscription("273b471453224920b2b488d0c2856546", "westeurope");
         const audioConfig = sdk.AudioConfig.fromDefaultSpeakerOutput();
         return new sdk.SpeechSynthesizer(speechConfig, audioConfig)
     }
