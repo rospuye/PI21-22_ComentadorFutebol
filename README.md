@@ -9,6 +9,8 @@
 | Lucius Vinicius | 96123 |
 | Miguel Ferreira | 98599 |
 
+### **Final Grade:** 19/20
+
 ---
 
 ### **Recursos**
